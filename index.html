@@ -1,43 +1,1164 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <title>Test Page For Chris</title>
-  </head>
-  <body>
-    <h1>Test Page For Chris</h1>
-    <input type="text" id="textbox1" placeholder="enter your shit" />
-    <input type="button" id="butt1" value="Click Me" />
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seegson Solutions — Built Where the Work Is</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #0d0d0d;
+    --paper:    #f2efe8;
+    --cream:    #e8e4d9;
+    --amber:    #e8621a;
+    --amber2:   #f5a623;
+    --rule:     rgba(13,13,13,0.12);
+    --muted:    #6b6760;
+    --white:    #ffffff;
+  }
 
-    <p class="output" id="output1"></p>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <script>
-      const text1 = document.getElementById("textbox1");
-      const btn1 = document.getElementById("butt1");
-      const out1 = document.getElementById("output1");
+  html { scroll-behavior: smooth; }
 
-      function fun1() {
-        out1.innerHTML = text1.value;
-      }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
 
-      btn1.addEventListener("click", fun1);
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-      function plusOne() {
-        var count = document.getElementById("addOne");
-        number++;
-        count.innerHTML = number;
-      }
-      var number = 1;
-    </script>
-    <div>
-      <span id="addOne">1</span>
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--ink);
+    border-bottom: 3px solid var(--amber);
+    padding: 0 40px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .nav-logo span { color: var(--amber); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--amber) !important;
+    color: var(--ink) !important;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 700 !important;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    padding-top: 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    padding: 80px 40px 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    border-right: 1px solid var(--rule);
+  }
+
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.1s forwards;
+  }
+
+  .eyebrow-line {
+    width: 40px;
+    height: 2px;
+    background: var(--amber);
+  }
+
+  .eyebrow-text {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+
+  .hero-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 9vw, 120px);
+    line-height: 0.92;
+    letter-spacing: 2px;
+    color: var(--ink);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.2s forwards;
+  }
+
+  .hero-headline em {
+    color: var(--amber);
+    font-style: normal;
+    display: block;
+  }
+
+  .hero-body {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 420px;
+    margin-bottom: 44px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.35s forwards;
+  }
+
+  .hero-body strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.45s forwards;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--white);
+    padding: 16px 36px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.2s, transform 0.15s;
+    border: 2px solid var(--ink);
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: var(--ink);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+
+  .btn-secondary:hover { color: var(--ink); }
+
+  .btn-secondary::after {
+    content: '→';
+    font-size: 16px;
+    transition: transform 0.2s;
+  }
+
+  .btn-secondary:hover::after { transform: translateX(4px); }
+
+  /* HERO RIGHT — GRID VISUAL */
+  .hero-right {
+    position: relative;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeIn 0.9s ease 0.5s forwards;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245,166,35,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,166,35,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .hero-card-stack {
+    position: relative;
+    z-index: 2;
+    padding: 40px;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .hero-stat-block {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(4px);
+  }
+
+  .hero-stat-block:first-child {
+    border-color: rgba(232,98,26,0.4);
+    border-left: 3px solid var(--amber);
+  }
+
+  .stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 2px;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .stat-value span { color: var(--amber); }
+
+  .stat-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+  }
+
+  .hero-mini-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .mini-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .mini-card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--white);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  .mini-card-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ─── MARQUEE ─── */
+  .marquee-wrap {
+    background: var(--amber);
+    padding: 14px 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 22s linear infinite;
+    white-space: nowrap;
+  }
+
+  .marquee-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 4px;
+    color: var(--ink);
+    padding: 0 40px;
+  }
+
+  .marquee-dot {
+    color: rgba(0,0,0,0.3);
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ─── ABOUT STRIP ─── */
+  .about-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    z-index: 1;
+  }
+
+  .about-left {
+    padding: 80px 60px;
+    border-right: 1px solid var(--rule);
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 2px;
+    background: var(--amber);
+  }
+
+  .about-headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+
+  .about-headline em {
+    font-style: italic;
+    color: var(--amber);
+  }
+
+  .about-body {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--muted);
+    max-width: 420px;
+  }
+
+  .about-body p + p { margin-top: 16px; }
+
+  .about-right {
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .about-stat {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 28px;
+  }
+
+  .about-stat:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .about-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+
+  .about-stat-num span { color: var(--amber); }
+
+  .about-stat-desc {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* ─── SERVICES ─── */
+  .services {
+    padding: 100px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .services-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 64px;
+    align-items: end;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 40px;
+  }
+
+  .services-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    line-height: 0.95;
+    letter-spacing: 2px;
+  }
+
+  .services-sub {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 380px;
+    align-self: end;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  .service-card {
+    background: var(--paper);
+    padding: 40px 36px;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--amber);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .service-card:hover::after { transform: scaleX(1); }
+  .service-card:hover { background: var(--cream); }
+
+  .service-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--amber);
+    margin-bottom: 20px;
+  }
+
+  .service-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+
+  .service-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .service-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: var(--ink);
+  }
+
+  .service-price sub {
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    vertical-align: baseline;
+    letter-spacing: 0;
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  .how {
+    background: var(--ink);
+    padding: 100px 60px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .how::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245,166,35,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,166,35,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .how-header {
+    text-align: center;
+    margin-bottom: 72px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .how-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 16px;
+  }
+
+  .how-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 72px);
+    letter-spacing: 2px;
+    color: var(--white);
+  }
+
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+    z-index: 1;
+  }
+
+  .how-step {
+    background: var(--ink);
+    padding: 40px 32px;
+    position: relative;
+  }
+
+  .how-step::before {
+    content: attr(data-num);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: rgba(255,255,255,0.04);
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    line-height: 1;
+    letter-spacing: 2px;
+  }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--amber);
+    margin-bottom: 16px;
+  }
+
+  .step-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--white);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.45);
+  }
+
+  /* ─── INDUSTRIES ─── */
+  .industries {
+    padding: 100px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .industries-header {
+    margin-bottom: 56px;
+  }
+
+  .industries-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 72px);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .industries-sub {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  .industries-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  .industry-item {
+    background: var(--paper);
+    padding: 32px 36px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: background 0.2s;
+    cursor: default;
+  }
+
+  .industry-item:hover { background: var(--cream); }
+
+  .industry-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .industry-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .industry-desc {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    background: var(--amber);
+    padding: 100px 60px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .cta-bg-text {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 220px;
+    color: rgba(0,0,0,0.06);
+    letter-spacing: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .cta-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cta-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 88px);
+    letter-spacing: 2px;
+    line-height: 0.95;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+
+  .cta-body {
+    font-size: 17px;
+    color: rgba(0,0,0,0.65);
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .cta-form {
+    display: flex;
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .cta-input {
+    flex: 1;
+    padding: 16px 20px;
+    background: var(--white);
+    border: 2px solid transparent;
+    border-radius: 4px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .cta-input:focus { border-color: var(--ink); }
+  .cta-input::placeholder { color: rgba(0,0,0,0.35); }
+
+  .cta-btn {
+    background: var(--ink);
+    color: var(--white);
+    padding: 16px 28px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+
+  .cta-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .cta-btn:active { transform: translateY(0); }
+
+  .cta-fine {
+    font-size: 12px;
+    color: rgba(0,0,0,0.45);
+    margin-top: 16px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink);
+    padding: 48px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+    border-top: 2px solid var(--amber);
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: var(--white);
+  }
+
+  .footer-logo span { color: var(--amber); }
+
+  .footer-loc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  .footer-loc strong {
+    display: block;
+    color: rgba(255,255,255,0.6);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+    text-align: right;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 60px 24px 48px; border-right: none; border-bottom: 1px solid var(--rule); }
+    .hero-right { min-height: 320px; }
+    .hero-headline { font-size: 72px; }
+
+    .about-strip { grid-template-columns: 1fr; }
+    .about-left { padding: 60px 24px; border-right: none; border-bottom: 1px solid var(--rule); }
+    .about-right { padding: 48px 24px; }
+
+    .services { padding: 60px 24px; }
+    .services-header { grid-template-columns: 1fr; gap: 20px; }
+    .services-grid { grid-template-columns: 1fr; }
+
+    .how { padding: 60px 24px; }
+    .how-steps { grid-template-columns: 1fr 1fr; }
+
+    .industries { padding: 60px 24px; }
+    .industries-list { grid-template-columns: 1fr; }
+
+    .cta-section { padding: 60px 24px; }
+    .cta-form { flex-direction: column; }
+    .cta-bg-text { font-size: 80px; }
+
+    footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 24px; }
+    .footer-copy { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SEEGSON<span> · </span>SOLUTIONS</div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#how">Process</a>
+    <a href="#industries">Industries</a>
+    <a href="#contact" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <div class="eyebrow-text">Seegson Solutions · Southeast Texas</div>
     </div>
-
-    <div>
-      <button onclick="plusOne()">+</button>
+    <h1 class="hero-headline">
+      Tools<br>Built<br><em>For The<br>Field.</em>
+    </h1>
+    <p class="hero-body">
+      Your operation runs on expertise, not spreadsheets.
+      <strong>Seegson Solutions</strong> builds custom tools for contractors, shops, and construction companies
+      in the Beaumont–Port Arthur–Orange area — so you can run tighter, move faster, and stop losing
+      hours to paperwork.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Talk to Us</a>
+      <a href="#services" class="btn-secondary">See what we build</a>
     </div>
-  </body>
+  </div>
+  <div class="hero-right">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-card-stack">
+      <div class="hero-stat-block">
+        <div class="stat-label">Average time saved per week</div>
+        <div class="stat-value">12<span>+ hrs</span></div>
+        <div class="stat-sub">Per site foreman after switching from paper</div>
+      </div>
+      <div class="hero-mini-grid">
+        <div class="mini-card">
+          <div class="mini-card-num">3 <span style="font-size:18px;color:rgba(255,255,255,0.4)">days</span></div>
+          <div class="mini-card-label">To first demo</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-num">$0</div>
+          <div class="mini-card-label">To see it working</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-num">100<span style="font-size:16px;color:rgba(255,255,255,0.4)">%</span></div>
+          <div class="mini-card-label">Built for your ops</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-num" style="color:var(--amber)">SE TX</div>
+          <div class="mini-card-label">Local studio</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Equipment Tracking</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Job Management</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Crew Scheduling</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Quoting & Invoicing</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Material Logs</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Field Reports</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Safety Checklists</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Client Portals</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Equipment Tracking</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Job Management</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Crew Scheduling</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Quoting & Invoicing</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Material Logs</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Field Reports</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Safety Checklists</span><span class="marquee-dot"> · </span>
+    <span class="marquee-item">Client Portals</span><span class="marquee-dot"> · </span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-strip">
+  <div class="about-left reveal">
+    <div class="section-label">Who We Are</div>
+    <h2 class="about-headline">Not a big agency.<br><em>Built where<br>the work is.</em></h2>
+    <div class="about-body">
+      <p>Seegson Solutions is a small, focused studio based in Beaumont, Texas. We build custom web and mobile tools exclusively for businesses in Southeast Texas — no generic software, no offshore handoffs, no bloated contracts.</p>
+      <p>Before we build anything, we show up, learn your operation, and hand you a working demo of exactly what we'd build. No pitch decks. No proposals. Just a live tool built around your actual workflow.</p>
+      <p>If it solves your problem, we talk numbers. If it doesn't, you keep the demo free of charge.</p>
+    </div>
+  </div>
+  <div class="about-right reveal">
+    <div class="about-stat">
+      <div class="about-stat-num">48<span>hr</span></div>
+      <div class="about-stat-desc">From first conversation to a working prototype in your hands</div>
+    </div>
+    <div class="about-stat">
+      <div class="about-stat-num">3<span>×</span></div>
+      <div class="about-stat-desc">Average ROI our clients see in the first 90 days through time and labor savings</div>
+    </div>
+    <div class="about-stat">
+      <div class="about-stat-num">100<span>%</span></div>
+      <div class="about-stat-desc">Local — we're in Beaumont, available by phone, and can be on your job site</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-header reveal">
+    <h2 class="services-headline">What We Build</h2>
+    <p class="services-sub">Three tiers designed around how contractors actually operate — from a quick fix to a full system. Every engagement starts with a free demo.</p>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-num">01 —</div>
+      <div class="service-name">Quick Win</div>
+      <div class="service-desc">One focused tool that replaces your worst bottleneck — a paper log, a spreadsheet, a whiteboard. Fast to build, fast to deploy, immediate payoff.</div>
+      <div class="service-price">$1,500 <sub>— $3,000</sub></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02 —</div>
+      <div class="service-name">Core System</div>
+      <div class="service-desc">A fuller internal platform — job tracking, crew management, equipment logs, client records. Built around how your operation actually runs, not a generic template.</div>
+      <div class="service-price">$5,000 <sub>— $12,000</sub></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03 —</div>
+      <div class="service-name">Ongoing Partner</div>
+      <div class="service-desc">Monthly retainer for updates, new features, support, and improvements as your business grows. We stay in your corner after go-live.</div>
+      <div class="service-price">$500 <sub>— $1,500 / mo</sub></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-header reveal">
+    <div class="how-label">Our Process</div>
+    <h2 class="how-headline">How It Works</h2>
+  </div>
+  <div class="how-steps reveal">
+    <div class="how-step" data-num="1">
+      <div class="step-num">Step 01</div>
+      <div class="step-title">We Show Up With Something</div>
+      <div class="step-desc">Before any conversation about money, we arrive with a working demo built specifically around your business. You interact with it first.</div>
+    </div>
+    <div class="how-step" data-num="2">
+      <div class="step-num">Step 02</div>
+      <div class="step-title">You Tell Us What's Wrong</div>
+      <div class="step-desc">We walk your operation, ask questions, and get into the real problems — not just the surface ones. The demo evolves based on what you tell us.</div>
+    </div>
+    <div class="how-step" data-num="3">
+      <div class="step-num">Step 03</div>
+      <div class="step-title">We Scope and Price It</div>
+      <div class="step-desc">Flat-rate pricing. No hourly billing surprises. You know the number before we touch a line of code.</div>
+    </div>
+    <div class="how-step" data-num="4">
+      <div class="step-num">Step 04</div>
+      <div class="step-title">You're Live in Weeks</div>
+      <div class="step-desc">We build fast, test with your crew, and get you live. Full handoff, training, and support included. It works on any phone — no installs.</div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="industries" id="industries">
+  <div class="industries-header reveal">
+    <h2 class="industries-headline">Who We Serve</h2>
+    <p class="industries-sub">We work with hands-on Southeast Texas businesses that run complex operations and don't have time for software that doesn't fit.</p>
+  </div>
+  <div class="industries-list reveal">
+    <div class="industry-item">
+      <div class="industry-icon">🏗️</div>
+      <div>
+        <div class="industry-name">General Contractors</div>
+        <div class="industry-desc">Job tracking, subcontractor management, field reporting</div>
+      </div>
+    </div>
+    <div class="industry-item">
+      <div class="industry-icon">🔧</div>
+      <div>
+        <div class="industry-name">Mechanical & Welding Shops</div>
+        <div class="industry-desc">Work order systems, equipment logs, job costing</div>
+      </div>
+    </div>
+    <div class="industry-item">
+      <div class="industry-icon">🏭</div>
+      <div>
+        <div class="industry-name">Industrial Fabricators</div>
+        <div class="industry-desc">Material tracking, inspection logs, delivery coordination</div>
+      </div>
+    </div>
+    <div class="industry-item">
+      <div class="industry-icon">🚛</div>
+      <div>
+        <div class="industry-name">Equipment & Trucking</div>
+        <div class="industry-desc">Fleet tracking, checkout/return logs, maintenance scheduling</div>
+      </div>
+    </div>
+    <div class="industry-item">
+      <div class="industry-icon">⚡</div>
+      <div>
+        <div class="industry-name">Electrical & Specialty Trades</div>
+        <div class="industry-desc">Permit tracking, crew dispatch, material requisitions</div>
+      </div>
+    </div>
+    <div class="industry-item">
+      <div class="industry-icon">🔩</div>
+      <div>
+        <div class="industry-name">Maintenance & Turnaround</div>
+        <div class="industry-desc">Turnaround planning, crew handoffs, safety compliance tools</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-bg-text">LET'S BUILD</div>
+  <div class="cta-inner">
+    <h2 class="cta-headline">Ready to See What We'd Build for You?</h2>
+    <p class="cta-body">Drop your number or email below. We'll reach out within one business day — and we'll show up with something already built for your business.</p>
+    <div class="cta-form">
+      <input class="cta-input" type="text" placeholder="Your name, phone, or email" id="contact-input">
+      <button class="cta-btn" onclick="submitContact()">Send It</button>
+    </div>
+    <div class="cta-fine" id="cta-confirm">No spam. No sales calls. Just a local builder ready to solve your problem.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SEEGSON<span> · </span>SOLUTIONS</div>
+  <div class="footer-loc">
+    <strong>Based in Southeast Texas</strong>
+    Beaumont · Port Arthur · Orange · Surrounding Areas
+  </div>
+  <div class="footer-copy">© 2026 Seegson Solutions<br>All rights reserved.</div>
+</footer>
+
+<script>
+  // SCROLL REVEAL
+  var reveals = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(function(el) { observer.observe(el); });
+
+  // CONTACT FORM
+  function submitContact() {
+    var val = document.getElementById('contact-input').value.trim();
+    var confirm = document.getElementById('cta-confirm');
+    if (!val) { confirm.textContent = 'Enter your name, phone, or email first.'; return; }
+    document.getElementById('contact-input').value = '';
+    confirm.textContent = '✓ Got it. We\'ll be in touch within one business day.';
+    confirm.style.color = 'rgba(0,0,0,0.8)';
+    confirm.style.fontWeight = '600';
+  }
+</script>
+
+</body>
 </html>

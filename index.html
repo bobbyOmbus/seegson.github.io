@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Test Page For Chris</title>
+  </head>
+  <body>
+    <h1>Test Page For Chris</h1>
+    <input type="text" id="textbox1" placeholder="enter your shit" />
+    <input type="button" id="butt1" value="Click Me" />
+
+    <p class="output" id="output1"></p>
+
+    <script>
+      const text1 = document.getElementById("textbox1");
+      const btn1 = document.getElementById("butt1");
+      const out1 = document.getElementById("output1");
+
+      function fun1() {
+        out1.innerHTML = text1.value;
+      }
+
+      btn1.addEventListener("click", fun1);
+
+      function plusOne() {
+        var count = document.getElementById("addOne");
+        number++;
+        count.innerHTML = number;
+      }
+      var number = 1;
+    </script>
+    <div>
+      <span id="addOne">1</span>
+    </div>
+
+    <div>
+      <button onclick="plusOne()">+</button>
+    </div>
+  </body>
+</html>

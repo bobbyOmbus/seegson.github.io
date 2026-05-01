@@ -1116,7 +1116,7 @@
   <div class="cta-inner">
     <h2 class="cta-headline">Ready to See What We'd Build for You?</h2>
     <p class="cta-body">Drop your number or email below. We'll reach out within one business day — and we'll show up with something already built for your business.</p>
-    <div class="cta-form">
+    <div class="cta-form" id="cta-form">
       <input class="cta-input" type="text" placeholder="Your name, phone, or email" id="contact-input">
       <button class="cta-btn" onclick="submitContact()">Send It</button>
     </div>
@@ -1152,11 +1152,36 @@
   function submitContact() {
     var val = document.getElementById('contact-input').value.trim();
     var confirm = document.getElementById('cta-confirm');
+    var btn = document.querySelector('.cta-btn');
     if (!val) { confirm.textContent = 'Enter your name, phone, or email first.'; return; }
-    document.getElementById('contact-input').value = '';
-    confirm.textContent = '✓ Got it. We\'ll be in touch within one business day.';
-    confirm.style.color = 'rgba(0,0,0,0.8)';
-    confirm.style.fontWeight = '600';
+
+    btn.textContent = 'Sending...';
+    btn.style.opacity = '0.7';
+
+    fetch('https://formspree.io/f/xqenakgz', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ message: val })
+    })
+    .then(function(res) {
+      if (res.ok) {
+        document.getElementById('contact-input').value = '';
+        btn.textContent = 'Sent ✓';
+        btn.style.background = '#2ecc71';
+        confirm.textContent = '✓ Got it. We\'ll be in touch within one business day.';
+        confirm.style.color = 'rgba(0,0,0,0.8)';
+        confirm.style.fontWeight = '600';
+      } else {
+        btn.textContent = 'Send It';
+        btn.style.opacity = '1';
+        confirm.textContent = 'Something went wrong — try emailing bobby@seegsonsolutions.com directly.';
+      }
+    })
+    .catch(function() {
+      btn.textContent = 'Send It';
+      btn.style.opacity = '1';
+      confirm.textContent = 'Something went wrong — try emailing bobby@seegsonsolutions.com directly.';
+    });
   }
 </script>
 

@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FieldTrack — H&E Equipment</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0e0f11;
+    --surface:   #16181c;
+    --card:      #1d2026;
+    --border:    #2a2d35;
+    --accent:    #f5a623;
+    --accent2:   #e8441a;
+    --green:     #2ecc71;
+    --red:       #e74c3c;
+    --yellow:    #f39c12;
+    --text:      #f0f0f0;
+    --muted:     #7a7f8e;
+    --radius:    10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--accent);
+    padding: 14px 18px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .company-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .app-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .header-badge {
+    background: var(--accent);
+    color: #000;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  /* NAV TABS */
+  .nav {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 8px;
+  }
+
+  .nav-tab {
+    flex: 1;
+    padding: 11px 4px;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .nav-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* KPI STRIP */
+  .kpi-strip {
+    display: flex;
+    gap: 10px;
+    padding: 14px 14px 0;
+  }
+
+  .kpi {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 10px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .kpi.total::before { background: var(--accent); }
+  .kpi.out::before   { background: var(--accent2); }
+  .kpi.avail::before { background: var(--green); }
+  .kpi.maint::before { background: var(--yellow); }
+
+  .kpi-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+
+  .kpi.total .kpi-num  { color: var(--accent); }
+  .kpi.out .kpi-num    { color: var(--accent2); }
+  .kpi.avail .kpi-num  { color: var(--green); }
+  .kpi.maint .kpi-num  { color: var(--yellow); }
+
+  .kpi-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 14px 10px;
+  }
+
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .btn-add {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: opacity 0.15s;
+  }
+
+  .btn-add:active { opacity: 0.75; }
+
+  /* FILTER ROW */
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 14px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filter-row::-webkit-scrollbar { display: none; }
+
+  .filter-chip {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+    user-select: none;
+  }
+
+  .filter-chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+  }
+
+  /* EQUIPMENT CARDS */
+  .cards {
+    padding: 0 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .eq-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .eq-card:active { transform: scale(0.985); }
+  .eq-card:hover  { border-color: #3a3d47; }
+
+  .eq-card-accent {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 2px 0 0 2px;
+  }
+
+  .eq-card-accent.available { background: var(--green); }
+  .eq-card-accent.checked-out { background: var(--accent2); }
+  .eq-card-accent.maintenance { background: var(--yellow); }
+
+  .eq-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .eq-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.1;
+    max-width: 220px;
+  }
+
+  .eq-id {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .status-badge {
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .status-badge.available    { background: rgba(46,204,113,0.15); color: var(--green); border: 1px solid rgba(46,204,113,0.3); }
+  .status-badge.checked-out  { background: rgba(232,68,26,0.15);  color: var(--accent2); border: 1px solid rgba(232,68,26,0.3); }
+  .status-badge.maintenance  { background: rgba(243,156,18,0.15); color: var(--yellow); border: 1px solid rgba(243,156,18,0.3); }
+
+  .eq-meta {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .eq-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .eq-meta-item span {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .eq-bottom {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .eq-assigned {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .eq-assigned span {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .eq-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-sm {
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s;
+  }
+
+  .btn-sm:active { opacity: 0.7; }
+  .btn-checkout  { background: var(--accent2); color: #fff; }
+  .btn-return    { background: var(--green); color: #000; }
+  .btn-view      { background: var(--border); color: var(--text); }
+
+  /* LOG VIEW */
+  .log-list {
+    padding: 0 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .log-entry {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .log-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  .log-dot.out  { background: var(--accent2); }
+  .log-dot.in   { background: var(--green); }
+  .log-dot.maint{ background: var(--yellow); }
+
+  .log-body { flex: 1; }
+
+  .log-action {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .log-detail {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .log-time {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 16px 16px 0 0;
+    border-top: 2px solid var(--accent);
+    width: 100%;
+    max-width: 430px;
+    padding: 20px 18px 36px;
+    animation: slideUp 0.25s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .modal-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 18px;
+  }
+
+  .modal-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+
+  .modal-field {
+    margin-bottom: 14px;
+  }
+
+  .modal-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .modal-field input,
+  .modal-field select {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .modal-field input:focus,
+  .modal-field select:focus {
+    border-color: var(--accent);
+  }
+
+  .modal-field select option { background: var(--card); }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .btn-cancel {
+    flex: 1;
+    padding: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .btn-confirm {
+    flex: 2;
+    padding: 12px;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .btn-confirm:active { opacity: 0.8; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--green);
+    color: #000;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 10px 22px;
+    border-radius: 30px;
+    z-index: 300;
+    transition: transform 0.3s ease, opacity 0.3s;
+    opacity: 0;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* EMPTY */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--muted);
+  }
+
+  .empty-state .icon { font-size: 36px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; line-height: 1.6; }
+
+  /* BOTTOM SPACER */
+  .spacer { height: 32px; }
+
+  /* POWERED BY FOOTER */
+  .powered-by {
+    text-align: center;
+    padding: 24px 20px 40px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+
+  .powered-by a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+
+  .powered-by a:hover { color: var(--accent); }
+
+  .powered-by a::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 1px;
+    background: var(--muted);
+  }
+
+  .powered-by a::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 1px;
+    background: var(--muted);
+  }
+
+  /* DEMO BANNER */
+  .demo-banner {
+    margin: 14px 14px 0;
+    background: linear-gradient(135deg, rgba(245,166,35,0.1), rgba(232,68,26,0.1));
+    border: 1px solid rgba(245,166,35,0.3);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .demo-banner-text {
+    font-size: 12px;
+    color: var(--accent);
+    line-height: 1.4;
+  }
+
+  .demo-banner-text strong {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+
+  /* PAGE TRANSITIONS */
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="company-name" id="companyLabel">H&E Equipment Beaumont</div>
+    <div class="app-title">FIELDTRACK</div>
+  </div>
+  <div class="header-badge">Live Demo</div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-tab active" onclick="switchTab('assets')">Assets</div>
+  <div class="nav-tab" onclick="switchTab('log')">Activity</div>
+  <div class="nav-tab" onclick="switchTab('crew')">Crew</div>
+</div>
+
+<!-- ASSETS PAGE -->
+<div class="page active" id="page-assets">
+
+  <!-- DEMO BANNER -->
+  <div class="demo-banner">
+    <div style="font-size:20px;">⚡</div>
+    <div class="demo-banner-text">
+      <strong>This is your data</strong>
+      Built specifically for H&E Equipment Beaumont. Tap any item to interact.
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip">
+    <div class="kpi total"><div class="kpi-num" id="kpi-total">0</div><div class="kpi-label">Total</div></div>
+    <div class="kpi out"><div class="kpi-num" id="kpi-out">0</div><div class="kpi-label">Out</div></div>
+    <div class="kpi avail"><div class="kpi-num" id="kpi-avail">0</div><div class="kpi-label">Avail</div></div>
+    <div class="kpi maint"><div class="kpi-num" id="kpi-maint">0</div><div class="kpi-label">Maint</div></div>
+  </div>
+
+  <!-- SECTION HEADER -->
+  <div class="section-header">
+    <div class="section-title">Equipment</div>
+    <button class="btn-add" onclick="openAddModal()">＋ Add Item</button>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-row">
+    <div class="filter-chip active" onclick="setFilter('all', this)">All</div>
+    <div class="filter-chip" onclick="setFilter('available', this)">Available</div>
+    <div class="filter-chip" onclick="setFilter('checked-out', this)">Checked Out</div>
+    <div class="filter-chip" onclick="setFilter('maintenance', this)">Maintenance</div>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards" id="cards-container"></div>
+  <div class="spacer"></div>
+</div>
+
+<!-- ACTIVITY LOG PAGE -->
+<div class="page" id="page-log">
+  <div class="section-header">
+    <div class="section-title">Activity Log</div>
+  </div>
+  <div class="log-list" id="log-container"></div>
+  <div class="spacer"></div>
+</div>
+
+<!-- CREW PAGE -->
+<div class="page" id="page-crew">
+  <div class="section-header">
+    <div class="section-title">Crew Members</div>
+    <button class="btn-add" onclick="openCrewModal()">＋ Add</button>
+  </div>
+  <div class="cards" id="crew-container"></div>
+  <div class="spacer"></div>
+</div>
+
+<!-- ADD EQUIPMENT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add Equipment</div>
+    <div class="modal-field">
+      <label>Equipment Name</label>
+      <input type="text" id="new-name" placeholder="e.g. Cat 320 Excavator">
+    </div>
+    <div class="modal-field">
+      <label>Asset ID / Tag #</label>
+      <input type="text" id="new-id" placeholder="e.g. EQ-047">
+    </div>
+    <div class="modal-field">
+      <label>Category</label>
+      <select id="new-cat">
+        <option>Heavy Equipment</option>
+        <option>Hand Tools</option>
+        <option>Power Tools</option>
+        <option>Vehicles</option>
+        <option>Safety Gear</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Initial Status</label>
+      <select id="new-status">
+        <option value="available">Available</option>
+        <option value="checked-out">Checked Out</option>
+        <option value="maintenance">Maintenance</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('addModal')">Cancel</button>
+      <button class="btn-confirm" onclick="addEquipment()">Add to Fleet</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="checkout-title">Check Out Equipment</div>
+    <div class="modal-field">
+      <label>Assigned To</label>
+      <select id="checkout-person"></select>
+    </div>
+    <div class="modal-field">
+      <label>Job / Location</label>
+      <input type="text" id="checkout-job" placeholder="e.g. Hwy 90 Pipeline Job">
+    </div>
+    <div class="modal-field">
+      <label>Expected Return</label>
+      <input type="date" id="checkout-date">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('checkoutModal')">Cancel</button>
+      <button class="btn-confirm" onclick="confirmCheckout()">Confirm Checkout</button>
+    </div>
+  </div>
+</div>
+
+<!-- RETURN MODAL -->
+<div class="modal-overlay" id="returnModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Return Equipment</div>
+    <div class="modal-field">
+      <label>Condition on Return</label>
+      <select id="return-condition">
+        <option value="good">Good — No Issues</option>
+        <option value="minor">Minor Wear — Noted</option>
+        <option value="needs-repair">Needs Repair</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Notes (optional)</label>
+      <input type="text" id="return-notes" placeholder="Any damage or issues...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('returnModal')">Cancel</button>
+      <button class="btn-confirm" onclick="confirmReturn()">Mark Returned</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CREW MODAL -->
+<div class="modal-overlay" id="crewModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add Crew Member</div>
+    <div class="modal-field">
+      <label>Full Name</label>
+      <input type="text" id="crew-name" placeholder="e.g. Marcus Thibodaux">
+    </div>
+    <div class="modal-field">
+      <label>Role</label>
+      <input type="text" id="crew-role" placeholder="e.g. Equipment Operator">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('crewModal')">Cancel</button>
+      <button class="btn-confirm" onclick="addCrew()">Add to Crew</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+var equipment = [
+  { id: 'HE-001', name: 'Genie Z-80 Boom Lift',      category: 'Aerial',          status: 'checked-out', assignedTo: 'Paul Arceneaux',  job: 'ExxonMobil Stone Oak TA',  returnDate: '05/05/2026' },
+  { id: 'HE-002', name: 'JLG 600S Boom Lift',        category: 'Aerial',          status: 'available',   assignedTo: null,              job: null,                        returnDate: null },
+  { id: 'HE-003', name: 'Skyjack 3226 Scissor Lift', category: 'Aerial',          status: 'checked-out', assignedTo: 'Wade Thibodaux',  job: 'Motiva Refinery Laydown',  returnDate: '05/06/2026' },
+  { id: 'HE-004', name: 'SkyTrak 10054 Telehandler', category: 'Material Handling',status: 'available',  assignedTo: null,              job: null,                        returnDate: null },
+  { id: 'HE-005', name: 'Komatsu PC210 Excavator',   category: 'Earthmoving',     status: 'checked-out', assignedTo: 'Curtis Fontenot', job: 'Hwy 69 Grade & Drain',     returnDate: '05/04/2026' },
+  { id: 'HE-006', name: 'John Deere 325G Skid Steer',category: 'Earthmoving',     status: 'available',   assignedTo: null,              job: null,                        returnDate: null },
+  { id: 'HE-007', name: 'Bomag BW120 Roller',        category: 'Compaction',      status: 'maintenance', assignedTo: null,              job: 'Shop — Drum Bearing',       returnDate: null },
+  { id: 'HE-008', name: 'Atlas Copco Air Compressor',category: 'Air & Power',     status: 'available',   assignedTo: null,              job: null,                        returnDate: null },
+  { id: 'HE-009', name: 'Multiquip Generator 25kW',  category: 'Air & Power',     status: 'checked-out', assignedTo: 'Paul Arceneaux',  job: 'ExxonMobil Stone Oak TA',  returnDate: '05/05/2026' },
+];
+
+var crew = [
+  { name: 'Dusty DuBois',    role: 'Branch Manager' },
+  { name: 'Paul Arceneaux',  role: 'Equipment Operator' },
+  { name: 'Wade Thibodaux',  role: 'Operator / Driver' },
+  { name: 'Curtis Fontenot', role: 'Field Technician' },
+];
+
+var activityLog = [
+  { type: 'out',   action: 'Genie Z-80 Boom Lift checked out',   detail: 'Assigned to Paul Arceneaux · ExxonMobil Stone Oak TA', time: 'Today 6:00 AM' },
+  { type: 'out',   action: 'Skyjack Scissor Lift checked out',   detail: 'Assigned to Wade Thibodaux · Motiva Refinery Laydown', time: 'Today 6:45 AM' },
+  { type: 'out',   action: 'Komatsu PC210 checked out',          detail: 'Assigned to Curtis Fontenot · Hwy 69 Grade & Drain',   time: 'Today 7:15 AM' },
+  { type: 'maint', action: 'Bomag Roller flagged for service',   detail: 'Drum bearing issue — pulled by Dusty DuBois',          time: 'Yesterday 4:30 PM' },
+  { type: 'in',    action: 'SkyTrak Telehandler returned',       detail: 'Returned by Wade Thibodaux · Good condition',          time: 'Yesterday 2:45 PM' },
+];
+
+var currentFilter = 'all';
+var activeCheckoutId = null;
+var activeReturnId = null;
+
+function updateKPIs() {
+  var total = equipment.length;
+  var out   = equipment.filter(function(e){ return e.status === 'checked-out'; }).length;
+  var avail = equipment.filter(function(e){ return e.status === 'available'; }).length;
+  var maint = equipment.filter(function(e){ return e.status === 'maintenance'; }).length;
+  document.getElementById('kpi-total').textContent = total;
+  document.getElementById('kpi-out').textContent   = out;
+  document.getElementById('kpi-avail').textContent  = avail;
+  document.getElementById('kpi-maint').textContent  = maint;
+}
+
+function renderCards() {
+  var container = document.getElementById('cards-container');
+  var filtered = currentFilter === 'all'
+    ? equipment
+    : equipment.filter(function(e){ return e.status === currentFilter; });
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>No equipment in this category.</p></div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(function(eq) {
+    var statusLabel = eq.status === 'checked-out' ? 'Checked Out'
+                    : eq.status === 'maintenance'  ? 'Maintenance'
+                    : 'Available';
+
+    var bottomContent = '';
+    if (eq.status === 'checked-out') {
+      bottomContent = '<div class="eq-assigned">Assigned to <span>' + eq.assignedTo + '</span> · ' + eq.job + '</div>'
+        + '<div class="eq-actions"><button class="btn-sm btn-return" onclick="openReturn(\'' + eq.id + '\', event)">Return</button></div>';
+    } else if (eq.status === 'available') {
+      bottomContent = '<div class="eq-assigned" style="color:var(--muted)">Ready for checkout</div>'
+        + '<div class="eq-actions"><button class="btn-sm btn-checkout" onclick="openCheckout(\'' + eq.id + '\', event)">Check Out</button></div>';
+    } else {
+      bottomContent = '<div class="eq-assigned" style="color:var(--yellow)">' + (eq.job || 'In shop for service') + '</div>'
+        + '<div class="eq-actions"><button class="btn-sm btn-return" onclick="openReturn(\'' + eq.id + '\', event)">Clear</button></div>';
+    }
+
+    return '<div class="eq-card">'
+      + '<div class="eq-card-accent ' + eq.status + '"></div>'
+      + '<div style="padding-left:8px">'
+      + '<div class="eq-top">'
+      + '<div><div class="eq-name">' + eq.name + '</div><div class="eq-id">' + eq.id + ' · ' + eq.category + '</div></div>'
+      + '<div class="status-badge ' + eq.status + '">' + statusLabel + '</div>'
+      + '</div>'
+      + (eq.returnDate ? '<div class="eq-meta"><div class="eq-meta-item">Return: <span>' + eq.returnDate + '</span></div></div>' : '')
+      + '<div class="eq-bottom">' + bottomContent + '</div>'
+      + '</div></div>';
+  }).join('');
+}
+
+function renderLog() {
+  var container = document.getElementById('log-container');
+  container.innerHTML = activityLog.map(function(entry) {
+    return '<div class="log-entry">'
+      + '<div class="log-dot ' + entry.type + '"></div>'
+      + '<div class="log-body">'
+      + '<div class="log-action">' + entry.action + '</div>'
+      + '<div class="log-detail">' + entry.detail + '</div>'
+      + '</div>'
+      + '<div class="log-time">' + entry.time + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function renderCrew() {
+  var container = document.getElementById('crew-container');
+  var itemsOut = {};
+  equipment.forEach(function(e) {
+    if (e.status === 'checked-out' && e.assignedTo) {
+      if (!itemsOut[e.assignedTo]) itemsOut[e.assignedTo] = [];
+      itemsOut[e.assignedTo].push(e.name);
+    }
+  });
+
+  container.innerHTML = crew.map(function(c) {
+    var items = itemsOut[c.name] || [];
+    var itemsHtml = items.length
+      ? '<div class="eq-meta" style="margin-top:6px"><div class="eq-meta-item">Has: <span>' + items.join(', ') + '</span></div></div>'
+      : '<div class="eq-meta" style="margin-top:6px"><div class="eq-meta-item" style="color:var(--muted)">No items checked out</div></div>';
+    return '<div class="eq-card">'
+      + '<div class="eq-top">'
+      + '<div><div class="eq-name">' + c.name + '</div><div class="eq-id">' + c.role + '</div></div>'
+      + '<div class="status-badge ' + (items.length ? 'checked-out' : 'available') + '">'
+      + (items.length ? items.length + ' Out' : 'Free') + '</div>'
+      + '</div>'
+      + itemsHtml
+      + '</div>';
+  }).join('');
+}
+
+function setFilter(filter, el) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  renderCards();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach(function(t, i){
+    t.classList.toggle('active', ['assets','log','crew'][i] === tab);
+  });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('page-' + tab).classList.add('active');
+  if (tab === 'log')  renderLog();
+  if (tab === 'crew') renderCrew();
+}
+
+function openCheckout(id, event) {
+  event.stopPropagation();
+  activeCheckoutId = id;
+  var eq = equipment.find(function(e){ return e.id === id; });
+  document.getElementById('checkout-title').textContent = 'Check Out — ' + eq.name;
+  var select = document.getElementById('checkout-person');
+  select.innerHTML = crew.map(function(c){
+    return '<option>' + c.name + '</option>';
+  }).join('');
+  var today = new Date();
+  today.setDate(today.getDate() + 3);
+  document.getElementById('checkout-date').value = today.toISOString().split('T')[0];
+  document.getElementById('checkout-job').value = '';
+  openModal('checkoutModal');
+}
+
+function openReturn(id, event) {
+  event.stopPropagation();
+  activeReturnId = id;
+  document.getElementById('return-notes').value = '';
+  openModal('returnModal');
+}
+
+function confirmCheckout() {
+  var eq = equipment.find(function(e){ return e.id === activeCheckoutId; });
+  var person = document.getElementById('checkout-person').value;
+  var job    = document.getElementById('checkout-job').value || 'Unspecified Job';
+  var date   = document.getElementById('checkout-date').value;
+  var parts  = date ? date.split('-') : null;
+  var formatted = parts ? (parts[1] + '/' + parts[2] + '/' + parts[0]) : '';
+  eq.status     = 'checked-out';
+  eq.assignedTo = person;
+  eq.job        = job;
+  eq.returnDate = formatted;
+  activityLog.unshift({ type: 'out', action: eq.name + ' checked out', detail: 'Assigned to ' + person + ' · ' + job, time: 'Just now' });
+  closeModal('checkoutModal');
+  renderCards();
+  updateKPIs();
+  showToast('✓ Checked out to ' + person);
+}
+
+function confirmReturn() {
+  var eq = equipment.find(function(e){ return e.id === activeReturnId; });
+  var condition = document.getElementById('return-condition').value;
+  var notes     = document.getElementById('return-notes').value;
+  var prevAssigned = eq.assignedTo || 'Unknown';
+  eq.status     = condition === 'needs-repair' ? 'maintenance' : 'available';
+  eq.assignedTo = null;
+  eq.job        = condition === 'needs-repair' ? 'Needs repair — flagged' : null;
+  eq.returnDate = null;
+  activityLog.unshift({ type: condition === 'needs-repair' ? 'maint' : 'in', action: eq.name + ' returned', detail: 'Returned by ' + prevAssigned + (notes ? ' · ' + notes : ''), time: 'Just now' });
+  closeModal('returnModal');
+  renderCards();
+  renderCrew();
+  updateKPIs();
+  showToast(condition === 'needs-repair' ? '⚠ Flagged for maintenance' : '✓ Returned to yard');
+}
+
+function openAddModal() { openModal('addModal'); }
+
+function addEquipment() {
+  var name   = document.getElementById('new-name').value.trim();
+  var assetId = document.getElementById('new-id').value.trim();
+  var cat    = document.getElementById('new-cat').value;
+  var status = document.getElementById('new-status').value;
+  if (!name) { showToast('Enter equipment name'); return; }
+  var id = assetId || ('EQ-' + String(equipment.length + 1).padStart(3,'0'));
+  equipment.push({ id: id, name: name, category: cat, status: status, assignedTo: null, job: null, returnDate: null });
+  activityLog.unshift({ type: 'in', action: name + ' added to fleet', detail: id + ' · ' + cat, time: 'Just now' });
+  closeModal('addModal');
+  document.getElementById('new-name').value = '';
+  document.getElementById('new-id').value = '';
+  renderCards();
+  updateKPIs();
+  showToast('✓ ' + name + ' added');
+}
+
+function openCrewModal() { openModal('crewModal'); }
+
+function addCrew() {
+  var name = document.getElementById('crew-name').value.trim();
+  var role = document.getElementById('crew-role').value.trim();
+  if (!name) { showToast('Enter a name'); return; }
+  crew.push({ name: name, role: role || 'Crew Member' });
+  closeModal('crewModal');
+  document.getElementById('crew-name').value = '';
+  document.getElementById('crew-role').value = '';
+  renderCrew();
+  showToast('✓ ' + name + ' added to crew');
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+// INIT
+updateKPIs();
+renderCards();
+</script>
+<!-- POWERED BY FOOTER -->
+<div class="powered-by">
+  <a href="https://seegsonsolutions.com" target="_blank">Built by Seegson Solutions</a>
+</div>
+
+</body>
+</html>

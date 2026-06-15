@@ -177,6 +177,7 @@
   }
 
   .kpi-val.green { color: var(--green); }
+  .green-text { color: var(--green); }
   .kpi-val.red   { color: var(--red); }
   .kpi-val.amber { color: var(--amber); }
 
@@ -188,6 +189,32 @@
     color: var(--muted);
     text-transform: uppercase;
     line-height: 1.3;
+  }
+
+
+  /* ── EDITABLE KPI ── */
+  .kpi-box {
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s;
+  }
+
+  .kpi-box:hover { background: #eef3fb; }
+  .kpi-box:hover::after {
+    content: '✎';
+    position: absolute;
+    top: 4px; right: 5px;
+    font-size: 9px;
+    color: var(--blue);
+    opacity: 0.7;
+  }
+
+  .kpi-edit-hint {
+    font-size: 7px;
+    color: rgba(0,115,207,0.5);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
   }
 
   /* ── SECTION CARD ── */
@@ -723,7 +750,7 @@
 <div class="header">
   <div class="header-top">
     <div class="header-brand">
-      <div class="header-exxon">B&E · PSMS</div>
+      <div class="header-exxon">ExxonMobil · PSMS</div>
       <div class="header-title">Safety Scorecard</div>
     </div>
     <div class="header-vendor">
@@ -744,46 +771,50 @@
 <div class="nav">
   <div class="nav-tab active" onclick="switchTab('scorecard')">Scorecard</div>
   <div class="nav-tab" onclick="switchTab('trend')">Trend</div>
-  <div class="nav-tab" onclick="switchTab('buddy')">Buddy Mgr</div>
   <div class="nav-tab" onclick="switchTab('log')">Event Log</div>
 </div>
 
 <!-- ══ SCORECARD TAB ══ -->
 <div class="page active" id="page-scorecard">
 
-  <!-- KPI Strip -->
+  <!-- KPI Strip — tap any box to edit -->
   <div class="kpi-strip">
-    <div class="kpi-box">
-      <div class="kpi-val green">81</div>
+    <div class="kpi-box" onclick="editKPI('fte','FTE','81','number')">
+      <div class="kpi-val green" id="kpi-fte">81</div>
       <div class="kpi-label">FTE</div>
+      <div class="kpi-edit-hint">tap to edit</div>
     </div>
-    <div class="kpi-box">
-      <div class="kpi-val green">100%</div>
+    <div class="kpi-box" onclick="editKPI('leaders','Leaders Trained','100%','text')">
+      <div class="kpi-val green" id="kpi-leaders">100%</div>
       <div class="kpi-label">Leaders Trained</div>
+      <div class="kpi-edit-hint">tap to edit</div>
     </div>
-    <div class="kpi-box">
-      <div class="kpi-val green">0%</div>
+    <div class="kpi-box" onclick="editKPI('turnover','Avg % Turnover','0%','text')">
+      <div class="kpi-val green" id="kpi-turnover">0%</div>
       <div class="kpi-label">Turnover</div>
+      <div class="kpi-edit-hint">tap to edit</div>
     </div>
-    <div class="kpi-box">
-      <div class="kpi-val amber">5%</div>
+    <div class="kpi-box" onclick="editKPI('ssw','Avg % SSW','5%','text')">
+      <div class="kpi-val amber" id="kpi-ssw">5%</div>
       <div class="kpi-label">Avg % SSW</div>
+      <div class="kpi-edit-hint">tap to edit</div>
     </div>
-    <div class="kpi-box">
-      <div class="kpi-val green">0</div>
+    <div class="kpi-box" onclick="editKPI('rec','Recordables','0','number')">
+      <div class="kpi-val green" id="kpi-rec">0</div>
       <div class="kpi-label">Recordables</div>
+      <div class="kpi-edit-hint">tap to edit</div>
     </div>
   </div>
 
-  <!-- Big stat row -->
+  <!-- Big stat row — tap to edit -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-bottom:1px solid var(--border);">
-    <div style="background:var(--white);padding:14px 16px;">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">LTIs</div>
-      <div style="font-size:36px;font-weight:700;color:var(--green);letter-spacing:-2px;line-height:1;">0</div>
+    <div style="background:var(--white);padding:14px 16px;cursor:pointer;position:relative;transition:background 0.15s;" onclick="editKPI('lti','# LTIs','0','number')" onmouseover="this.style.background='#eef3fb'" onmouseout="this.style.background='var(--white)'">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">LTIs <span style="color:rgba(0,115,207,0.45);font-size:8px;">✎</span></div>
+      <div style="font-size:36px;font-weight:700;letter-spacing:-2px;line-height:1;" id="big-lti" class="green-text">0</div>
     </div>
-    <div style="background:var(--white);padding:14px 16px;">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Recordables</div>
-      <div style="font-size:36px;font-weight:700;color:var(--green);letter-spacing:-2px;line-height:1;">0</div>
+    <div style="background:var(--white);padding:14px 16px;cursor:pointer;position:relative;transition:background 0.15s;" onclick="editKPI('rec','# Recordables','0','number')" onmouseover="this.style.background='#eef3fb'" onmouseout="this.style.background='var(--white)'">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Recordables <span style="color:rgba(0,115,207,0.45);font-size:8px;">✎</span></div>
+      <div style="font-size:36px;font-weight:700;letter-spacing:-2px;line-height:1;" id="big-rec" class="green-text">0</div>
     </div>
   </div>
 
@@ -922,57 +953,6 @@
           </tr>
         </tbody>
       </table>
-    </div>
-  </div>
-
-  <div class="spacer"></div>
-  <div class="powered-by"><a href="https://seegsonsolutions.com" target="_blank">Built by Seegson Solutions · seegsonsolutions.com</a></div>
-</div>
-
-<!-- ══ BUDDY MANAGER TAB ══ -->
-<div class="page" id="page-buddy">
-
-  <div class="section-card" style="margin-top:12px;">
-    <div class="section-head">
-      <div class="section-head-title">Buddy Manager Insights</div>
-      <div class="section-head-sub">May 2026 · ExxonMobil</div>
-    </div>
-
-    <div class="buddy-section">
-      <div class="buddy-col">
-        <div class="buddy-col-label">SITM — Safety In The Moment</div>
-        <div class="buddy-col-text">Continuing to emphasize purposeful PTBs, strong two-way engagement, verification of safeguards throughout the activity, and reinforcing the use of stop work authority when needed. Emphasizing with the contractor the importance of providing feedback through all layers and not just to the front line supervisor. Field walk V&V identified a task likely suited for an LMRA rather than a PTB; however, the Crew Leader proceeded with a PTB to ensure clarity across the crew. 2nd line encouraged the Crew Leader to be comfortable in making the decision to use LMRAs in place of a PTB when appropriate.</div>
-      </div>
-      <div class="buddy-col">
-        <div class="buddy-col-label">Capacity</div>
-        <div class="buddy-col-text">Individual development plans are being reviewed for all supervisor levels, testing development areas during walks, with a focus on strengthening safety capacity. Field walks have been including 2nd Line more frequently, with an emphasis on observing developments and providing layered feedback.</div>
-      </div>
-      <div class="buddy-col">
-        <div class="buddy-col-label">Special</div>
-        <div class="buddy-col-text empty">No Comments Provided</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- B&E Self-Assessment -->
-  <div class="section-card">
-    <div class="section-head">
-      <div class="section-head-title">B&amp;E Self-Assessment</div>
-      <div class="section-head-sub">Internal · Weekly Prep</div>
-    </div>
-    <div class="buddy-section">
-      <div class="buddy-col">
-        <div class="buddy-col-label">SITM — Our View</div>
-        <textarea class="comment-textarea" style="border:none;background:transparent;padding:0;min-height:80px;" placeholder="What are we doing well in Safety In The Moment this week? What do we expect the buddy manager to note?">Our crew leaders are consistently leading PTBs at task start. Stop work authority was exercised twice this week — both appropriate. Reinforcing LMRA vs PTB decision-making in daily briefings.</textarea>
-      </div>
-      <div class="buddy-col">
-        <div class="buddy-col-label">Capacity — Our View</div>
-        <textarea class="comment-textarea" style="border:none;background:transparent;padding:0;min-height:80px;" placeholder="Leadership development and capacity notes...">Supervisor development plans reviewed in weekly safety meeting. 2nd line participation in field walks increased from 1 to 3 this month. Layered feedback observations on track.</textarea>
-      </div>
-      <div class="buddy-col">
-        <div class="buddy-col-label">Special — Our View</div>
-        <textarea class="comment-textarea" style="border:none;background:transparent;padding:0;min-height:80px;" placeholder="Any special items to note or prepare for...">No special items this period.</textarea>
-      </div>
     </div>
   </div>
 
@@ -1123,6 +1103,29 @@
   </div>
 </div>
 
+
+<!-- KPI Edit Modal -->
+<div class="modal-overlay" id="kpiEditModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="kpi-edit-label">Edit KPI</div>
+    <div class="modal-sub">B&amp;E Resources · May 2026</div>
+    <input type="hidden" id="kpi-edit-key">
+    <div class="modal-field">
+      <label>Value</label>
+      <input type="text" id="kpi-edit-input" placeholder="Enter value...">
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:-6px;margin-bottom:12px;font-family:'IBM Plex Mono',monospace;line-height:1.6;">
+      Include % sign if percentage (e.g. 5%)<br>
+      Enter number only for FTE, LTIs, Recordables
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('kpiEditModal')">Cancel</button>
+      <button class="btn-confirm" onclick="saveKPI()">Save</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -1197,7 +1200,7 @@
 
   // ── TABS ──
   function switchTab(tab) {
-    var tabs = ['scorecard','trend','buddy','log'];
+    var tabs = ['scorecard','trend','log'];
     document.querySelectorAll('.nav-tab').forEach(function(t, i) {
       t.classList.toggle('active', tabs[i] === tab);
     });
@@ -1293,6 +1296,60 @@
     t.className = 'toast' + (type ? ' ' + type : '');
     t.classList.add('show');
     setTimeout(function() { t.classList.remove('show'); }, 2400);
+  }
+
+  // ── EDIT KPI ──
+  function editKPI(key, label, current, type) {
+    openModal('kpiEditModal');
+    document.getElementById('kpi-edit-label').textContent = 'Edit — ' + label;
+    document.getElementById('kpi-edit-input').value = current;
+    document.getElementById('kpi-edit-input').type = type === 'number' ? 'text' : 'text';
+    document.getElementById('kpi-edit-key').value  = key;
+  }
+
+  function saveKPI() {
+    var key = document.getElementById('kpi-edit-key').value;
+    var val = document.getElementById('kpi-edit-input').value.trim();
+    if (!val) return;
+
+    // Update KPI strip
+    var stripEl = document.getElementById('kpi-' + key);
+    if (stripEl) stripEl.textContent = val;
+
+    // Update big stat boxes
+    if (key === 'lti') {
+      var bigLTI = document.getElementById('big-lti');
+      if (bigLTI) {
+        bigLTI.textContent = val;
+        bigLTI.style.color = (parseInt(val) > 0) ? 'var(--red)' : 'var(--green)';
+      }
+    }
+
+    if (key === 'rec') {
+      var bigREC = document.getElementById('big-rec');
+      if (bigREC) {
+        bigREC.textContent = val;
+        bigREC.style.color = (parseInt(val) > 0) ? 'var(--red)' : 'var(--green)';
+      }
+      // Also update kpi strip rec color
+      var kpiRec = document.getElementById('kpi-rec');
+      if (kpiRec) kpiRec.style.color = (parseInt(val) > 0) ? 'var(--red)' : 'var(--green)';
+    }
+
+    // Color logic for strip values
+    if (stripEl) {
+      var num = parseFloat(val);
+      if (key === 'ssw') {
+        stripEl.style.color = num > 10 ? 'var(--red)' : num > 5 ? 'var(--amber)' : 'var(--green)';
+      } else if (key === 'turnover') {
+        stripEl.style.color = num > 5 ? 'var(--red)' : num > 2 ? 'var(--amber)' : 'var(--green)';
+      } else if (key === 'leaders') {
+        stripEl.style.color = num < 90 ? 'var(--red)' : num < 100 ? 'var(--amber)' : 'var(--green)';
+      }
+    }
+
+    closeModal('kpiEditModal');
+    showToast('✓ ' + label + ' updated to ' + val, 'ok');
   }
 
   // ── INIT ──

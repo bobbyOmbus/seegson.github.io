@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PSMS Scorecard — B&E Resources</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:   #1a2744;
+    --navy2:  #243057;
+    --blue:   #0073cf;
+    --blue2:  #005ea8;
+    --green:  #1a7a4a;
+    --red:    #b83232;
+    --amber:  #c47d0e;
+    --paper:  #f5f7fa;
+    --white:  #ffffff;
+    --border: #d0d5de;
+    --text:   #1a1e2a;
+    --muted:  #5a6278;
+    --row-alt:#f0f3f8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--paper);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--navy);
+    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--blue);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .header-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+    .header-exxon {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.3px;
+  }
+
+  .header-vendor {
+    text-align: right;
+  }
+
+  .vendor-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 2px;
+  }
+
+  .vendor-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .header-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+  }
+
+  .header-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.3px;
+    line-height: 1.6;
+  }
+
+  .header-month {
+    font-size: 13px;
+    font-weight: 600;
+    color: #7eb8f7;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    flex-shrink: 0;
+    padding: 10px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; animation: fadeUp 0.18s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── KPI STRIP ── */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .kpi-box {
+    background: var(--white);
+    padding: 10px 6px;
+    text-align: center;
+  }
+
+  .kpi-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.5px;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .kpi-val.green { color: var(--green); }
+  .kpi-val.red   { color: var(--red); }
+  .kpi-val.amber { color: var(--amber); }
+
+  .kpi-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 7.5px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin: 12px 12px 0;
+    overflow: hidden;
+  }
+
+  .section-card:last-child { margin-bottom: 24px; }
+
+  .section-head {
+    background: var(--navy);
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .section-head-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .section-head-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+  }
+
+  /* ── INCIDENT TABLE ── */
+  .incident-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  .incident-table th {
+    background: var(--row-alt);
+    padding: 6px 5px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .incident-table th:first-child {
+    text-align: left;
+    padding-left: 10px;
+    width: 72px;
+  }
+
+  .incident-table th.total-col {
+    background: var(--navy);
+    color: var(--white);
+    border-right: none;
+  }
+
+  .incident-table td {
+    padding: 7px 4px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    color: var(--text);
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.1s;
+    position: relative;
+  }
+
+  .incident-table td:hover { background: #eef3fb; }
+
+  .incident-table td:first-child {
+    text-align: left;
+    padding-left: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: default;
+    background: var(--row-alt);
+  }
+
+  .incident-table td:first-child:hover { background: var(--row-alt); }
+
+  .incident-table td.total-col {
+    font-weight: 700;
+    background: var(--row-alt);
+    border-right: none;
+  }
+
+  .incident-table tr.total-row td {
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 700;
+    border-bottom: none;
+  }
+
+  .incident-table tr.total-row td:first-child {
+    color: var(--white);
+    background: var(--navy);
+  }
+
+  .incident-table tr.total-row td.total-col {
+    background: var(--navy2);
+    color: #7eb8f7;
+  }
+
+  .cell-nonzero { color: var(--red) !important; font-weight: 700 !important; }
+
+  /* ── TREND TABLE ── */
+  .trend-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  .trend-table th {
+    background: var(--row-alt);
+    padding: 6px 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .trend-table th:first-child { text-align: left; padding-left: 12px; }
+
+  .trend-table td {
+    padding: 7px 8px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .trend-table td:first-child {
+    text-align: left;
+    padding-left: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    background: var(--row-alt);
+  }
+
+  .trend-table tr.total-row td {
+    font-weight: 700;
+    background: var(--navy);
+    color: var(--white);
+    border-bottom: none;
+  }
+
+  .trend-table tr.total-row td:first-child {
+    color: var(--white);
+    background: var(--navy);
+  }
+
+  /* ── COMMENTS ── */
+  .comment-section { padding: 12px 14px; }
+
+  .comment-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .comment-row:last-child { margin-bottom: 0; }
+
+  .comment-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+    width: 56px;
+    padding-top: 10px;
+  }
+
+  .comment-textarea {
+    flex: 1;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 8px 10px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.55;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    min-height: 64px;
+  }
+
+  .comment-textarea:focus { border-color: var(--blue); }
+  .comment-textarea.readonly { background: var(--row-alt); color: var(--muted); font-style: italic; }
+
+  /* ── BUDDY MANAGER INSIGHTS ── */
+  .buddy-section { padding: 0; }
+
+  .buddy-col {
+    border-bottom: 1px solid var(--border);
+    padding: 12px 14px;
+  }
+
+  .buddy-col:last-child { border-bottom: none; }
+
+  .buddy-col-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+
+  .buddy-col-text {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .buddy-col-text.empty { color: var(--muted); font-style: italic; }
+
+  /* ── LOG ENTRIES ── */
+  .log-list { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 8px; }
+
+  .log-entry {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 14px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .log-entry:hover { border-color: #aab6cc; }
+
+  .log-entry::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+
+  .log-entry.recordable::before { background: var(--red); }
+  .log-entry.near-miss::before  { background: var(--amber); }
+  .log-entry.lti::before        { background: #8b2222; }
+  .log-entry.good::before       { background: var(--green); }
+
+  .log-entry-inner { padding-left: 8px; }
+
+  .log-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+
+  .log-type {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .log-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .log-desc {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 6px;
+    font-weight: 300;
+  }
+
+  .log-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .badge-red    { background: rgba(184,50,50,0.1);  color: var(--red);   border: 1px solid rgba(184,50,50,0.2); }
+  .badge-amber  { background: rgba(196,125,14,0.1); color: var(--amber); border: 1px solid rgba(196,125,14,0.2); }
+  .badge-green  { background: rgba(26,122,74,0.1);  color: var(--green); border: 1px solid rgba(26,122,74,0.2); }
+  .badge-blue   { background: rgba(0,115,207,0.1);  color: var(--blue);  border: 1px solid rgba(0,115,207,0.2); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,39,68,0.65);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--white);
+    border-radius: 12px 12px 0 0;
+    border-top: 3px solid var(--blue);
+    width: 100%;
+    max-width: 480px;
+    padding: 20px 18px 40px;
+    animation: slideUp 0.22s ease;
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .modal-handle {
+    width: 32px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+
+  .modal-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 3px;
+    letter-spacing: -0.3px;
+  }
+
+  .modal-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .modal-field { margin-bottom: 14px; }
+
+  .modal-field label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .modal-field input,
+  .modal-field select,
+  .modal-field textarea {
+    width: 100%;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+    -webkit-appearance: none;
+  }
+
+  .modal-field input:focus,
+  .modal-field select:focus,
+  .modal-field textarea:focus { border-color: var(--blue); }
+
+  .modal-field select option { background: var(--white); }
+
+  .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+  .btn-cancel {
+    flex: 1;
+    padding: 11px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .btn-confirm {
+    flex: 2;
+    padding: 11px;
+    background: var(--blue);
+    border: none;
+    border-radius: 4px;
+    color: var(--white);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .btn-confirm:active { opacity: 0.8; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(70px);
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 10px 20px;
+    border-radius: 3px;
+    z-index: 300;
+    transition: transform 0.28s ease, opacity 0.28s;
+    opacity: 0;
+    white-space: nowrap;
+    border-left: 3px solid var(--blue);
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast.ok   { border-left-color: var(--green); }
+
+  /* ── MISC ── */
+  .btn-add {
+    background: var(--blue);
+    color: var(--white);
+    border: none;
+    border-radius: 3px;
+    padding: 6px 13px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .btn-add:active { opacity: 0.75; }
+
+  .empty-state {
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  .empty-state .empty-icon { font-size: 28px; margin-bottom: 10px; }
+  .empty-state p { font-size: 12px; line-height: 1.6; }
+
+  .spacer { height: 24px; }
+
+  .powered-by {
+    text-align: center;
+    padding: 16px 20px 32px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+
+  .powered-by a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .powered-by a:hover { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="header-brand">
+      <div class="header-exxon">ExxonMobil · PSMS</div>
+      <div class="header-title">Safety Scorecard</div>
+    </div>
+    <div class="header-vendor">
+      <div class="vendor-label">Vendor</div>
+      <div class="vendor-name">B&amp;E Resources</div>
+    </div>
+  </div>
+  <div class="header-bottom">
+    <div class="header-meta">
+      Last Updated: 6/15/2026 10:04 AM<br>
+      Week of: Jun 9–15, 2026
+    </div>
+    <div class="header-month" id="current-period">May 2026</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-tab active" onclick="switchTab('scorecard')">Scorecard</div>
+  <div class="nav-tab" onclick="switchTab('trend')">Trend</div>
+  <div class="nav-tab" onclick="switchTab('buddy')">Buddy Mgr</div>
+  <div class="nav-tab" onclick="switchTab('log')">Event Log</div>
+</div>
+
+<!-- ══ SCORECARD TAB ══ -->
+<div class="page active" id="page-scorecard">
+
+  <!-- KPI Strip -->
+  <div class="kpi-strip">
+    <div class="kpi-box">
+      <div class="kpi-val green">81</div>
+      <div class="kpi-label">FTE</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-val green">100%</div>
+      <div class="kpi-label">Leaders Trained</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-val green">0%</div>
+      <div class="kpi-label">Turnover</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-val amber">5%</div>
+      <div class="kpi-label">Avg % SSW</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-val green">0</div>
+      <div class="kpi-label">Recordables</div>
+    </div>
+  </div>
+
+  <!-- Big stat row -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-bottom:1px solid var(--border);">
+    <div style="background:var(--white);padding:14px 16px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">LTIs</div>
+      <div style="font-size:36px;font-weight:700;color:var(--green);letter-spacing:-2px;line-height:1;">0</div>
+    </div>
+    <div style="background:var(--white);padding:14px 16px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Recordables</div>
+      <div style="font-size:36px;font-weight:700;color:var(--green);letter-spacing:-2px;line-height:1;">0</div>
+    </div>
+  </div>
+
+  <!-- Incident Matrix -->
+  <div class="section-card">
+    <div class="section-head">
+      <div class="section-head-title">Incident Matrix — By Craft</div>
+      <button class="btn-add" onclick="openModal('logEventModal')">+ Log Event</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="incident-table" id="incident-matrix">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>BC/OPE</th>
+            <th>BSC</th>
+            <th>CSE</th>
+            <th>DRV</th>
+            <th>EI</th>
+            <th>EXC</th>
+            <th>HW</th>
+            <th>LOF</th>
+            <th>SML</th>
+            <th>WAME</th>
+            <th>WA</th>
+            <th>WAH</th>
+            <th class="total-col">Total</th>
+          </tr>
+        </thead>
+        <tbody id="matrix-body">
+          <!-- Rendered by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Comments -->
+  <div class="section-card">
+    <div class="section-head">
+      <div class="section-head-title">Comments</div>
+      <div class="section-head-sub">B&amp;E Internal</div>
+    </div>
+    <div class="comment-section">
+      <div class="comment-row">
+        <div class="comment-label">General</div>
+        <textarea class="comment-textarea" id="comment-general" placeholder="Add internal comments for this period...">No Comments Provided</textarea>
+      </div>
+      <div class="comment-row">
+        <div class="comment-label">LTI Notes</div>
+        <textarea class="comment-textarea" id="comment-lti" placeholder="LTI-specific notes...">No Comments Provided</textarea>
+      </div>
+      <div class="comment-row">
+        <div class="comment-label">REC Notes</div>
+        <textarea class="comment-textarea" id="comment-rec" placeholder="Recordable-specific notes...">No Comments Provided</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="powered-by"><a href="https://seegsonsolutions.com" target="_blank">Built by Seegson Solutions · seegsonsolutions.com</a></div>
+</div>
+
+<!-- ══ TREND TAB ══ -->
+<div class="page" id="page-trend">
+
+  <div class="section-card" style="margin-top:12px;">
+    <div class="section-head">
+      <div class="section-head-title">Historical Trend</div>
+      <div class="section-head-sub">LY · YTD · Quarterly</div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="trend-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>LY</th>
+            <th>YTD</th>
+            <th>4Q25</th>
+            <th>1Q26</th>
+            <th>2Q26</th>
+            <th>3Q26</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td># Recordables</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>—</td>
+          </tr>
+          <tr>
+            <td># LTIs</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>—</td>
+          </tr>
+          <tr class="total-row">
+            <td>Total</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- KPI History -->
+  <div class="section-card">
+    <div class="section-head">
+      <div class="section-head-title">KPI History</div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="trend-table">
+        <thead>
+          <tr>
+            <th>KPI</th>
+            <th>LY</th>
+            <th>YTD</th>
+            <th>4Q25</th>
+            <th>1Q26</th>
+            <th>2Q26</th>
+            <th>3Q26</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>FTE</td>
+            <td>74</td><td>81</td><td>78</td><td>80</td><td>81</td><td>—</td>
+          </tr>
+          <tr>
+            <td>% Leaders Trained</td>
+            <td>96%</td><td>100%</td><td>98%</td><td>100%</td><td>100%</td><td>—</td>
+          </tr>
+          <tr>
+            <td>% Turnover</td>
+            <td>4%</td><td>0%</td><td>2%</td><td>0%</td><td>0%</td><td>—</td>
+          </tr>
+          <tr>
+            <td>% SSW</td>
+            <td>8%</td><td>5%</td><td>6%</td><td>5%</td><td>5%</td><td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="powered-by"><a href="https://seegsonsolutions.com" target="_blank">Built by Seegson Solutions · seegsonsolutions.com</a></div>
+</div>
+
+<!-- ══ BUDDY MANAGER TAB ══ -->
+<div class="page" id="page-buddy">
+
+  <div class="section-card" style="margin-top:12px;">
+    <div class="section-head">
+      <div class="section-head-title">Buddy Manager Insights</div>
+      <div class="section-head-sub">May 2026 · ExxonMobil</div>
+    </div>
+
+    <div class="buddy-section">
+      <div class="buddy-col">
+        <div class="buddy-col-label">SITM — Safety In The Moment</div>
+        <div class="buddy-col-text">Continuing to emphasize purposeful PTBs, strong two-way engagement, verification of safeguards throughout the activity, and reinforcing the use of stop work authority when needed. Emphasizing with the contractor the importance of providing feedback through all layers and not just to the front line supervisor. Field walk V&V identified a task likely suited for an LMRA rather than a PTB; however, the Crew Leader proceeded with a PTB to ensure clarity across the crew. 2nd line encouraged the Crew Leader to be comfortable in making the decision to use LMRAs in place of a PTB when appropriate.</div>
+      </div>
+      <div class="buddy-col">
+        <div class="buddy-col-label">Capacity</div>
+        <div class="buddy-col-text">Individual development plans are being reviewed for all supervisor levels, testing development areas during walks, with a focus on strengthening safety capacity. Field walks have been including 2nd Line more frequently, with an emphasis on observing developments and providing layered feedback.</div>
+      </div>
+      <div class="buddy-col">
+        <div class="buddy-col-label">Special</div>
+        <div class="buddy-col-text empty">No Comments Provided</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B&E Self-Assessment -->
+  <div class="section-card">
+    <div class="section-head">
+      <div class="section-head-title">B&amp;E Self-Assessment</div>
+      <div class="section-head-sub">Internal · Weekly Prep</div>
+    </div>
+    <div class="buddy-section">
+      <div class="buddy-col">
+        <div class="buddy-col-label">SITM — Our View</div>
+        <textarea class="comment-textarea" style="border:none;background:transparent;padding:0;min-height:80px;" placeholder="What are we doing well in Safety In The Moment this week? What do we expect the buddy manager to note?">Our crew leaders are consistently leading PTBs at task start. Stop work authority was exercised twice this week — both appropriate. Reinforcing LMRA vs PTB decision-making in daily briefings.</textarea>
+      </div>
+      <div class="buddy-col">
+        <div class="buddy-col-label">Capacity — Our View</div>
+        <textarea class="comment-textarea" style="border:none;background:transparent;padding:0;min-height:80px;" placeholder="Leadership development and capacity notes...">Supervisor development plans reviewed in weekly safety meeting. 2nd line participation in field walks increased from 1 to 3 this month. Layered feedback observations on track.</textarea>
+      </div>
+      <div class="buddy-col">
+        <div class="buddy-col-label">Special — Our View</div>
+        <textarea class="comment-textarea" style="border:none;background:transparent;padding:0;min-height:80px;" placeholder="Any special items to note or prepare for...">No special items this period.</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="powered-by"><a href="https://seegsonsolutions.com" target="_blank">Built by Seegson Solutions · seegsonsolutions.com</a></div>
+</div>
+
+<!-- ══ EVENT LOG TAB ══ -->
+<div class="page" id="page-log">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 12px 0;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);">Event Log · May 2026</div>
+    <button class="btn-add" onclick="openModal('logEventModal')">+ Log Event</button>
+  </div>
+
+  <div class="log-list" id="event-log-list">
+    <!-- Sample entries showing zero incidents -->
+    <div class="log-entry good">
+      <div class="log-entry-inner">
+        <div class="log-top">
+          <div>
+            <div class="log-type" style="color:var(--green)">Stop Work Authority Used</div>
+            <div class="log-meta">Craft: WA · Crew Leader: Marcus Webb</div>
+          </div>
+          <div>
+            <span class="badge badge-green">SWA</span>
+            <div class="log-date">May 6</div>
+          </div>
+        </div>
+        <div class="log-desc">Worker identified an unsecured overhead load path. SWA exercised, area cleared, lift replanned and completed safely.</div>
+        <div class="log-meta">Location: BTRP Unit 4 · Resolved ✓</div>
+      </div>
+    </div>
+
+    <div class="log-entry good">
+      <div class="log-entry-inner">
+        <div class="log-top">
+          <div>
+            <div class="log-type" style="color:var(--green)">PTB / LMRA Observation</div>
+            <div class="log-meta">Craft: HW · Supervisor: Trey Leblanc</div>
+          </div>
+          <div>
+            <span class="badge badge-blue">OBS</span>
+            <div class="log-date">May 5</div>
+          </div>
+        </div>
+        <div class="log-desc">Task suited for LMRA rather than full PTB. Crew Leader chose PTB for clarity. 2nd line coaching provided on LMRA vs PTB decision criteria.</div>
+        <div class="log-meta">Location: BTRP Unit 4 · Coaching note added</div>
+      </div>
+    </div>
+
+    <div class="log-entry good">
+      <div class="log-entry-inner">
+        <div class="log-top">
+          <div>
+            <div class="log-type" style="color:var(--green)">Field Walk V&amp;V</div>
+            <div class="log-meta">2nd Line · Danny Arceneaux</div>
+          </div>
+          <div>
+            <span class="badge badge-blue">Walk</span>
+            <div class="log-date">May 3</div>
+          </div>
+        </div>
+        <div class="log-desc">2nd line participated in field walk. Strong engagement observed. Layered feedback provided to front-line supervisor. No safety gaps identified.</div>
+        <div class="log-meta">Location: Fab Shop · Chance Dr</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="powered-by"><a href="https://seegsonsolutions.com" target="_blank">Built by Seegson Solutions · seegsonsolutions.com</a></div>
+</div>
+
+<!-- ══ MODALS ══ -->
+
+<!-- Log Event Modal -->
+<div class="modal-overlay" id="logEventModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Log Safety Event</div>
+    <div class="modal-sub">B&amp;E Resources · May 2026</div>
+
+    <div class="modal-field">
+      <label>Event Type</label>
+      <select id="ev-type">
+        <option value="near-miss">Near Miss</option>
+        <option value="recordable">Recordable Injury</option>
+        <option value="lti">Lost Time Injury (LTI)</option>
+        <option value="good">Positive Observation / SWA</option>
+        <option value="good">PTB / LMRA Observation</option>
+        <option value="good">Field Walk V&V</option>
+        <option value="good">First Aid</option>
+      </select>
+    </div>
+
+    <div class="modal-row">
+      <div class="modal-field">
+        <label>Craft Type</label>
+        <select id="ev-craft">
+          <option>BC/OPE</option>
+          <option>BSC</option>
+          <option>CSE</option>
+          <option>DRV</option>
+          <option>EI</option>
+          <option>EXC</option>
+          <option>HW</option>
+          <option>LOF</option>
+          <option>SML</option>
+          <option>WAME</option>
+          <option>WA</option>
+          <option>WAH</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Date</label>
+        <input type="date" id="ev-date">
+      </div>
+    </div>
+
+    <div class="modal-field">
+      <label>Location / Unit</label>
+      <input type="text" id="ev-location" placeholder="e.g. BTRP Unit 4, Fab Shop">
+    </div>
+
+    <div class="modal-field">
+      <label>Supervisor / Crew Leader</label>
+      <input type="text" id="ev-supervisor" placeholder="Name">
+    </div>
+
+    <div class="modal-field">
+      <label>Description</label>
+      <textarea id="ev-desc" rows="4" placeholder="Describe what happened, what was done, outcome..."></textarea>
+    </div>
+
+    <div class="modal-field">
+      <label>Reportable to ExxonMobil?</label>
+      <select id="ev-reportable">
+        <option>No — Internal record only</option>
+        <option>Yes — Will appear on PSMS scorecard</option>
+        <option>Under Review</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('logEventModal')">Cancel</button>
+      <button class="btn-confirm" onclick="logEvent()">Log Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── DATA ──
+  var crafts = ['BC/OPE','BSC','CSE','DRV','EI','EXC','HW','LOF','SML','WAME','WA','WAH'];
+  var rows   = ['ACTUAL','NEAR MISS','TRIs','Total'];
+
+  // Matrix data — all zeros for B&E's clean month
+  var matrix = {
+    'ACTUAL':    [0,0,0,0,0,0,0,0,0,0,0,0],
+    'NEAR MISS': [0,0,0,0,0,0,0,0,0,0,0,0],
+    'TRIs':      [0,0,0,0,0,0,0,0,0,0,0,0],
+    'Total':     [0,0,0,0,0,0,0,0,0,0,0,0]
+  };
+
+  // ── RENDER MATRIX ──
+  function renderMatrix() {
+    var tbody = document.getElementById('matrix-body');
+    tbody.innerHTML = '';
+
+    rows.forEach(function(row) {
+      var tr = document.createElement('tr');
+      if (row === 'Total') tr.className = 'total-row';
+
+      // Row label
+      var tdLabel = document.createElement('td');
+      tdLabel.textContent = row;
+      tr.appendChild(tdLabel);
+
+      var rowTotal = 0;
+      crafts.forEach(function(craft, ci) {
+        var val = matrix[row][ci];
+        rowTotal += val;
+        var td = document.createElement('td');
+        td.textContent = val;
+        if (val > 0) td.className = 'cell-nonzero';
+        if (row !== 'Total') {
+          td.onclick = (function(r, c) {
+            return function() { openCellEdit(r, c); };
+          })(row, ci);
+        }
+        tr.appendChild(td);
+      });
+
+      // Total column
+      var tdTotal = document.createElement('td');
+      tdTotal.className = 'total-col';
+      tdTotal.textContent = rowTotal;
+      if (rowTotal > 0) tdTotal.style.color = '#e05555';
+      tr.appendChild(tdTotal);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function openCellEdit(row, craftIndex) {
+    var current = matrix[row][craftIndex];
+    var craft   = crafts[craftIndex];
+    var newVal  = prompt('Enter count for ' + row + ' · ' + craft + ':', current);
+    if (newVal === null) return;
+    var num = parseInt(newVal, 10);
+    if (isNaN(num) || num < 0) return;
+    matrix[row][craftIndex] = num;
+    // Recalc total row
+    crafts.forEach(function(c, i) {
+      matrix['Total'][i] = matrix['ACTUAL'][i] + matrix['NEAR MISS'][i] + matrix['TRIs'][i];
+    });
+    renderMatrix();
+    showToast('✓ ' + craft + ' ' + row + ' updated to ' + num);
+  }
+
+  // ── TABS ──
+  function switchTab(tab) {
+    var tabs = ['scorecard','trend','buddy','log'];
+    document.querySelectorAll('.nav-tab').forEach(function(t, i) {
+      t.classList.toggle('active', tabs[i] === tab);
+    });
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    document.getElementById('page-' + tab).classList.add('active');
+  }
+
+  // ── MODALS ──
+  function openModal(id)  { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  document.querySelectorAll('.modal-overlay').forEach(function(o) {
+    o.addEventListener('click', function(e) {
+      if (e.target === o) o.classList.remove('open');
+    });
+  });
+
+  // ── LOG EVENT ──
+  function logEvent() {
+    var type       = document.getElementById('ev-type').value;
+    var craft      = document.getElementById('ev-craft').value;
+    var date       = document.getElementById('ev-date').value;
+    var location   = document.getElementById('ev-location').value.trim() || 'ExxonMobil BTRP';
+    var supervisor = document.getElementById('ev-supervisor').value.trim() || 'Unknown';
+    var desc       = document.getElementById('ev-desc').value.trim() || 'No description provided.';
+    var reportable = document.getElementById('ev-reportable').value;
+
+    if (!date) { showToast('Please select a date'); return; }
+
+    // Format date for display
+    var d = new Date(date + 'T12:00:00');
+    var displayDate = (d.getMonth()+1) + '/' + d.getDate();
+
+    // Determine badge / class
+    var entryClass = type;
+    var typeLabel  = document.getElementById('ev-type').options[document.getElementById('ev-type').selectedIndex].text;
+    var badgeClass = type === 'recordable' ? 'badge-red' :
+                     type === 'near-miss'  ? 'badge-amber' :
+                     type === 'lti'        ? 'badge-red' : 'badge-blue';
+    var badgeText  = type === 'recordable' ? 'REC' :
+                     type === 'near-miss'  ? 'NM'  :
+                     type === 'lti'        ? 'LTI' : 'OBS';
+    var typeColor  = type === 'recordable' || type === 'lti' ? 'var(--red)' :
+                     type === 'near-miss'  ? 'var(--amber)' : 'var(--green)';
+
+    // Add to incident matrix if safety negative event
+    if (type === 'recordable' || type === 'near-miss' || type === 'lti') {
+      var craftIndex = crafts.indexOf(craft);
+      if (craftIndex >= 0) {
+        var matrixRow = type === 'near-miss' ? 'NEAR MISS' :
+                        type === 'lti'       ? 'ACTUAL' : 'ACTUAL';
+        matrix[matrixRow][craftIndex]++;
+        matrix['Total'][craftIndex]++;
+        renderMatrix();
+      }
+    }
+
+    // Add to log
+    var list = document.getElementById('event-log-list');
+    var entry = document.createElement('div');
+    entry.className = 'log-entry ' + (type === 'good' ? 'good' : type);
+    entry.innerHTML = '<div class="log-entry-inner">'
+      + '<div class="log-top">'
+      + '<div>'
+      + '<div class="log-type" style="color:' + typeColor + '">' + typeLabel + '</div>'
+      + '<div class="log-meta">Craft: ' + craft + ' · ' + supervisor + '</div>'
+      + '</div>'
+      + '<div>'
+      + '<span class="badge ' + badgeClass + '">' + badgeText + '</span>'
+      + '<div class="log-date">' + displayDate + '</div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="log-desc">' + desc + '</div>'
+      + '<div class="log-meta">Location: ' + location + ' · ' + reportable + '</div>'
+      + '</div>';
+
+    list.insertBefore(entry, list.firstChild);
+
+    closeModal('logEventModal');
+
+    // Reset form
+    document.getElementById('ev-location').value   = '';
+    document.getElementById('ev-supervisor').value = '';
+    document.getElementById('ev-desc').value       = '';
+
+    showToast('✓ Event logged', 'ok');
+  }
+
+  // ── TOAST ──
+  function showToast(msg, type) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast' + (type ? ' ' + type : '');
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2400);
+  }
+
+  // ── INIT ──
+  var today = new Date();
+  document.getElementById('ev-date').value = today.toISOString().split('T')[0];
+  renderMatrix();
+</script>
+</body>
+</html>

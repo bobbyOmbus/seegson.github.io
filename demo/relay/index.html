@@ -275,6 +275,23 @@ body[data-view="detail"] .detailbar{display:block}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast .ti{width:22px;height:22px;border-radius:50%;background:var(--ok);display:grid;place-items:center;flex:none}
 
+/* site link / learn-more */
+.site-foot{margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+body[data-view="detail"] .site-foot{display:none}
+.site-link{display:inline-flex;align-items:center;gap:11px;text-decoration:none;color:var(--dim);font-size:13px;padding:6px 2px}
+.site-link .mk{width:30px;height:30px;border-radius:8px;flex:none;background:linear-gradient(150deg,var(--accent),#5B84F0);display:grid;place-items:center}
+.site-link .mk svg{width:16px;height:16px}
+.site-link .lt b{color:var(--text);font-weight:600}
+.site-link .lt small{display:block;font-size:11.5px;color:var(--faint);margin-top:1px}
+.site-link .ext{width:15px;height:15px;color:var(--faint);transition:transform .15s}
+.site-link:hover{color:var(--text)}
+.site-link:hover .ext{transform:translate(1px,-1px);color:var(--accent)}
+.rail-cta{display:flex;align-items:center;gap:8px;text-decoration:none;color:#AEB8C2;font-size:12.5px;font-weight:500;
+  padding:10px 11px;border:1px solid var(--ink-line);border-radius:9px;background:var(--ink-2)}
+.rail-cta svg{width:14px;height:14px;flex:none;margin-left:auto;color:#7C8894;transition:transform .15s}
+.rail-cta:hover{color:#fff;border-color:#3A4756}
+.rail-cta:hover svg{transform:translate(1px,-1px);color:#fff}
+
 /* ============ DESKTOP (>= 860px) ============ */
 @media (min-width:860px){
   .shell{display:grid;grid-template-columns:248px 1fr;padding-bottom:0}
@@ -366,7 +383,10 @@ body[data-view="detail"] .detailbar{display:block}
     <button class="rnav" data-go="metrics"><svg viewBox="0 0 24 24" fill="none"><path d="M5 19V5m14 14V11M12 19V8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg> Cycle-time report</button>
     <div class="rlbl">Viewing as</div>
     <div class="persona" id="persona-rail"></div>
-    <div style="margin-top:auto;font-size:11.5px;color:#5E6975;line-height:1.55;padding:14px 6px 0">Demo · switch desks to walk the whole approval chain, then send a line back from Sales to watch Relay reroute.</div>
+    <div style="margin-top:auto;padding:16px 4px 4px">
+      <div style="font-size:11.5px;color:#5E6975;line-height:1.55;margin-bottom:12px">Demo · switch desks to walk the whole approval chain, then send a line back from Sales to watch Relay reroute.</div>
+      <a class="rail-cta" href="https://seegsonsolutions.com" target="_blank" rel="noopener">Learn more at seegsonsolutions.com<svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
   </aside>
 
   <!-- ===== mobile app bar ===== -->
@@ -466,6 +486,15 @@ body[data-view="detail"] .detailbar{display:block}
         </div>
       </div>
     </section>
+
+    <!-- ===== learn more ===== -->
+    <footer class="site-foot">
+      <a class="site-link" href="https://seegsonsolutions.com" target="_blank" rel="noopener">
+        <span class="mk"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h9m0 0-3.2-3.2M13 12l-3.2 3.2M13 6h4a3 3 0 0 1 0 6" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="lt"><b>Relay is a Seegson Solutions build</b><small>See what else we make for Southeast Texas ops teams</small></span>
+        <svg class="ext" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </footer>
   </main>
 
   <!-- ===== mobile tab bar ===== -->

@@ -1237,6 +1237,18 @@ function updateHeader() {
   autoSave();
 }
 
+function toggleRail() {
+  const rail = document.getElementById('rail');
+  const backdrop = document.getElementById('railBackdrop');
+  const isOpen = rail.classList.toggle('open');
+  backdrop.classList.toggle('open', isOpen);
+}
+function closeRail() {
+  document.getElementById('rail').classList.remove('open');
+  document.getElementById('railBackdrop').classList.remove('open');
+}
+
+
 function buildTable() {
   const tbody = document.getElementById('riskTableBody');
   tbody.innerHTML = '';
@@ -1956,7 +1968,7 @@ function renderRail(){
     </div>`;
   }).join('');
   document.getElementById('toolsNav').innerHTML = `
-    <div class="tool-item ${currentView==='risk'?'active':''}" onclick="openRiskTool()">
+    <div class="tool-item ${currentView==='risk'?'active':''}" onclick="selectBook('${b.id}');closeRail()"">
       <div class="tool-icon">📊</div><div class="tool-title">Risk Scorecard</div>
     </div>`;
 }

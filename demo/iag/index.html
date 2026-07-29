@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Industrial Assistance Group — Operating System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -29,37 +29,30 @@
     color:var(--ink);
     display:flex;
     height:100vh;
-    height:100dvh;
     overflow:hidden;
   }
   .mono{font-family:'IBM Plex Mono',monospace;}
   .slab{font-family:'Zilla Slab',serif;}
 
   /* ---------- LEFT RAIL ---------- */
-  #rail{
-    width:300px;min-width:300px;
-    background:var(--graphite);color:var(--paper);
-    display:flex;flex-direction:column;
-    border-right:1px solid #000;
-    z-index:100;
-  }
+  #rail{width:300px;min-width:300px;background:var(--graphite);color:var(--paper);display:flex;flex-direction:column;border-right:1px solid #000;}
   .rail-head{padding:22px 20px 16px;border-bottom:1px solid #33393f;}
   .rail-head .wordmark{font-family:'Zilla Slab',serif;font-weight:700;font-size:15px;letter-spacing:1.5px;color:var(--paper);}
   .rail-head .wordmark span{color:var(--brass-bright);}
   .rail-head .sub{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:1px;color:#8b93a0;margin-top:4px;text-transform:uppercase;}
-  #railScroll{flex:1;overflow-y:auto;padding:6px 0;-webkit-overflow-scrolling:touch;}
+  #railScroll{flex:1;overflow-y:auto;padding:6px 0;}
   .rail-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;color:#5c6570;text-transform:uppercase;padding:14px 20px 4px;}
   .spine{display:flex;align-items:center;gap:12px;padding:11px 20px;cursor:pointer;border-left:3px solid transparent;transition:background .15s;}
-  .spine:hover,.spine:active{background:var(--graphite-2);}
+  .spine:hover{background:var(--graphite-2);}
   .spine.active{background:var(--graphite-2);border-left:3px solid var(--brass-bright);}
   .spine.locked{opacity:.42;}
-  .spine-num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--brass-bright);width:20px;flex-shrink:0;}
+  .spine-num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--brass-bright);width:20px;}
   .spine-body{flex:1;min-width:0;}
   .spine-title{font-family:'Zilla Slab',serif;font-size:13.5px;line-height:1.25;color:var(--paper);}
   .spine-tag{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:#7d8794;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
   .gauge-mini{width:34px;height:20px;flex-shrink:0;}
   .tool-item{display:flex;align-items:center;gap:12px;padding:11px 20px;cursor:pointer;border-left:3px solid transparent;transition:background .15s;}
-  .tool-item:hover,.tool-item:active{background:var(--graphite-2);}
+  .tool-item:hover{background:var(--graphite-2);}
   .tool-item.active{background:var(--graphite-2);border-left:3px solid var(--brass-bright);}
   .tool-icon{width:20px;text-align:center;font-size:13px;}
   .tool-title{font-family:'Zilla Slab',serif;font-size:13.5px;color:var(--paper);}
@@ -71,39 +64,17 @@
   .edit-toggle{text-align:center;padding:8px 0;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:#8b93a0;border:1px dashed #3a414a;cursor:pointer;}
   .edit-toggle.on{background:var(--rust);color:#fff;border-color:var(--rust);}
 
-  .menu-btn{
-    display:none;
-    background:none;border:1px solid var(--hairline);
-    font-family:'IBM Plex Mono',monospace;font-size:16px;
-    padding:6px 10px;cursor:pointer;color:var(--ink);line-height:1;
-    flex-shrink:0;
-  }
-  #railBackdrop{
-    display:none;position:fixed;inset:0;
-    background:rgba(0,0,0,.45);z-index:90;
-  }
-
   /* ---------- MAIN ---------- */
-  #main{flex:1;background:var(--paper);overflow-y:auto;position:relative;min-width:0;-webkit-overflow-scrolling:touch;}
-  .topbar{
-    position:sticky;top:0;background:var(--paper);
-    border-bottom:1px solid var(--hairline);
-    padding:16px 40px;display:flex;justify-content:space-between;align-items:center;z-index:5;
-    gap:12px;
-  }
-  .topbar-left{display:flex;align-items:center;gap:12px;min-width:0;}
-  #searchbox{
-    font-family:'IBM Plex Mono',monospace;font-size:12px;
-    border:1px solid var(--hairline);background:var(--paper-2);
-    padding:8px 12px;width:260px;max-width:100%;color:var(--ink);outline:none;flex-shrink:1;
-  }
+  #main{flex:1;background:var(--paper);overflow-y:auto;position:relative;}
+  .topbar{position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--hairline);padding:16px 40px;display:flex;justify-content:space-between;align-items:center;z-index:5;}
+  #searchbox{font-family:'IBM Plex Mono',monospace;font-size:12px;border:1px solid var(--hairline);background:var(--paper-2);padding:8px 12px;width:260px;color:var(--ink);outline:none;}
   #searchbox::placeholder{color:#9c927d;}
   #content{padding:40px 60px 100px;max-width:800px;}
 
   .titleblock{border:1.5px solid var(--ink);margin-bottom:22px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;}
   .tb-cell{padding:8px 12px;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);}
   .tb-cell:nth-child(4n){border-right:none;}
-  .tb-cell.wide{grid-column:span 4;border-right:none;padding:14px 14px 10px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;}
+  .tb-cell.wide{grid-column:span 4;border-right:none;padding:14px 14px 10px;display:flex;justify-content:space-between;align-items:flex-end;}
   .tb-label{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:3px;}
   .tb-value{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;}
   .tb-value.book-title{font-family:'Zilla Slab',serif;font-size:22px;font-weight:700;line-height:1.15;}
@@ -116,17 +87,17 @@
 
   .link-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--brass);background:none;border:1px solid var(--brass);padding:2px 7px;cursor:pointer;white-space:nowrap;}
   .link-btn:hover{background:var(--brass);color:#fff;}
-  .toolbar-row{display:flex;justify-content:flex-end;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+  .toolbar-row{display:flex;justify-content:flex-end;gap:8px;margin-bottom:6px;}
 
   section.chapter{margin-bottom:46px;}
-  .chapter-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:8px;margin:0 0 22px;gap:10px;flex-wrap:wrap;}
+  .chapter-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:8px;margin:0 0 22px;}
   h2.chapter-title{font-family:'Zilla Slab',serif;font-size:20px;font-weight:600;margin:0;}
   .sec-block{margin-bottom:30px;padding-bottom:6px;scroll-margin-top:90px;}
   .sec-block.flash{animation:flashbg 1.8s ease;}
   @keyframes flashbg{0%{background:#e9d9b8;}100%{background:transparent;}}
-  .sec-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--hairline);padding-bottom:6px;margin-bottom:12px;gap:10px;flex-wrap:wrap;}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--hairline);padding-bottom:6px;margin-bottom:12px;gap:10px;}
   h3.sec-title{font-family:'Zilla Slab',serif;font-size:16px;font-weight:600;margin:0;}
-  .sec-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .sec-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:8px;white-space:nowrap;}
   .sec-body p{font-size:15px;line-height:1.65;margin:0 0 14px;}
   .sec-body ul,.sec-body ol{margin:0 0 14px;padding-left:20px;}
   .sec-body li{font-size:15px;line-height:1.6;margin-bottom:3px;}
@@ -138,6 +109,7 @@
   table.spec td{padding:7px 10px;border-bottom:1px solid var(--hairline);vertical-align:top;}
   table.spec tr:nth-child(even){background:var(--paper-2);}
 
+  /* edit mode */
   .edit-field{width:100%;font-family:'Source Serif 4',serif;font-size:14px;border:1px solid var(--hairline);background:#fffdf8;padding:8px;min-height:110px;line-height:1.5;}
   .edit-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
   .edit-row input,.edit-row select{font-family:'IBM Plex Mono',monospace;font-size:11px;border:1px solid var(--hairline);padding:5px 8px;background:#fffdf8;}
@@ -169,74 +141,19 @@
   .board tr:nth-child(even) td{background:var(--paper-2);}
   .owner-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-soft);}
 
-  #toast{position:fixed;bottom:24px;left:320px;background:var(--graphite);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:11.5px;padding:10px 18px;border-left:3px solid var(--brass-bright);box-shadow:0 6px 20px rgba(0,0,0,.3);z-index:999;display:none;max-width:min(420px,calc(100vw - 40px));word-break:break-all;}
+  mark.hit{background:var(--brass-bright);color:var(--graphite);padding:0 2px;}
 
-  #riskFrame{width:100%;height:100%;border:none;display:block;min-height:calc(100vh - 60px);}
+  #toast{position:fixed;bottom:24px;left:320px;background:var(--graphite);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:11.5px;padding:10px 18px;border-left:3px solid var(--brass-bright);box-shadow:0 6px 20px rgba(0,0,0,.3);z-index:999;display:none;max-width:420px;word-break:break-all;}
 
-  /* ========== MOBILE ========== */
-  @media (max-width: 900px) {
-    body {
-      display: block;
-      overflow: hidden;
-      height: 100%;
-      height: 100dvh;
-    }
-    #rail {
-      position: fixed;
-      top: 0; left: 0; bottom: 0;
-      width: 280px; min-width: 280px;
-      transform: translateX(-100%);
-      transition: transform 0.25s ease;
-      box-shadow: 4px 0 24px rgba(0,0,0,.35);
-    }
-    #rail.open { transform: translateX(0); }
-    #railBackdrop.open { display: block; }
-    .menu-btn { display: block; }
-    #main {
-      width: 100%;
-      height: 100%;
-      height: 100dvh;
-      margin: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    .topbar { padding: 12px 16px; }
-    #searchbox { width: 100%; max-width: 170px; font-size: 13px; }
-    #content { padding: 24px 16px 80px !important; max-width: none !important; }
-    .titleblock { grid-template-columns: 1fr 1fr; }
-    .tb-cell:nth-child(2n) { border-right: none; }
-    .tb-cell.wide { grid-column: span 2; flex-direction: column; align-items: flex-start; }
-    .tb-value.book-title { font-size: 18px; }
-    .metrics-row { grid-template-columns: 1fr 1fr; }
-    .metric .num { font-size: 22px; }
-    .gauge-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-    .board { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    #toast { left: 16px; right: 16px; max-width: none; }
-    h2.chapter-title { font-size: 18px; }
-    h3.sec-title { font-size: 15px; }
-    .locked-page { padding: 40px 16px; }
-    .locked-page h1 { font-size: 22px; }
-    #riskFrame { min-height: calc(100dvh - 56px); }
-  }
-  @media (max-width: 520px) {
-    .metrics-row { grid-template-columns: 1fr; }
-    .gauge-grid { grid-template-columns: 1fr; }
-    .titleblock { grid-template-columns: 1fr; }
-    .tb-cell { border-right: none; }
-    .tb-cell.wide { grid-column: span 1; }
-    #searchbox { max-width: 120px; }
-    .edit-row input, .edit-row select { width: 100%; }
-  }
+  #riskFrame{width:100%;height:calc(100vh - 0px);border:none;display:block;}
 </style>
 </head>
 <body>
 
-<div id="railBackdrop" onclick="closeRail()"></div>
-
 <nav id="rail">
   <div class="rail-head">
     <div class="wordmark">INDUSTRIAL<span> ASSISTANCE</span> GROUP</div>
-    <div class="sub">Operating System — Rev. 2</div>
+    <div class="sub" id="railSub">Operating System — Rev. 2</div>
   </div>
   <div id="railScroll">
     <div class="rail-label">Books</div>
@@ -246,8 +163,8 @@
   </div>
   <div class="rail-foot">
     <div class="toggle-row">
-      <div class="toggle-btn on" id="btn-library" onclick="setView('library');closeRail()">Library</div>
-      <div class="toggle-btn" id="btn-command" onclick="setView('command');closeRail()">Command</div>
+      <div class="toggle-btn on" id="btn-library" onclick="setView('library')">Library</div>
+      <div class="toggle-btn" id="btn-command" onclick="setView('command')">Command</div>
     </div>
     <div class="edit-toggle" id="editToggle" onclick="toggleEdit()">✎ Edit Mode: Off</div>
   </div>
@@ -255,10 +172,7 @@
 
 <main id="main">
   <div class="topbar" id="topbar">
-    <div class="topbar-left">
-      <button class="menu-btn" id="menuBtn" onclick="toggleRail()" aria-label="Menu">☰</button>
-      <div class="doc-kicker mono" id="crumb">INDUSTRIAL ASSISTANCE GROUP</div>
-    </div>
+    <div class="doc-kicker mono" id="crumb">INDUSTRIAL ASSISTANCE GROUP</div>
     <input id="searchbox" placeholder="Search the library…" oninput="onSearch(this.value)">
   </div>
   <div id="content">
@@ -268,124 +182,709 @@
 
 <div id="toast"></div>
 
+<!-- Risk Scorecard — fully aligned industrial theme -->
 <template id="riskTemplate">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
-  :root{--graphite:#1B2027;--steel:#2F4858;--brass:#B8894F;--brass-bright:#D3A868;--paper:#F1ECE1;--paper-2:#E8E1D2;--ink:#211E1A;--ink-soft:#544E44;--moss:#4B6B4F;--amber:#C08A2E;--rust:#8B4A3B;--hairline:#C9BFA9;}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Source Serif 4',serif;background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.45;-webkit-text-size-adjust:100%;}
-  .header{background:var(--graphite);color:var(--paper);padding:16px 16px 12px;border-bottom:3px solid var(--brass);}
-  .header h1{font-family:'Zilla Slab',serif;font-size:1.25rem;font-weight:700;}
-  .header h2{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:1.1px;text-transform:uppercase;color:var(--brass-bright);margin-top:3px;}
-  .header-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
-  .header-meta span{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:#a8b0ba;background:rgba(255,255,255,.06);padding:3px 8px;border:1px solid #3a414a;}
-  .meta-bar{background:var(--paper-2);padding:12px 14px;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;border-bottom:1px solid var(--hairline);}
-  .meta-group{display:flex;flex-direction:column;gap:3px;min-width:0;}
-  .meta-group label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--ink-soft);}
-  .meta-group input,.meta-group select{font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:7px 8px;border:1px solid var(--hairline);background:#fffdf8;color:var(--ink);width:100%;max-width:160px;}
-  .meta-group input:focus,.meta-group select:focus{outline:none;border-color:var(--brass);}
-  .completion-wrap{margin-left:auto;text-align:right;}
-  .completion-wrap label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.7px;text-transform:uppercase;color:var(--ink-soft);}
-  #completionText{font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:600;color:var(--steel);margin-top:2px;}
-  .completion-bar-wrap{width:110px;height:5px;background:var(--hairline);margin-top:4px;}
-  .completion-bar{height:5px;background:var(--moss);transition:width .4s;}
-  .container{max-width:1480px;margin:0 auto;padding:14px 14px 32px;}
-  .dashboard-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:16px;}
-  .summary-card{background:var(--paper-2);border:1px solid var(--ink);padding:12px 8px 10px;text-align:center;}
-  .summary-card .s-number{font-family:'Zilla Slab',serif;font-size:1.5rem;font-weight:700;line-height:1;}
-  .summary-card .s-label{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft);margin-top:5px;}
-  .summary-card .s-sub{font-family:'IBM Plex Mono',monospace;font-size:.52rem;color:#9c927d;margin-top:2px;}
-  .section-title{font-family:'Zilla Slab',serif;font-size:.95rem;font-weight:600;margin:20px 0 10px;padding-bottom:5px;border-bottom:2px solid var(--ink);}
-  .overall-risk-card{background:var(--paper-2);border:1px solid var(--ink);padding:14px;margin-bottom:16px;}
-  .overall-risk-inner{display:flex;justify-content:center;align-items:center;gap:20px;flex-wrap:wrap;}
-  .overall-score-ring{display:inline-block;width:100px;height:100px;position:relative;}
-  .ring-svg{transform:rotate(-90deg);}
-  .ring-bg-circle{fill:none;stroke:var(--hairline);stroke-width:10;}
-  .ring-fill-circle{fill:none;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .6s,stroke .3s;}
-  .ring-center-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
-  .ring-score{font-family:'Zilla Slab',serif;font-size:1.5rem;font-weight:700;}
-  .ring-label{font-family:'IBM Plex Mono',monospace;font-size:.52rem;color:var(--ink-soft);}
-  .ring-sub{font-family:'IBM Plex Mono',monospace;font-size:.62rem;text-align:center;margin-top:6px;font-weight:500;}
-  .chart-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
-  .chart-label{width:90px;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--ink-soft);text-align:right;flex-shrink:0;}
-  .chart-bar-bg{flex:1;background:var(--hairline);height:15px;overflow:hidden;}
-  .chart-bar-fill{height:15px;transition:width .5s;display:flex;align-items:center;padding-left:6px;min-width:0;}
-  .chart-bar-fill span{font-family:'IBM Plex Mono',monospace;font-size:.55rem;font-weight:600;color:#fff;white-space:nowrap;}
-  .chart-val{width:20px;font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:600;flex-shrink:0;}
-  .filter-bar{background:var(--paper-2);border:1px solid var(--hairline);padding:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
-  .filter-bar label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft);}
-  .filter-btn{font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:6px 10px;border:1px solid var(--hairline);background:var(--paper);color:var(--ink-soft);cursor:pointer;min-height:32px;}
-  .filter-btn.active{background:var(--graphite);color:var(--paper);border-color:var(--graphite);}
-  .filter-btn.f-vh.active{background:#7b1d1d;border-color:#7b1d1d;}
-  .filter-btn.f-high.active{background:var(--rust);border-color:var(--rust);}
-  .filter-btn.f-medium.active{background:var(--amber);border-color:var(--amber);color:#fff;}
-  .filter-btn.f-low.active{background:var(--moss);border-color:var(--moss);}
-  .filter-btn.f-star.active{background:var(--brass);border-color:var(--brass);color:#fff;}
-  .search-input{font-family:'IBM Plex Mono',monospace;font-size:.7rem;padding:6px 10px;border:1px solid var(--hairline);background:#fffdf8;width:100%;max-width:160px;margin-left:auto;min-height:32px;}
-  .search-input:focus{outline:none;border-color:var(--brass);}
-  .table-wrap{border:1px solid var(--ink);overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:16px;}
-  .risk-table{width:100%;border-collapse:collapse;min-width:720px;}
-  .risk-table thead tr{background:var(--graphite);}
-  .risk-table th{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.4px;text-transform:uppercase;color:var(--paper);padding:8px;text-align:left;white-space:nowrap;}
-  .risk-table th.sortable{cursor:pointer;}
-  .risk-table tbody tr.main-row{border-bottom:1px solid var(--hairline);}
-  .risk-table tbody tr.main-row:hover{background:#e9e2d4;}
-  .risk-table tbody tr.hidden-row{display:none!important;}
-  .risk-table tbody tr.main-row:nth-child(4n+1){background:var(--paper-2);}
-  .risk-table td{padding:8px;font-size:.72rem;vertical-align:middle;}
-  .score-selector{display:flex;gap:3px;align-items:center;flex-wrap:wrap;}
-  .score-btn{width:28px;height:28px;border:1px solid var(--hairline);background:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:600;color:#9c927d;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-  .score-btn.active-1{background:var(--moss);border-color:var(--moss);color:#fff;}
-  .score-btn.active-2{background:#5a8a5e;border-color:#5a8a5e;color:#fff;}
-  .score-btn.active-3{background:var(--amber);border-color:var(--amber);color:#fff;}
-  .score-btn.active-4{background:#c06a3a;border-color:#c06a3a;color:#fff;}
-  .score-btn.active-5{background:var(--rust);border-color:var(--rust);color:#fff;}
-  .mini-bar-wrap{background:var(--hairline);height:5px;width:44px;flex-shrink:0;}
-  .mini-bar{height:5px;transition:width .35s,background .35s;width:0;}
-  .risk-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.55rem;font-weight:600;padding:2px 6px;color:#fff;}
-  .badge-very-high{background:#7b1d1d;}.badge-high{background:var(--rust);}.badge-medium{background:var(--amber);}.badge-low{background:var(--moss);}.badge-na{background:#8a8577;}
-  .impact-badge{font-family:'IBM Plex Mono',monospace;font-size:.55rem;padding:2px 6px;border:1px solid;}
-  .impact-very-high{background:#f5e0e0;color:#7b1d1d;border-color:#c9a0a0;}
-  .impact-high{background:#f5e8e4;color:var(--rust);border-color:#d4b0a4;}
-  .impact-medium{background:#f5edd8;color:#856404;border-color:#d4c49a;}
-  .impact-low{background:#e0ede1;color:var(--moss);border-color:#a8c4aa;}
-  .table-select{font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:5px 6px;border:1px solid var(--hairline);background:#fffdf8;cursor:pointer;min-height:30px;}
-  .residual-display{font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:600;padding:3px 6px;display:inline-block;min-width:64px;text-align:center;}
-  .notes-input{width:100%;font-family:'Source Serif 4',serif;font-size:.7rem;padding:5px 6px;border:1px solid var(--hairline);background:#fffdf8;resize:none;min-height:32px;}
-  .priority-star{cursor:pointer;font-size:1.15rem;color:var(--hairline);display:block;text-align:center;padding:4px;}
-  .priority-star.active{color:var(--brass);}
-  .expand-btn{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:600;background:none;border:1px solid var(--hairline);color:var(--steel);padding:5px 8px;cursor:pointer;min-height:30px;}
-  .expand-btn.open{background:var(--graphite);color:var(--paper);border-color:var(--graphite);}
-  .detail-row{display:none;}.detail-row.open{display:table-row;}
-  .detail-cell{background:var(--paper-2);padding:12px;border-bottom:2px solid var(--ink);}
-  .detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-  .detail-section h4{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.5px;text-transform:uppercase;color:var(--steel);margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid var(--hairline);}
-  .detail-section p{font-size:.75rem;color:var(--ink-soft);line-height:1.5;}
-  .detail-section .owner-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.62rem;background:var(--paper);border:1px solid var(--hairline);color:var(--steel);padding:2px 6px;margin-top:3px;}
-  .detail-textarea{width:100%;font-family:'Source Serif 4',serif;font-size:.72rem;padding:7px;border:1px solid var(--hairline);background:#fffdf8;resize:vertical;min-height:60px;}
-  .heatmap-card{background:var(--paper-2);border:1px solid var(--ink);padding:12px;margin-bottom:16px;}
-  .heatmap-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .heatmap-grid-2 p{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--steel);margin-bottom:8px;}
-  .exec-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-  .exec-card{background:var(--paper-2);border:1px solid var(--ink);padding:12px;}
-  .exec-card h4{font-family:'Zilla Slab',serif;font-size:.82rem;font-weight:600;margin-bottom:6px;}
-  .exec-textarea{width:100%;font-family:'Source Serif 4',serif;font-size:.75rem;padding:7px;border:1px solid var(--hairline);background:#fffdf8;resize:vertical;min-height:80px;}
-  .action-bar{display:flex;gap:8px;justify-content:center;padding:14px 0 8px;flex-wrap:wrap;}
-  .btn{font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:600;letter-spacing:.4px;text-transform:uppercase;padding:10px 14px;border:none;cursor:pointer;min-height:40px;display:flex;align-items:center;gap:5px;}
-  .btn-primary{background:var(--steel);color:#fff;}.btn-success{background:var(--moss);color:#fff;}.btn-danger{background:var(--rust);color:#fff;}.btn-secondary{background:#6a6558;color:#fff;}.btn-dark{background:var(--graphite);color:var(--paper);}.btn-warning{background:var(--brass);color:#fff;}
-  .footer-note{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:#9c927d;padding:6px 0 12px;}
-  .toast{position:fixed;bottom:16px;right:12px;left:12px;background:var(--graphite);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:10px 14px;border-left:3px solid var(--brass-bright);z-index:9999;max-width:320px;margin-left:auto;}
-  .divider{border:none;border-top:1px dashed var(--hairline);margin:16px 0;}
-  @media (max-width:700px){
-    .exec-grid,.heatmap-grid-2,.detail-grid{grid-template-columns:1fr;}
-    .chart-label{width:75px;font-size:.55rem;}
-    .meta-group input,.meta-group select{max-width:none;}
-    .completion-wrap{margin-left:0;width:100%;text-align:left;}
-    .search-input{margin-left:0;max-width:none;width:100%;}
-    .dashboard-summary{grid-template-columns:repeat(2,1fr);}
+
+  :root {
+    --graphite: #1B2027;
+    --graphite-2: #242B33;
+    --steel: #2F4858;
+    --brass: #B8894F;
+    --brass-bright: #D3A868;
+    --paper: #F1ECE1;
+    --paper-2: #E8E1D2;
+    --ink: #211E1A;
+    --ink-soft: #544E44;
+    --moss: #4B6B4F;
+    --amber: #C08A2E;
+    --rust: #8B4A3B;
+    --hairline: #C9BFA9;
   }
-  @media (max-width:420px){.header h1{font-size:1.1rem;}.summary-card .s-number{font-size:1.3rem;}}
-  @media print{.action-bar,.filter-bar,.meta-bar,.score-btn,.expand-btn,.toast{display:none!important;}body{background:#fff;font-size:11px;}.detail-row.open{display:table-row!important;}.risk-table{min-width:unset;}}
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.45;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--graphite);
+    color: var(--paper);
+    padding: 22px 36px 18px;
+    border-bottom: 3px solid var(--brass);
+  }
+  .header h1 {
+    font-family: 'Zilla Slab', serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    margin: 0;
+  }
+  .header h2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--brass-bright);
+    margin-top: 4px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .header-meta span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.4px;
+    color: #a8b0ba;
+    background: rgba(255,255,255,0.06);
+    padding: 3px 10px;
+    border: 1px solid #3a414a;
+  }
+
+  /* ── Meta bar ── */
+  .meta-bar {
+    background: var(--paper-2);
+    padding: 12px 28px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .meta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .meta-group label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .meta-group input,
+  .meta-group select {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    padding: 6px 9px;
+    border: 1px solid var(--hairline);
+    background: #fffdf8;
+    color: var(--ink);
+    border-radius: 0;
+  }
+  .meta-group input:focus,
+  .meta-group select:focus {
+    outline: none;
+    border-color: var(--brass);
+  }
+  .completion-wrap {
+    margin-left: auto;
+    text-align: right;
+  }
+  .completion-wrap label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  #completionText {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--steel);
+    margin-top: 2px;
+  }
+  .completion-bar-wrap {
+    width: 130px;
+    height: 6px;
+    background: var(--hairline);
+    margin-top: 4px;
+  }
+  .completion-bar {
+    height: 6px;
+    background: var(--moss);
+    transition: width 0.4s ease;
+  }
+
+  /* ── Container ── */
+  .container {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 20px 28px 40px;
+  }
+
+  /* ── Summary cards ── */
+  .dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .summary-card {
+    background: var(--paper-2);
+    border: 1px solid var(--ink);
+    padding: 14px 10px 12px;
+    text-align: center;
+  }
+  .summary-card .s-number {
+    font-family: 'Zilla Slab', serif;
+    font-size: 1.85rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .summary-card .s-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+  .summary-card .s-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    color: #9c927d;
+    margin-top: 2px;
+  }
+
+  /* ── Section titles ── */
+  .section-title {
+    font-family: 'Zilla Slab', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 26px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── Overall risk ── */
+  .overall-risk-card {
+    background: var(--paper-2);
+    border: 1px solid var(--ink);
+    padding: 22px 24px;
+    margin-bottom: 22px;
+  }
+  .overall-risk-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .overall-score-ring {
+    display: inline-block;
+    width: 130px;
+    height: 130px;
+    position: relative;
+  }
+  .ring-svg { transform: rotate(-90deg); }
+  .ring-bg-circle { fill: none; stroke: var(--hairline); stroke-width: 12; }
+  .ring-fill-circle {
+    fill: none;
+    stroke-width: 12;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s ease, stroke 0.3s ease;
+  }
+  .ring-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .ring-score {
+    font-family: 'Zilla Slab', serif;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .ring-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.5px;
+    color: var(--ink-soft);
+  }
+  .ring-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    text-align: center;
+    margin-top: 8px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── Charts ── */
+  .chart-wrap { padding: 2px 0; }
+  .chart-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+  }
+  .chart-label {
+    width: 118px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .chart-bar-bg {
+    flex: 1;
+    background: var(--hairline);
+    height: 18px;
+    overflow: hidden;
+  }
+  .chart-bar-fill {
+    height: 18px;
+    transition: width 0.5s ease;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    min-width: 0;
+  }
+  .chart-bar-fill span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .chart-val {
+    width: 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    background: var(--paper-2);
+    border: 1px solid var(--hairline);
+    padding: 10px 14px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .filter-bar label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-right: 2px;
+  }
+  .filter-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    padding: 5px 12px;
+    border: 1px solid var(--hairline);
+    background: var(--paper);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--brass); color: var(--ink); }
+  .filter-btn.active { background: var(--graphite); color: var(--paper); border-color: var(--graphite); }
+  .filter-btn.f-vh.active { background: #7b1d1d; border-color: #7b1d1d; }
+  .filter-btn.f-high.active { background: var(--rust); border-color: var(--rust); }
+  .filter-btn.f-medium.active { background: var(--amber); border-color: var(--amber); color: #fff; }
+  .filter-btn.f-low.active { background: var(--moss); border-color: var(--moss); }
+  .filter-btn.f-star.active { background: var(--brass); border-color: var(--brass); color: #fff; }
+  .search-input {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    padding: 5px 12px;
+    border: 1px solid var(--hairline);
+    background: #fffdf8;
+    width: 180px;
+    margin-left: auto;
+  }
+  .search-input:focus { outline: none; border-color: var(--brass); }
+
+  /* ── Table ── */
+  .table-wrap {
+    border: 1px solid var(--ink);
+    overflow-x: auto;
+    margin-bottom: 22px;
+  }
+  .risk-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 920px;
+  }
+  .risk-table thead tr { background: var(--graphite); }
+  .risk-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--paper);
+    padding: 9px 10px;
+    text-align: left;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .risk-table th.sortable { cursor: pointer; }
+  .risk-table th.sortable:hover { color: var(--brass-bright); }
+  .risk-table tbody tr.main-row {
+    border-bottom: 1px solid var(--hairline);
+    transition: background 0.12s;
+  }
+  .risk-table tbody tr.main-row:hover { background: #e9e2d4; }
+  .risk-table tbody tr.hidden-row { display: none !important; }
+  .risk-table tbody tr.main-row:nth-child(4n+1) { background: var(--paper-2); }
+  .risk-table tbody tr.main-row:nth-child(4n+1):hover { background: #e9e2d4; }
+  .risk-table td {
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    vertical-align: middle;
+  }
+
+  .score-selector { display: flex; gap: 3px; align-items: center; }
+  .score-btn {
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--hairline);
+    background: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #9c927d;
+    cursor: pointer;
+    transition: all 0.12s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-btn:hover { border-color: var(--brass); color: var(--ink); }
+  .score-btn.active-1 { background: var(--moss); border-color: var(--moss); color: #fff; }
+  .score-btn.active-2 { background: #5a8a5e; border-color: #5a8a5e; color: #fff; }
+  .score-btn.active-3 { background: var(--amber); border-color: var(--amber); color: #fff; }
+  .score-btn.active-4 { background: #c06a3a; border-color: #c06a3a; color: #fff; }
+  .score-btn.active-5 { background: var(--rust); border-color: var(--rust); color: #fff; }
+
+  .mini-bar-wrap {
+    background: var(--hairline);
+    height: 5px;
+    width: 56px;
+    flex-shrink: 0;
+  }
+  .mini-bar {
+    height: 5px;
+    transition: width 0.35s ease, background 0.35s ease;
+    width: 0%;
+  }
+
+  .risk-badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 2px 8px;
+    color: #fff;
+  }
+  .badge-very-high { background: #7b1d1d; }
+  .badge-high { background: var(--rust); }
+  .badge-medium { background: var(--amber); }
+  .badge-low { background: var(--moss); }
+  .badge-na { background: #8a8577; }
+
+  .impact-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    padding: 2px 8px;
+    border: 1px solid;
+  }
+  .impact-very-high { background: #f5e0e0; color: #7b1d1d; border-color: #c9a0a0; }
+  .impact-high { background: #f5e8e4; color: var(--rust); border-color: #d4b0a4; }
+  .impact-medium { background: #f5edd8; color: #856404; border-color: #d4c49a; }
+  .impact-low { background: #e0ede1; color: var(--moss); border-color: #a8c4aa; }
+
+  .table-select {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    padding: 4px 6px;
+    border: 1px solid var(--hairline);
+    background: #fffdf8;
+    cursor: pointer;
+  }
+  .table-select:focus { outline: none; border-color: var(--brass); }
+
+  .residual-display {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    display: inline-block;
+    min-width: 72px;
+    text-align: center;
+    border: 1px solid transparent;
+  }
+
+  .notes-input {
+    width: 100%;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.75rem;
+    padding: 5px 7px;
+    border: 1px solid var(--hairline);
+    background: #fffdf8;
+    resize: none;
+    min-height: 36px;
+    line-height: 1.35;
+  }
+  .notes-input:focus { outline: none; border-color: var(--brass); }
+
+  .priority-star {
+    cursor: pointer;
+    font-size: 1.15rem;
+    color: var(--hairline);
+    display: block;
+    text-align: center;
+    line-height: 1;
+    transition: color 0.15s, transform 0.15s;
+  }
+  .priority-star.active { color: var(--brass); }
+  .priority-star:hover { transform: scale(1.25); color: var(--brass); }
+
+  .expand-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: none;
+    border: 1px solid var(--hairline);
+    color: var(--steel);
+    padding: 3px 7px;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .expand-btn:hover { border-color: var(--brass); color: var(--ink); }
+  .expand-btn.open { background: var(--graphite); color: var(--paper); border-color: var(--graphite); }
+
+  .detail-row { display: none; }
+  .detail-row.open { display: table-row; }
+  .detail-cell {
+    background: var(--paper-2);
+    padding: 16px 18px;
+    border-bottom: 2px solid var(--ink);
+    border-top: 1px solid var(--hairline);
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+  }
+  .detail-section h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: var(--steel);
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .detail-section p {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .detail-section .owner-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    color: var(--steel);
+    padding: 2px 8px;
+    margin-top: 3px;
+  }
+  .detail-textarea {
+    width: 100%;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.78rem;
+    padding: 7px 9px;
+    border: 1px solid var(--hairline);
+    background: #fffdf8;
+    resize: vertical;
+    min-height: 70px;
+    line-height: 1.45;
+  }
+  .detail-textarea:focus { outline: none; border-color: var(--brass); }
+
+  /* ── Heatmap / analysis ── */
+  .heatmap-card {
+    background: var(--paper-2);
+    border: 1px solid var(--ink);
+    padding: 18px 20px;
+    margin-bottom: 22px;
+  }
+  .heatmap-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .heatmap-grid-2 p {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--steel);
+    margin-bottom: 10px;
+  }
+
+  /* ── Executive summary ── */
+  .exec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .exec-card {
+    background: var(--paper-2);
+    border: 1px solid var(--ink);
+    padding: 14px 16px;
+  }
+  .exec-card h4 {
+    font-family: 'Zilla Slab', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .exec-textarea {
+    width: 100%;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.8rem;
+    padding: 8px 10px;
+    border: 1px solid var(--hairline);
+    background: #fffdf8;
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+  }
+  .exec-textarea:focus { outline: none; border-color: var(--brass); }
+
+  /* ── Action bar ── */
+  .action-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding: 20px 0 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 9px 18px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--steel); color: #fff; }
+  .btn-success { background: var(--moss); color: #fff; }
+  .btn-danger { background: var(--rust); color: #fff; }
+  .btn-secondary { background: #6a6558; color: #fff; }
+  .btn-dark { background: var(--graphite); color: var(--paper); }
+  .btn-warning { background: var(--brass); color: #fff; }
+
+  .footer-note {
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: #9c927d;
+    padding: 8px 0 16px;
+    letter-spacing: 0.3px;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--graphite);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    padding: 10px 18px;
+    border-left: 3px solid var(--brass-bright);
+    z-index: 9999;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px dashed var(--hairline);
+    margin: 22px 0;
+  }
+
+  @media print {
+    .action-bar, .filter-bar, .meta-bar, .score-btn, .expand-btn, .toast { display: none !important; }
+    body { background: white; font-size: 11px; }
+    .container { padding: 8px; }
+    .table-wrap, .exec-card, .summary-card, .overall-risk-card, .heatmap-card {
+      box-shadow: none !important;
+      border: 1px solid #ccc !important;
+    }
+    .detail-row.open { display: table-row !important; }
+    .risk-table { min-width: unset; }
+    .header { padding: 12px 16px; }
+    .header h1 { font-size: 1.2rem; }
+  }
+
+  @media (max-width: 900px) {
+    .exec-grid, .heatmap-grid-2 { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .overall-risk-inner { gap: 18px; }
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.2rem; }
+    .container { padding: 12px; }
+    .meta-bar { padding: 10px; gap: 10px; }
+  }
+
+  ::-webkit-scrollbar { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-track { background: var(--paper-2); }
+  ::-webkit-scrollbar-thumb { background: #b0a890; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--brass); }
 </style>
 
 <div class="header">
@@ -399,31 +898,87 @@
     <span id="hdrStatus">Status: —</span>
   </div>
 </div>
+
 <div class="meta-bar">
-  <div class="meta-group"><label>Portfolio Company</label><input type="text" id="metaCompany" placeholder="Company Name" oninput="updateHeader()"></div>
-  <div class="meta-group"><label>Lead Analyst</label><input type="text" id="metaAnalyst" placeholder="Your Name" oninput="updateHeader()"></div>
-  <div class="meta-group"><label>Review Date</label><input type="date" id="metaDate" oninput="updateHeader()"></div>
-  <div class="meta-group"><label>Review Period</label><select id="metaPeriod" onchange="updateHeader()"><option>Q1 2025</option><option>Q2 2025</option><option>Q3 2025</option><option>Q4 2025</option><option>Annual 2025</option><option>Annual 2026</option></select></div>
-  <div class="meta-group"><label>Portfolio Stage</label><select id="metaStage" onchange="autoSave()"><option>Platform</option><option>Add-On</option><option>Prospective Target</option><option>Mature / Exit</option></select></div>
-  <div class="meta-group"><label>Overall Status</label><select id="metaStatus" onchange="updateHeader()"><option value="on-track">On Track</option><option value="watch">Watch List</option><option value="concern">Concern</option><option value="critical">Critical</option></select></div>
-  <div class="completion-wrap"><label>Completion</label><div id="completionText">0 / 15</div><div class="completion-bar-wrap"><div class="completion-bar" id="completionBar" style="width:0%"></div></div></div>
+  <div class="meta-group">
+    <label>Portfolio Company</label>
+    <input type="text" id="metaCompany" placeholder="Company Name" style="width:170px" oninput="updateHeader()">
+  </div>
+  <div class="meta-group">
+    <label>Lead Analyst</label>
+    <input type="text" id="metaAnalyst" placeholder="Your Name" style="width:130px" oninput="updateHeader()">
+  </div>
+  <div class="meta-group">
+    <label>Review Date</label>
+    <input type="date" id="metaDate" oninput="updateHeader()">
+  </div>
+  <div class="meta-group">
+    <label>Review Period</label>
+    <select id="metaPeriod" onchange="updateHeader()">
+      <option>Q1 2025</option><option>Q2 2025</option><option>Q3 2025</option><option>Q4 2025</option>
+      <option>Annual 2025</option><option>Annual 2026</option>
+    </select>
+  </div>
+  <div class="meta-group">
+    <label>Portfolio Stage</label>
+    <select id="metaStage" onchange="autoSave()">
+      <option>Platform</option><option>Add-On</option><option>Prospective Target</option><option>Mature / Exit</option>
+    </select>
+  </div>
+  <div class="meta-group">
+    <label>Overall Status</label>
+    <select id="metaStatus" onchange="updateHeader()">
+      <option value="on-track">On Track</option>
+      <option value="watch">Watch List</option>
+      <option value="concern">Concern</option>
+      <option value="critical">Critical</option>
+    </select>
+  </div>
+  <div class="completion-wrap">
+    <label>Completion</label>
+    <div id="completionText">0 / 15</div>
+    <div class="completion-bar-wrap"><div class="completion-bar" id="completionBar" style="width:0%;"></div></div>
+  </div>
 </div>
+
 <div class="container">
   <div class="dashboard-summary" id="summaryCards">
-    <div class="summary-card"><div class="s-number" style="color:#7b1d1d" id="cntVH">—</div><div class="s-label">Very High</div><div class="s-sub">Immediate action</div></div>
-    <div class="summary-card"><div class="s-number" style="color:var(--rust)" id="cntH">—</div><div class="s-label">High Risk</div><div class="s-sub">Close monitoring</div></div>
-    <div class="summary-card"><div class="s-number" style="color:var(--amber)" id="cntM">—</div><div class="s-label">Medium Risk</div><div class="s-sub">Active mitigation</div></div>
-    <div class="summary-card"><div class="s-number" style="color:var(--moss)" id="cntL">—</div><div class="s-label">Low Risk</div><div class="s-sub">Well managed</div></div>
-    <div class="summary-card"><div class="s-number" style="color:var(--brass)" id="cntStar">0</div><div class="s-label">Priority Flags</div><div class="s-sub">Starred items</div></div>
-    <div class="summary-card"><div class="s-number" style="color:var(--steel)" id="cntScored">0/15</div><div class="s-label">Scores Entered</div><div class="s-sub" id="cntPct">0% complete</div></div>
-    <div class="summary-card"><div class="s-number" style="color:var(--ink)" id="cntAvg">—</div><div class="s-label">Avg Risk Score</div><div class="s-sub" id="cntAvgLabel">Not yet scored</div></div>
+    <div class="summary-card"><div class="s-number" style="color:#7b1d1d;" id="cntVH">—</div><div class="s-label">Very High</div><div class="s-sub">Immediate action</div></div>
+    <div class="summary-card"><div class="s-number" style="color:var(--rust);" id="cntH">—</div><div class="s-label">High Risk</div><div class="s-sub">Close monitoring</div></div>
+    <div class="summary-card"><div class="s-number" style="color:var(--amber);" id="cntM">—</div><div class="s-label">Medium Risk</div><div class="s-sub">Active mitigation</div></div>
+    <div class="summary-card"><div class="s-number" style="color:var(--moss);" id="cntL">—</div><div class="s-label">Low Risk</div><div class="s-sub">Well managed</div></div>
+    <div class="summary-card"><div class="s-number" style="color:var(--brass);" id="cntStar">0</div><div class="s-label">Priority Flags</div><div class="s-sub">Starred items</div></div>
+    <div class="summary-card"><div class="s-number" style="color:var(--steel);" id="cntScored">0/15</div><div class="s-label">Scores Entered</div><div class="s-sub" id="cntPct">0% complete</div></div>
+    <div class="summary-card"><div class="s-number" style="color:var(--ink);" id="cntAvg">—</div><div class="s-label">Avg Risk Score</div><div class="s-sub" id="cntAvgLabel">Not yet scored</div></div>
   </div>
+
   <div class="section-title">Portfolio Risk Overview</div>
-  <div class="overall-risk-card"><div class="overall-risk-inner">
-    <div style="text-align:center"><div class="overall-score-ring"><svg class="ring-svg" width="100" height="100" viewBox="0 0 100 100"><circle class="ring-bg-circle" cx="50" cy="50" r="38"/><circle class="ring-fill-circle" id="ringFill" cx="50" cy="50" r="38" stroke="#ddd" stroke-dasharray="238.76" stroke-dashoffset="238.76"/></svg><div class="ring-center-text"><div class="ring-score" id="ringScore" style="color:#ccc">—</div><div class="ring-label">/ 5.0</div></div></div><div class="ring-sub" id="ringLabel">Enter scores to begin</div></div>
-    <div style="min-width:180px;flex:1;max-width:340px"><p style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px">Risk Level Distribution</p><div id="levelDistChart"></div></div>
-    <div style="min-width:180px;flex:1;max-width:340px"><p style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px">Score Distribution (1–5)</p><div id="scoreDistChart"></div></div>
-  </div></div>
+  <div class="overall-risk-card">
+    <div class="overall-risk-inner">
+      <div style="text-align:center;">
+        <div class="overall-score-ring">
+          <svg class="ring-svg" width="130" height="130" viewBox="0 0 130 130">
+            <circle class="ring-bg-circle" cx="65" cy="65" r="50"/>
+            <circle class="ring-fill-circle" id="ringFill" cx="65" cy="65" r="50" stroke="#ddd" stroke-dasharray="314.16" stroke-dashoffset="314.16"/>
+          </svg>
+          <div class="ring-center-text">
+            <div class="ring-score" id="ringScore" style="color:#ccc;">—</div>
+            <div class="ring-label">/ 5.0</div>
+          </div>
+        </div>
+        <div class="ring-sub" id="ringLabel">Enter scores to begin assessment</div>
+      </div>
+      <div style="min-width:240px; flex:1; max-width:380px;">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;">Risk Level Distribution</p>
+        <div id="levelDistChart" class="chart-wrap"></div>
+      </div>
+      <div style="min-width:240px; flex:1; max-width:380px;">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;">Score Distribution (1–5)</p>
+        <div id="scoreDistChart" class="chart-wrap"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-title">Risk Register</div>
   <div class="filter-bar">
     <label>Filter</label>
@@ -435,304 +990,1084 @@
     <button class="filter-btn f-star" onclick="applyFilter('starred',this)">Priority</button>
     <input type="text" class="search-input" id="searchBox" placeholder="Search risks…" oninput="searchRisks(this.value)">
   </div>
-  <div class="table-wrap"><table class="risk-table"><thead><tr>
-    <th style="width:36px;text-align:center">★</th>
-    <th class="sortable" onclick="sortTable('category')">Risk Category <span id="sortIcon_category">↕</span></th>
-    <th>Risk Score (1–5)</th>
-    <th class="sortable" onclick="sortTable('level')">Risk Level <span id="sortIcon_level">↕</span></th>
-    <th>Impact</th><th>Trend</th><th>Residual</th><th>Mitigation Notes</th>
-    <th style="width:44px;text-align:center">Detail</th>
-  </tr></thead><tbody id="riskTableBody"></tbody></table></div>
+
+  <div class="table-wrap">
+    <table class="risk-table">
+      <thead>
+        <tr>
+          <th style="width:36px;text-align:center;">★</th>
+          <th class="sortable" onclick="sortTable('category')" style="min-width:170px;">Risk Category <span id="sortIcon_category">↕</span></th>
+          <th style="min-width:180px;">Risk Score (1–5)</th>
+          <th class="sortable" onclick="sortTable('level')" style="min-width:110px;">Risk Level <span id="sortIcon_level">↕</span></th>
+          <th style="min-width:90px;">Impact</th>
+          <th style="min-width:100px;">Trend</th>
+          <th style="min-width:100px;">Residual</th>
+          <th style="min-width:180px;">Mitigation Notes</th>
+          <th style="width:44px;text-align:center;">Detail</th>
+        </tr>
+      </thead>
+      <tbody id="riskTableBody"></tbody>
+    </table>
+  </div>
+
   <div class="section-title">Risk Analysis</div>
-  <div class="heatmap-card"><div class="heatmap-grid-2">
-    <div><p>Risk Level Distribution</p><div id="hmLevelChart"></div></div>
-    <div><p>Score by Category</p><div id="hmScoreChart"></div></div>
-  </div></div>
+  <div class="heatmap-card">
+    <div class="heatmap-grid-2">
+      <div>
+        <p>Risk Level Distribution</p>
+        <div id="hmLevelChart" class="chart-wrap"></div>
+      </div>
+      <div>
+        <p>Score Distribution by Category</p>
+        <div id="hmScoreChart" class="chart-wrap"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-title">Executive Summary &amp; Action Plan</div>
   <div class="exec-grid">
-    <div class="exec-card"><h4>Top Risk Concerns</h4><textarea class="exec-textarea" id="execRisks" placeholder="Primary concerns…"></textarea></div>
-    <div class="exec-card"><h4>Mitigation Progress</h4><textarea class="exec-textarea" id="execMitigation" placeholder="Actions completed…"></textarea></div>
-    <div class="exec-card"><h4>Strategic Priorities</h4><textarea class="exec-textarea" id="execPriorities" placeholder="Top priorities…"></textarea></div>
-    <div class="exec-card"><h4>Action Items &amp; Owners</h4><textarea class="exec-textarea" id="execActions" placeholder="[Action] | [Owner] | [Due]"></textarea></div>
+    <div class="exec-card">
+      <h4>Top Risk Concerns</h4>
+      <textarea class="exec-textarea" id="execRisks" placeholder="Primary risk concerns identified this period…"></textarea>
+    </div>
+    <div class="exec-card">
+      <h4>Mitigation Progress</h4>
+      <textarea class="exec-textarea" id="execMitigation" placeholder="Mitigation actions completed since last review…"></textarea>
+    </div>
+    <div class="exec-card">
+      <h4>Strategic Priorities</h4>
+      <textarea class="exec-textarea" id="execPriorities" placeholder="Top 3–5 strategic priorities for risk reduction…"></textarea>
+    </div>
+    <div class="exec-card">
+      <h4>Action Items &amp; Owners</h4>
+      <textarea class="exec-textarea" id="execActions" placeholder="[Action] | [Owner] | [Due Date]"></textarea>
+    </div>
   </div>
+
   <hr class="divider">
   <div class="action-bar">
-    <button class="btn btn-success" onclick="saveData()">Save</button>
-    <button class="btn btn-dark" onclick="window.print()">Print</button>
-    <button class="btn btn-primary" onclick="exportJSON()">JSON</button>
-    <button class="btn btn-secondary" onclick="exportCSV()">CSV</button>
+    <button class="btn btn-success" onclick="saveData()">Save Progress</button>
+    <button class="btn btn-dark" onclick="window.print()">Print / PDF</button>
+    <button class="btn btn-primary" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
     <button class="btn btn-warning" onclick="expandAll()">Expand All</button>
-    <button class="btn btn-danger" onclick="resetAll()">Reset</button>
+    <button class="btn btn-danger" onclick="resetAll()">Reset All</button>
   </div>
-  <div class="footer-note">IAG Risk Scorecard · Auto-saves · <span id="lastSaved">Not yet saved</span></div>
+  <div class="footer-note">IAG Enterprise Investment Risk Scorecard · Auto-saves to this browser · <span id="lastSaved">Not yet saved</span></div>
 </div>
+
 <script>
-const RISKS=[{id:'r01',category:'Industrial Market Conditions',defaultLevel:'high',impact:'High',mitigation:'Focus on aftermarket services, recurring maintenance, diversified end markets',description:'Exposure to cyclical industrial demand.',kpis:'Aftermarket revenue %, diversification index',owner:'CEO / BD'},{id:'r02',category:'Economic Downturn',defaultLevel:'high',impact:'High',mitigation:'Conservative leverage, strong liquidity',description:'Macro contraction reduces industrial spending.',kpis:'Debt/EBITDA, cash runway',owner:'CFO'},{id:'r03',category:'Acquisition Competition',defaultLevel:'high',impact:'High',mitigation:'Proprietary deal sourcing, founder relationships',description:'Increased PE activity drives multiples up.',kpis:'Pipeline size, win rate',owner:'M&A'},{id:'r04',category:'Valuation Inflation',defaultLevel:'high',impact:'High',mitigation:'Walk away from overpriced deals',description:'Expanded multiples threaten returns.',kpis:'Entry EV/EBITDA vs target',owner:'Investment Committee'},{id:'r05',category:'Industry Consolidation',defaultLevel:'medium',impact:'Medium',mitigation:'Build regional density, operational excellence',description:'Consolidation may reduce available targets.',kpis:'Market share, competitor M&A',owner:'CEO / Strategy'},{id:'r06',category:'Customer Concentration',defaultLevel:'high',impact:'High',mitigation:'Diversify customer base, recurring revenue',description:'Over-reliance on key customers.',kpis:'Top 3 customer %, retention',owner:'Sales / CEO'},{id:'r07',category:'Labor Availability',defaultLevel:'high',impact:'High',mitigation:'Leadership Development, apprenticeship programs',description:'Skilled trades shortage is structural.',kpis:'Fill rate, turnover %',owner:'HR / Ops'},{id:'r08',category:'Leadership Succession',defaultLevel:'medium',impact:'Medium',mitigation:'Internal pipeline, succession planning',description:'Loss of key leaders post-acquisition.',kpis:'Succession coverage %, retention',owner:'CEO / HR'},{id:'r09',category:'Technology Disruption',defaultLevel:'medium',impact:'Medium',mitigation:'Continuous tech investment, AI, predictive maintenance',description:'IoT and AI could disrupt service models.',kpis:'Tech investment %, digital revenue',owner:'CTO / Ops'},{id:'r10',category:'Capital Availability',defaultLevel:'high',impact:'High',mitigation:'Multiple lenders, conservative debt',description:'Access to acquisition financing is critical.',kpis:'Available credit, debt/EBITDA',owner:'CFO'},{id:'r11',category:'Interest Rate Environment',defaultLevel:'medium',impact:'Medium',mitigation:'Conservative leverage, fixed-rate debt',description:'Elevated rates increase financing cost.',kpis:'Wtd avg rate, interest coverage',owner:'CFO'},{id:'r12',category:'Integration Execution',defaultLevel:'high',impact:'High',mitigation:'Integration Playbook, 30-60-90 plans',description:'Failed integrations destroy value.',kpis:'Milestone completion, synergy rate',owner:'Integration / COO'},{id:'r13',category:'Regulatory & Environmental',defaultLevel:'medium',impact:'Medium',mitigation:'Compliance programs, safety systems',description:'OSHA, EPA, sector regulations.',kpis:'Incident rate, audit findings',owner:'Compliance / Legal'},{id:'r14',category:'Reputation',defaultLevel:'very-high',impact:'Very High',mitigation:'Employees First culture, ethical leadership',description:'Brand is a critical differentiator.',kpis:'Employee NPS, Glassdoor, retention',owner:'CEO'},{id:'r15',category:'Cybersecurity',defaultLevel:'medium',impact:'Medium',mitigation:'IT governance, training, incident response',description:'Ransomware and OT/IT convergence risk.',kpis:'Assessment score, patch compliance',owner:'IT / CISO'}];
-const LEVEL_ORDER={'very-high':5,high:4,medium:3,low:2,na:1};
-const LEVEL_LABELS={'very-high':'Very High',high:'High',medium:'Medium',low:'Low',na:'N/A'};
-const LEVEL_COLORS={'very-high':'#7b1d1d',high:'#8B4A3B',medium:'#C08A2E',low:'#4B6B4F',na:'#8a8577'};
-const SCORE_LABELS={1:'Very Low',2:'Low',3:'Moderate',4:'Elevated',5:'Critical'};
-const SCORE_COLORS={1:'#4B6B4F',2:'#5a8a5e',3:'#C08A2E',4:'#c06a3a',5:'#8B4A3B'};
-const TREND_LABELS={up:'Increasing',flat:'Stable',down:'Decreasing'};
-let state={scores:{},levels:{},trends:{},notes:{},priorities:{},detailNotes:{},detailActions:{},currentFilter:'all',sortCol:null,sortDir:1,allExpanded:false};
-document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('metaDate').valueAsDate=new Date();
-  RISKS.forEach(r=>{state.levels[r.id]=r.defaultLevel;state.trends[r.id]='flat';state.scores[r.id]=0;state.priorities[r.id]=false;state.notes[r.id]='';state.detailNotes[r.id]='';state.detailActions[r.id]='';});
-  buildTable();loadData();updateHeader();updateDashboard();
+/* identical risk logic preserved — only visual layer changed */
+const RISKS = [
+  { id:'r01', category:'Industrial Market Conditions', defaultLevel:'high', impact:'High', mitigation:'Focus on aftermarket services, recurring maintenance, diversified end markets', description:'Exposure to cyclical industrial demand. Revenue concentration in capital-intensive sectors creates volatility risk during market downturns. IAG mitigates through diversification across end markets and emphasis on recurring service revenue.', kpis:'Aftermarket revenue %, end-market diversification index, revenue volatility vs. market index', owner:'CEO / Business Development' },
+  { id:'r02', category:'Economic Downturn', defaultLevel:'high', impact:'High', mitigation:'Conservative leverage, strong liquidity, disciplined capital allocation', description:'Macro-economic contraction reduces industrial spending and acquisition financing availability. IAG targets recession-resilient service businesses but remains exposed to broader economic cycles.', kpis:'Debt/EBITDA ratio, current ratio, revenue retention during downturns, cash runway', owner:'CFO' },
+  { id:'r03', category:'Acquisition Competition', defaultLevel:'high', impact:'High', mitigation:'Proprietary deal sourcing, founder relationships, disciplined valuations', description:'Increased PE activity in industrial services drives up acquisition multiples and reduces quality deal flow. Competitor platforms with more capital can outbid IAG on brokered processes.', kpis:'Deal pipeline size, proprietary vs. brokered deal ratio, average acquisition multiple, win rate', owner:'M&A / Business Development' },
+  { id:'r04', category:'Valuation Inflation', defaultLevel:'high', impact:'High', mitigation:'Walk away from overpriced deals, maintain underwriting discipline', description:'Market multiples for industrial services businesses have expanded significantly, threatening return targets. Pressure to deploy capital may tempt overpayment for lower-quality assets.', kpis:'Entry EV/EBITDA vs. target, IRR sensitivity, deal pipeline conversion rate, walk-away rate', owner:'Investment Committee' },
+  { id:'r05', category:'Industry Consolidation', defaultLevel:'medium', impact:'Medium', mitigation:'Build regional density, operational excellence, preserve entrepreneurial culture', description:'Rapid consolidation by strategic acquirers and larger PE platforms may reduce available targets and compress competitive moat. Scale players may have cost advantages.', kpis:'Regional market share, competitive win rate, target availability index, competitor M&A activity', owner:'CEO / Strategy' },
+  { id:'r06', category:'Customer Concentration', defaultLevel:'high', impact:'High', mitigation:'Diversify customer base, increase share of wallet, expand recurring revenue', description:'Over-reliance on key customers creates revenue vulnerability. Loss of a top customer could materially impact EBITDA. Recurring service contracts reduce but do not eliminate this risk.', kpis:'Top 3 customer revenue %, customer retention rate, recurring revenue %, new customer acquisition', owner:'Sales Leadership / CEO' },
+  { id:'r07', category:'Labor Availability', defaultLevel:'high', impact:'High', mitigation:'Leadership Development Program, apprenticeship programs, employer-of-choice strategy', description:'Skilled trades shortage is a structural, long-term challenge. Technician availability directly limits service capacity and growth. Wage inflation compounds margin pressure.', kpis:'Open position fill rate, technician turnover %, apprenticeship enrollment, wage inflation rate', owner:'HR / Operations Leadership' },
+  { id:'r08', category:'Leadership Succession', defaultLevel:'medium', impact:'Medium', mitigation:'Internal leadership pipeline, succession planning, mentorship programs', description:'Loss of key operational leaders or founders post-acquisition can disrupt culture, customer relationships, and performance. Founder dependency is a common risk in lower-middle market acquisitions.', kpis:'Succession plan coverage %, leadership retention rate, internal promotion rate, key-man dependency', owner:'CEO / HR' },
+  { id:'r09', category:'Technology Disruption', defaultLevel:'medium', impact:'Medium', mitigation:'Continuous investment in technology, AI, predictive maintenance, digital capabilities', description:'IoT sensors, AI-driven predictive maintenance, and automation could disrupt traditional service models. Companies that fail to adopt digital tools risk losing customers to more technologically advanced competitors.', kpis:'Technology investment as % of revenue, digital revenue %, predictive maintenance adoption rate', owner:'CTO / Operations' },
+  { id:'r10', category:'Capital Availability', defaultLevel:'high', impact:'High', mitigation:'Multiple lending relationships, conservative debt structure, strong cash flow generation', description:"Access to acquisition financing and growth capital is critical to IAG's buy-and-build strategy. Credit market tightening, bank failures, or covenant violations could constrain deal execution.", kpis:'Available credit facilities, debt/EBITDA, lender relationship count, cost of capital, covenant headroom', owner:'CFO / Investor Relations' },
+  { id:'r11', category:'Interest Rate Environment', defaultLevel:'medium', impact:'Medium', mitigation:'Conservative leverage, fixed-rate debt where appropriate, rate hedging', description:'Elevated interest rates increase cost of acquisition financing and compress returns on leveraged transactions. Variable rate debt creates cash flow sensitivity to rate movements.', kpis:'Weighted average interest rate, fixed vs. floating ratio, interest coverage ratio, rate sensitivity analysis', owner:'CFO' },
+  { id:'r12', category:'Integration Execution', defaultLevel:'high', impact:'High', mitigation:'Integration Playbook, 30-60-90-day plans, dedicated integration team', description:'Failed integrations destroy value. Cultural misalignment, ERP/systems gaps, management friction, and unrealized synergies are the primary failure modes in buy-and-build strategies.', kpis:'Integration milestone completion %, synergy realization rate, employee retention post-close, EBITDA vs. underwrite', owner:'Integration Team / COO' },
+  { id:'r13', category:'Regulatory & Environmental', defaultLevel:'medium', impact:'Medium', mitigation:'Compliance programs, safety systems, ongoing audits, environmental assessments', description:'Industrial operations face OSHA, EPA, state environmental, and sector-specific regulatory requirements. Non-compliance creates financial liability, reputational damage, and operational disruption.', kpis:'OSHA incident rate, regulatory violation count, audit findings, compliance training completion %', owner:'Compliance / Operations / Legal' },
+  { id:'r14', category:'Reputation', defaultLevel:'very-high', impact:'Very High', mitigation:'Employees First culture, ethical leadership, customer-first execution, proactive communications', description:"IAG's brand and reputation is a critical competitive differentiator for deal sourcing, talent attraction, and customer retention. Reputation damage from any portfolio company or leadership action can have outsized impact.", kpis:'Employee NPS, customer satisfaction score, Glassdoor rating, media sentiment, employee retention', owner:'CEO / All Leadership' },
+  { id:'r15', category:'Cybersecurity', defaultLevel:'medium', impact:'Medium', mitigation:'IT governance, cybersecurity standards, employee training, incident response plan', description:'Industrial companies are increasingly targeted by ransomware and data breaches. OT/IT convergence creates new attack surfaces. A successful attack could halt operations and damage customer trust.', kpis:'Security assessment score, incident count, patch compliance %, employee phishing test pass rate', owner:'IT Leadership / CISO' }
+];
+
+const LEVEL_ORDER  = { 'very-high':5, 'high':4, 'medium':3, 'low':2, 'na':1 };
+const LEVEL_LABELS = { 'very-high':'Very High', 'high':'High', 'medium':'Medium', 'low':'Low', 'na':'N/A' };
+const LEVEL_COLORS = { 'very-high':'#7b1d1d', 'high':'#8B4A3B', 'medium':'#C08A2E', 'low':'#4B6B4F', 'na':'#8a8577' };
+const LEVEL_ICONS  = { 'very-high':'●', 'high':'●', 'medium':'●', 'low':'●', 'na':'○' };
+const SCORE_LABELS = { 1:'Very Low', 2:'Low', 3:'Moderate', 4:'Elevated', 5:'Critical' };
+const SCORE_COLORS = { 1:'#4B6B4F', 2:'#5a8a5e', 3:'#C08A2E', 4:'#c06a3a', 5:'#8B4A3B' };
+const TREND_LABELS = { 'up':'Increasing', 'flat':'Stable', 'down':'Decreasing' };
+
+let state = { scores:{}, levels:{}, trends:{}, notes:{}, priorities:{}, detailNotes:{}, detailActions:{}, currentFilter:'all', sortCol:null, sortDir:1, allExpanded:false };
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('metaDate').valueAsDate = new Date();
+  RISKS.forEach(r => {
+    state.levels[r.id] = r.defaultLevel;
+    state.trends[r.id] = 'flat';
+    state.scores[r.id] = 0;
+    state.priorities[r.id] = false;
+    state.notes[r.id] = '';
+    state.detailNotes[r.id] = '';
+    state.detailActions[r.id] = '';
+  });
+  buildTable(); loadData(); updateHeader(); updateDashboard();
 });
-function updateHeader(){
-  const co=document.getElementById('metaCompany').value||'—',an=document.getElementById('metaAnalyst').value||'—',dt=document.getElementById('metaDate').value||'—',pr=document.getElementById('metaPeriod').value||'—';
-  const stLabels={'on-track':'On Track',watch:'Watch List',concern:'Concern',critical:'Critical'};
-  document.getElementById('hdrCompany').textContent=`Company: ${co}`;
-  document.getElementById('hdrAnalyst').textContent=`Analyst: ${an}`;
-  document.getElementById('hdrDate').textContent=`Date: ${dt}`;
-  document.getElementById('hdrPeriod').textContent=`Period: ${pr}`;
-  document.getElementById('hdrStatus').textContent=`Status: ${stLabels[document.getElementById('metaStatus').value]||'—'}`;
+
+function updateHeader() {
+  const co = document.getElementById('metaCompany').value || '—';
+  const an = document.getElementById('metaAnalyst').value || '—';
+  const dt = document.getElementById('metaDate').value || '—';
+  const pr = document.getElementById('metaPeriod').value || '—';
+  const stVal = document.getElementById('metaStatus').value;
+  const stLabels = { 'on-track':'On Track', 'watch':'Watch List', 'concern':'Concern', 'critical':'Critical' };
+  document.getElementById('hdrCompany').textContent = `Company: ${co}`;
+  document.getElementById('hdrAnalyst').textContent = `Analyst: ${an}`;
+  document.getElementById('hdrDate').textContent    = `Date: ${dt}`;
+  document.getElementById('hdrPeriod').textContent  = `Period: ${pr}`;
+  document.getElementById('hdrStatus').textContent  = `Status: ${stLabels[stVal] || '—'}`;
   autoSave();
 }
-function buildTable(){
-  const tbody=document.getElementById('riskTableBody');tbody.innerHTML='';
-  RISKS.forEach(risk=>{
-    const lv=state.levels[risk.id];
-    const tr=document.createElement('tr');tr.className='main-row';tr.id=`row_${risk.id}`;tr.dataset.level=lv;
-    tr.innerHTML=`<td style="text-align:center"><span class="priority-star ${state.priorities[risk.id]?'active':''}" id="star_${risk.id}" onclick="togglePriority('${risk.id}')">★</span></td>
-      <td><div style="font-family:'Zilla Slab',serif;font-weight:600;font-size:.78rem">${risk.category}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:#9c927d;margin-top:2px">${risk.owner}</div></td>
-      <td><div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap"><div class="score-selector">${[1,2,3,4,5].map(n=>`<button class="score-btn" id="scoreBtn_${risk.id}_${n}" onclick="setScore('${risk.id}',${n})">${n}</button>`).join('')}</div><div class="mini-bar-wrap"><div class="mini-bar" id="miniBar_${risk.id}"></div></div><span id="scoreLabel_${risk.id}" style="font-family:'IBM Plex Mono',monospace;font-size:.52rem;color:#9c927d"></span></div></td>
-      <td><select class="table-select" id="levelSel_${risk.id}" onchange="setLevel('${risk.id}',this.value)"><option value="very-high" ${lv==='very-high'?'selected':''}>Very High</option><option value="high" ${lv==='high'?'selected':''}>High</option><option value="medium" ${lv==='medium'?'selected':''}>Medium</option><option value="low" ${lv==='low'?'selected':''}>Low</option><option value="na" ${lv==='na'?'selected':''}>N/A</option></select><div id="levelBadge_${risk.id}"></div></td>
+
+function buildTable() {
+  const tbody = document.getElementById('riskTableBody');
+  tbody.innerHTML = '';
+  RISKS.forEach((risk) => {
+    const lv = state.levels[risk.id];
+    const tr = document.createElement('tr');
+    tr.className = 'main-row';
+    tr.id = `row_${risk.id}`;
+    tr.dataset.riskId = risk.id;
+    tr.dataset.level = lv;
+    tr.dataset.category = risk.category.toLowerCase();
+    tr.innerHTML = `
+      <td style="text-align:center;padding:6px 4px;"><span class="priority-star ${state.priorities[risk.id]?'active':''}" id="star_${risk.id}" onclick="togglePriority('${risk.id}')" title="Toggle priority">★</span></td>
+      <td><div style="font-family:'Zilla Slab',serif;font-weight:600;font-size:0.82rem;color:var(--ink);line-height:1.25;">${risk.category}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:#9c927d;margin-top:2px;">${risk.owner}</div></td>
+      <td><div style="display:flex;align-items:center;gap:6px;"><div class="score-selector" id="scoreSel_${risk.id}">${[1,2,3,4,5].map(n=>`<button class="score-btn" id="scoreBtn_${risk.id}_${n}" data-score="${n}" title="${SCORE_LABELS[n]}" onclick="setScore('${risk.id}',${n})">${n}</button>`).join('')}</div><div class="mini-bar-wrap"><div class="mini-bar" id="miniBar_${risk.id}"></div></div><span id="scoreLabel_${risk.id}" style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:#9c927d;white-space:nowrap;min-width:48px;"></span></div></td>
+      <td><select class="table-select" id="levelSel_${risk.id}" onchange="setLevel('${risk.id}',this.value)" style="margin-bottom:4px;">
+        <option value="very-high" ${lv==='very-high'?'selected':''}>Very High</option>
+        <option value="high" ${lv==='high'?'selected':''}>High</option>
+        <option value="medium" ${lv==='medium'?'selected':''}>Medium</option>
+        <option value="low" ${lv==='low'?'selected':''}>Low</option>
+        <option value="na" ${lv==='na'?'selected':''}>N/A</option>
+      </select><div id="levelBadge_${risk.id}"></div></td>
       <td><span class="impact-badge impact-${risk.impact.toLowerCase().replace(' ','-')}">${risk.impact}</span></td>
-      <td><select class="table-select" id="trendSel_${risk.id}" onchange="setTrend('${risk.id}',this.value)"><option value="up" ${state.trends[risk.id]==='up'?'selected':''}>Increasing</option><option value="flat" ${state.trends[risk.id]==='flat'?'selected':''}>Stable</option><option value="down" ${state.trends[risk.id]==='down'?'selected':''}>Decreasing</option></select></td>
-      <td><div class="residual-display" id="residual_${risk.id}" style="background:#f0f0f0;color:#aaa">—</div></td>
-      <td><textarea class="notes-input" id="notes_${risk.id}" placeholder="Notes…" oninput="setNote('${risk.id}',this.value)">${state.notes[risk.id]}</textarea></td>
-      <td style="text-align:center"><button class="expand-btn" id="expandBtn_${risk.id}" onclick="toggleDetail('${risk.id}')">▶</button></td>`;
+      <td><select class="table-select" id="trendSel_${risk.id}" onchange="setTrend('${risk.id}',this.value)">
+        <option value="up" ${state.trends[risk.id]==='up'?'selected':''}>Increasing</option>
+        <option value="flat" ${state.trends[risk.id]==='flat'?'selected':''}>Stable</option>
+        <option value="down" ${state.trends[risk.id]==='down'?'selected':''}>Decreasing</option>
+      </select></td>
+      <td><div class="residual-display" id="residual_${risk.id}" style="background:#f0f0f0;color:#aaa;">—</div></td>
+      <td><textarea class="notes-input" id="notes_${risk.id}" placeholder="Mitigation notes…" oninput="setNote('${risk.id}',this.value)">${state.notes[risk.id]}</textarea></td>
+      <td style="text-align:center;"><button class="expand-btn" id="expandBtn_${risk.id}" onclick="toggleDetail('${risk.id}')" title="View details">▶</button></td>
+    `;
     tbody.appendChild(tr);
-    const detailTr=document.createElement('tr');detailTr.className='detail-row';detailTr.id=`detail_${risk.id}`;
-    detailTr.innerHTML=`<td colspan="9" class="detail-cell"><div class="detail-grid">
-      <div class="detail-section"><h4>Description</h4><p>${risk.description}</p><br><h4>Owner</h4><span class="owner-tag">${risk.owner}</span><br><br><h4>Mitigation</h4><p>${risk.mitigation}</p></div>
-      <div class="detail-section"><h4>KPIs</h4><p>${risk.kpis}</p><br><h4>Trend</h4><p id="detailTrend_${risk.id}" style="font-weight:600">${TREND_LABELS[state.trends[risk.id]]}</p><br><h4>Score</h4><p id="detailScore_${risk.id}" style="font-weight:600;color:#9c927d">Not scored</p></div>
-      <div class="detail-section"><h4>Analysis Notes</h4><textarea class="detail-textarea" id="detailNotes_${risk.id}" oninput="state.detailNotes['${risk.id}']=this.value;autoSave()">${state.detailNotes[risk.id]}</textarea><h4 style="margin-top:8px">Action Items</h4><textarea class="detail-textarea" id="detailActions_${risk.id}" oninput="state.detailActions['${risk.id}']=this.value;autoSave()">${state.detailActions[risk.id]}</textarea></div>
+
+    const detailTr = document.createElement('tr');
+    detailTr.className = 'detail-row';
+    detailTr.id = `detail_${risk.id}`;
+    detailTr.innerHTML = `<td colspan="9" class="detail-cell"><div class="detail-grid">
+      <div class="detail-section"><h4>Risk Description</h4><p>${risk.description}</p><br><h4>Risk Owner</h4><span class="owner-tag">${risk.owner}</span><br><br><h4>Standard Mitigation</h4><p>${risk.mitigation}</p></div>
+      <div class="detail-section"><h4>Key Performance Indicators</h4><p>${risk.kpis}</p><br><h4>Current Trend</h4><p id="detailTrend_${risk.id}" style="font-weight:600;">${TREND_LABELS[state.trends[risk.id]]}</p><br><h4>Current Score</h4><p id="detailScore_${risk.id}" style="font-weight:600;color:#9c927d;">Not yet scored</p></div>
+      <div class="detail-section"><h4>Detailed Analysis Notes</h4><textarea class="detail-textarea" id="detailNotes_${risk.id}" placeholder="Add detailed analysis…" oninput="state.detailNotes['${risk.id}']=this.value;autoSave();">${state.detailNotes[risk.id]}</textarea><h4 style="margin-top:10px;">Specific Action Items</h4><textarea class="detail-textarea" id="detailActions_${risk.id}" placeholder="Actions, owners, due dates…" oninput="state.detailActions['${risk.id}']=this.value;autoSave();">${state.detailActions[risk.id]}</textarea></div>
     </div></td>`;
     tbody.appendChild(detailTr);
-    updateLevelBadge(risk.id);updateResidual(risk.id);
+    updateLevelBadge(risk.id);
+    updateResidual(risk.id);
   });
 }
-function setScore(id,v){state.scores[id]=v;for(let n=1;n<=5;n++){const b=document.getElementById(`scoreBtn_${id}_${n}`);if(b){b.className='score-btn';if(n===v)b.classList.add(`active-${n}`);}}const bar=document.getElementById(`miniBar_${id}`);if(bar){bar.style.width=(v/5*100)+'%';bar.style.background=SCORE_COLORS[v]||'#ddd';}const lbl=document.getElementById(`scoreLabel_${id}`);if(lbl){lbl.textContent=SCORE_LABELS[v]||'';lbl.style.color=SCORE_COLORS[v]||'#9c927d';}const ds=document.getElementById(`detailScore_${id}`);if(ds){ds.textContent=`${v}/5 — ${SCORE_LABELS[v]}`;ds.style.color=SCORE_COLORS[v];}updateResidual(id);updateDashboard();autoSave();}
-function setLevel(id,v){state.levels[id]=v;const row=document.getElementById(`row_${id}`);if(row)row.dataset.level=v;updateLevelBadge(id);updateResidual(id);applyCurrentFilter();updateDashboard();autoSave();}
-function updateLevelBadge(id){const el=document.getElementById(`levelBadge_${id}`);if(!el)return;const lv=state.levels[id];el.innerHTML=`<span class="risk-badge badge-${lv}">${LEVEL_LABELS[lv]}</span>`;}
-function setTrend(id,v){state.trends[id]=v;const dt=document.getElementById(`detailTrend_${id}`);if(dt)dt.textContent=TREND_LABELS[v];autoSave();}
-function setNote(id,v){state.notes[id]=v;autoSave();}
-function togglePriority(id){state.priorities[id]=!state.priorities[id];const s=document.getElementById(`star_${id}`);if(s)s.classList.toggle('active',state.priorities[id]);updateDashboard();autoSave();}
-function updateResidual(id){const el=document.getElementById(`residual_${id}`);if(!el)return;const sc=state.scores[id],lv=state.levels[id];if(!sc){el.textContent='—';el.style.background='#f0f0f0';el.style.color='#aaa';return;}const res=Math.round((sc+(LEVEL_ORDER[lv]||3))/2);const labs={1:'Very Low',2:'Low',3:'Moderate',4:'Elevated',5:'Critical'},cols={1:'#4B6B4F',2:'#5a8a5e',3:'#C08A2E',4:'#c06a3a',5:'#8B4A3B'};el.textContent=labs[res]||'—';el.style.color=cols[res]||'#aaa';el.style.background=(cols[res]||'#aaa')+'22';}
-function toggleDetail(id){const d=document.getElementById(`detail_${id}`),b=document.getElementById(`expandBtn_${id}`);if(!d||!b)return;const open=d.classList.contains('open');d.classList.toggle('open',!open);b.textContent=open?'▶':'▼';b.classList.toggle('open',!open);}
-function expandAll(){state.allExpanded=!state.allExpanded;RISKS.forEach(r=>{const d=document.getElementById(`detail_${r.id}`),b=document.getElementById(`expandBtn_${r.id}`);if(d)d.classList.toggle('open',state.allExpanded);if(b){b.textContent=state.allExpanded?'▼':'▶';b.classList.toggle('open',state.allExpanded);}});showToast(state.allExpanded?'Expanded':'Collapsed');}
-let currentFilter='all';
-function applyFilter(f,btn){currentFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');applyCurrentFilter();}
-function applyCurrentFilter(){const counts={'very-high':0,high:0,medium:0,low:0,na:0};RISKS.forEach(r=>{const row=document.getElementById(`row_${r.id}`),detail=document.getElementById(`detail_${r.id}`),lv=state.levels[r.id];counts[lv]=(counts[lv]||0)+1;let show=true;if(currentFilter==='starred')show=!!state.priorities[r.id];else if(currentFilter!=='all')show=lv===currentFilter;if(row)row.classList.toggle('hidden-row',!show);if(detail&&!show){detail.classList.remove('open');const b=document.getElementById(`expandBtn_${r.id}`);if(b){b.textContent='▶';b.classList.remove('open');}}});const labels={'f-all':`All (${RISKS.length})`,'f-vh':`Very High (${counts['very-high']||0})`,'f-high':`High (${counts.high||0})`,'f-medium':`Medium (${counts.medium||0})`,'f-low':`Low (${counts.low||0})`,'f-star':`Priority (${Object.values(state.priorities).filter(Boolean).length})`};Object.entries(labels).forEach(([c,l])=>{const el=document.querySelector(`.filter-btn.${c}`);if(el)el.textContent=l;});}
-function searchRisks(q){q=q.toLowerCase().trim();RISKS.forEach(r=>{const row=document.getElementById(`row_${r.id}`);if(!row)return;if(!q){applyCurrentFilter();return;}const m=r.category.toLowerCase().includes(q)||r.mitigation.toLowerCase().includes(q)||r.description.toLowerCase().includes(q)||r.owner.toLowerCase().includes(q)||(state.notes[r.id]||'').toLowerCase().includes(q);row.classList.toggle('hidden-row',!m);});}
-function sortTable(col){if(state.sortCol===col)state.sortDir*=-1;else{state.sortCol=col;state.sortDir=1;}['category','level'].forEach(c=>{const el=document.getElementById(`sortIcon_${c}`);if(el)el.textContent=c===col?(state.sortDir===1?'↑':'↓'):'↕';});const tbody=document.getElementById('riskTableBody');const pairs=RISKS.map(r=>({id:r.id,main:document.getElementById(`row_${r.id}`),detail:document.getElementById(`detail_${r.id}`)}));pairs.sort((a,b)=>{const ra=RISKS.find(r=>r.id===a.id),rb=RISKS.find(r=>r.id===b.id);if(col==='category')return ra.category.localeCompare(rb.category)*state.sortDir;if(col==='level')return(LEVEL_ORDER[state.levels[b.id]]-LEVEL_ORDER[state.levels[a.id]])*state.sortDir;return 0;});pairs.forEach(p=>{if(p.main)tbody.appendChild(p.main);if(p.detail)tbody.appendChild(p.detail);});}
-function updateDashboard(){
-  const counts={'very-high':0,high:0,medium:0,low:0,na:0};RISKS.forEach(r=>{counts[state.levels[r.id]||'na']++;});
-  const scoredList=RISKS.filter(r=>state.scores[r.id]>0),scored=scoredList.length,total=RISKS.length,pct=Math.round(scored/total*100);
-  const avg=scored>0?scoredList.reduce((s,r)=>s+state.scores[r.id],0)/scored:0,stars=Object.values(state.priorities).filter(Boolean).length;
-  [['cntVH',counts['very-high']],['cntH',counts.high],['cntM',counts.medium],['cntL',counts.low],['cntStar',stars],['cntScored',`${scored}/${total}`],['cntPct',`${pct}% complete`],['cntAvg',avg>0?avg.toFixed(1):'—'],['cntAvgLabel',avg>0?(SCORE_LABELS[Math.round(avg)]||'—'):'Not yet scored']].forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v;});
-  const cb=document.getElementById('completionBar'),ct=document.getElementById('completionText');if(cb)cb.style.width=pct+'%';if(ct)ct.textContent=`${scored} / ${total} scored`;
-  const ringFill=document.getElementById('ringFill'),ringScore=document.getElementById('ringScore'),ringLabel=document.getElementById('ringLabel'),circ=2*Math.PI*38;
-  if(avg>0&&ringFill&&ringScore){ringFill.style.strokeDashoffset=circ*(1-avg/5);ringFill.style.stroke=SCORE_COLORS[Math.round(avg)]||'#ddd';ringScore.textContent=avg.toFixed(1);ringScore.style.color=SCORE_COLORS[Math.round(avg)]||'#ccc';if(ringLabel){ringLabel.textContent=`Risk Level: ${SCORE_LABELS[Math.round(avg)]||'—'}`;ringLabel.style.color=SCORE_COLORS[Math.round(avg)];}}
-  else{if(ringFill){ringFill.style.strokeDashoffset=circ;ringFill.style.stroke='#ddd';}if(ringScore){ringScore.textContent='—';ringScore.style.color='#ccc';}if(ringLabel){ringLabel.textContent='Enter scores to begin';ringLabel.style.color='#9c927d';}}
-  const mkChart=(id,items)=>{(document.getElementById(id)||{}).innerHTML=items;};
-  mkChart('levelDistChart',['very-high','high','medium','low'].map(lv=>`<div class="chart-row"><div class="chart-label">${LEVEL_LABELS[lv]}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${counts[lv]/total*100}%;background:${LEVEL_COLORS[lv]}"><span>${counts[lv]||''}</span></div></div><div class="chart-val">${counts[lv]}</div></div>`).join(''));
-  const scCounts={1:0,2:0,3:0,4:0,5:0};RISKS.forEach(r=>{if(state.scores[r.id]>0)scCounts[state.scores[r.id]]++;});
-  mkChart('scoreDistChart',[1,2,3,4,5].map(s=>`<div class="chart-row"><div class="chart-label">${s} — ${SCORE_LABELS[s]}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${scCounts[s]/total*100}%;background:${SCORE_COLORS[s]}"><span>${scCounts[s]||''}</span></div></div><div class="chart-val">${scCounts[s]}</div></div>`).join(''));
-  mkChart('hmLevelChart',['very-high','high','medium','low'].map(lv=>`<div class="chart-row"><div class="chart-label">${LEVEL_LABELS[lv]}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${counts[lv]/total*100}%;background:${LEVEL_COLORS[lv]}"><span>${counts[lv]||''}</span></div></div><div class="chart-val" style="color:${LEVEL_COLORS[lv]}">${counts[lv]}</div></div>`).join(''));
-  const scoredR=RISKS.filter(r=>state.scores[r.id]>0).sort((a,b)=>state.scores[b.id]-state.scores[a.id]).slice(0,8);
-  mkChart('hmScoreChart',scoredR.length===0?'<p style="color:#9c927d;font-size:.72rem;padding:6px 0">Score risks to see chart</p>':scoredR.map(r=>{const sc=state.scores[r.id],n=r.category.length>16?r.category.slice(0,16)+'…':r.category;return `<div class="chart-row"><div class="chart-label" title="${r.category}">${n}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${sc/5*100}%;background:${SCORE_COLORS[sc]}"><span>${SCORE_LABELS[sc]}</span></div></div><div class="chart-val" style="color:${SCORE_COLORS[sc]}">${sc}</div></div>`;}).join(''));
+
+function setScore(riskId, value) {
+  state.scores[riskId] = value;
+  for (let n = 1; n <= 5; n++) {
+    const btn = document.getElementById(`scoreBtn_${riskId}_${n}`);
+    if (!btn) continue;
+    btn.className = 'score-btn';
+    if (n === value) btn.classList.add(`active-${n}`);
+  }
+  const bar = document.getElementById(`miniBar_${riskId}`);
+  if (bar) { bar.style.width = (value / 5 * 100) + '%'; bar.style.background = SCORE_COLORS[value] || '#ddd'; }
+  const lbl = document.getElementById(`scoreLabel_${riskId}`);
+  if (lbl) { lbl.textContent = SCORE_LABELS[value] || ''; lbl.style.color = SCORE_COLORS[value] || '#9c927d'; }
+  const ds = document.getElementById(`detailScore_${riskId}`);
+  if (ds) { ds.textContent = `${value}/5 — ${SCORE_LABELS[value]}`; ds.style.color = SCORE_COLORS[value]; }
+  updateResidual(riskId); updateDashboard(); autoSave();
+}
+
+function setLevel(riskId, value) {
+  state.levels[riskId] = value;
+  const row = document.getElementById(`row_${riskId}`);
+  if (row) row.dataset.level = value;
+  updateLevelBadge(riskId); updateResidual(riskId); applyCurrentFilter(); updateDashboard(); autoSave();
+}
+function updateLevelBadge(riskId) {
+  const el = document.getElementById(`levelBadge_${riskId}`);
+  if (!el) return;
+  const lv = state.levels[riskId];
+  el.innerHTML = `<span class="risk-badge badge-${lv}">${LEVEL_LABELS[lv]}</span>`;
+}
+function setTrend(riskId, value) {
+  state.trends[riskId] = value;
+  const dt = document.getElementById(`detailTrend_${riskId}`);
+  if (dt) dt.textContent = TREND_LABELS[value];
+  autoSave();
+}
+function setNote(riskId, value) { state.notes[riskId] = value; autoSave(); }
+function togglePriority(riskId) {
+  state.priorities[riskId] = !state.priorities[riskId];
+  const star = document.getElementById(`star_${riskId}`);
+  if (star) star.classList.toggle('active', state.priorities[riskId]);
+  updateDashboard(); autoSave();
+}
+function updateResidual(riskId) {
+  const el = document.getElementById(`residual_${riskId}`);
+  if (!el) return;
+  const score = state.scores[riskId];
+  const level = state.levels[riskId];
+  if (!score || score === 0) {
+    el.textContent = '—';
+    el.style.background = '#f0f0f0';
+    el.style.color = '#aaa';
+    el.style.border = '1px solid #e0e0e0';
+    return;
+  }
+  const lvScore = LEVEL_ORDER[level] || 3;
+  const residual = Math.round((score + lvScore) / 2);
+  const rLabels = { 1:'Very Low', 2:'Low', 3:'Moderate', 4:'Elevated', 5:'Critical' };
+  const rColors = { 1:'#4B6B4F', 2:'#5a8a5e', 3:'#C08A2E', 4:'#c06a3a', 5:'#8B4A3B' };
+  el.textContent = rLabels[residual] || '—';
+  el.style.color = rColors[residual] || '#aaa';
+  el.style.background = (rColors[residual] || '#aaa') + '22';
+  el.style.border = `1px solid ${(rColors[residual] || '#aaa')}55`;
+}
+function toggleDetail(riskId) {
+  const detailRow = document.getElementById(`detail_${riskId}`);
+  const btn = document.getElementById(`expandBtn_${riskId}`);
+  if (!detailRow || !btn) return;
+  const isOpen = detailRow.classList.contains('open');
+  detailRow.classList.toggle('open', !isOpen);
+  btn.textContent = isOpen ? '▶' : '▼';
+  btn.classList.toggle('open', !isOpen);
+}
+function expandAll() {
+  state.allExpanded = !state.allExpanded;
+  RISKS.forEach(r => {
+    const detailRow = document.getElementById(`detail_${r.id}`);
+    const btn = document.getElementById(`expandBtn_${r.id}`);
+    if (detailRow) detailRow.classList.toggle('open', state.allExpanded);
+    if (btn) { btn.textContent = state.allExpanded ? '▼' : '▶'; btn.classList.toggle('open', state.allExpanded); }
+  });
+  showToast(state.allExpanded ? 'All rows expanded' : 'All rows collapsed');
+}
+let currentFilter = 'all';
+function applyFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
   applyCurrentFilter();
 }
-function gatherData(){return{version:'2.0',meta:{company:document.getElementById('metaCompany').value,analyst:document.getElementById('metaAnalyst').value,date:document.getElementById('metaDate').value,period:document.getElementById('metaPeriod').value,stage:document.getElementById('metaStage').value,status:document.getElementById('metaStatus').value},scores:state.scores,levels:state.levels,trends:state.trends,notes:state.notes,priorities:state.priorities,detailNotes:state.detailNotes,detailActions:state.detailActions,summary:{risks:document.getElementById('execRisks').value,mitigation:document.getElementById('execMitigation').value,priorities:document.getElementById('execPriorities').value,actions:document.getElementById('execActions').value},savedAt:new Date().toISOString()};}
-function autoSave(){try{localStorage.setItem('iag_risk_v2',JSON.stringify(gatherData()));const el=document.getElementById('lastSaved');if(el)el.textContent=`Last saved: ${new Date().toLocaleTimeString()}`;}catch(e){}}
-function saveData(){autoSave();showToast('Saved');}
-function loadData(){const raw=localStorage.getItem('iag_risk_v2');if(!raw)return;try{const d=JSON.parse(raw);if(d.meta){['company','analyst','date','period','stage','status'].forEach(k=>{if(d.meta[k]){const el=document.getElementById('meta'+k.charAt(0).toUpperCase()+k.slice(1));if(el)el.value=d.meta[k];}});}if(d.scores)Object.entries(d.scores).forEach(([id,v])=>{if(v>0)setScore(id,v);});if(d.levels)Object.entries(d.levels).forEach(([id,v])=>{state.levels[id]=v;const s=document.getElementById(`levelSel_${id}`);if(s)s.value=v;const row=document.getElementById(`row_${id}`);if(row)row.dataset.level=v;updateLevelBadge(id);updateResidual(id);});if(d.trends)Object.entries(d.trends).forEach(([id,v])=>{state.trends[id]=v;const s=document.getElementById(`trendSel_${id}`);if(s)s.value=v;const dt=document.getElementById(`detailTrend_${id}`);if(dt)dt.textContent=TREND_LABELS[v];});if(d.notes)Object.entries(d.notes).forEach(([id,v])=>{state.notes[id]=v;const el=document.getElementById(`notes_${id}`);if(el)el.value=v;});if(d.priorities)Object.entries(d.priorities).forEach(([id,v])=>{state.priorities[id]=v;const s=document.getElementById(`star_${id}`);if(s)s.classList.toggle('active',v);});if(d.detailNotes)Object.entries(d.detailNotes).forEach(([id,v])=>{state.detailNotes[id]=v;const el=document.getElementById(`detailNotes_${id}`);if(el)el.value=v;});if(d.detailActions)Object.entries(d.detailActions).forEach(([id,v])=>{state.detailActions[id]=v;const el=document.getElementById(`detailActions_${id}`);if(el)el.value=v;});if(d.summary){if(d.summary.risks)document.getElementById('execRisks').value=d.summary.risks;if(d.summary.mitigation)document.getElementById('execMitigation').value=d.summary.mitigation;if(d.summary.priorities)document.getElementById('execPriorities').value=d.summary.priorities;if(d.summary.actions)document.getElementById('execActions').value=d.summary.actions;}updateHeader();updateDashboard();showToast('Session loaded');}catch(e){}}
-function exportJSON(){const data=gatherData(),blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`IAG_Risk_${data.meta.company||'IAG'}_${data.meta.date||'export'}.json`;a.click();URL.revokeObjectURL(url);showToast('JSON exported');}
-function exportCSV(){const data=gatherData(),headers=['Risk Category','Score','Score Label','Risk Level','Impact','Trend','Residual','Priority','Notes','Owner'];
-  const rows=RISKS.map(r=>{const sc=data.scores[r.id]||0,lv=data.levels[r.id]||r.defaultLevel,tr=data.trends[r.id]||'flat',nt=(data.notes[r.id]||'').replace(/"/g,'""'),pri=data.priorities[r.id]?'Yes':'No',res=sc>0?Math.round((sc+(LEVEL_ORDER[lv]||3))/2):'',resL=res?({1:'Very Low',2:'Low',3:'Moderate',4:'Elevated',5:'Critical'}[res]||''):'',trL={up:'Increasing',flat:'Stable',down:'Decreasing'}[tr]||'';return[`"${r.category}"`,sc||'',sc?`"${SCORE_LABELS[sc]}"`:'',`"${LEVEL_LABELS[lv]}"`,`"${r.impact}"`,`"${trL}"`,`"${resL}"`,pri,`"${nt}"`,`"${r.owner}"`];});
-  const blob=new Blob([[headers.join(','),...rows.map(r=>r.join(','))].join('\n')],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`IAG_Risk_${data.meta.company||'IAG'}_${data.meta.date||'export'}.csv`;a.click();URL.revokeObjectURL(url);showToast('CSV exported');}
-function resetAll(){if(!confirm('Reset all data? Cannot be undone.'))return;RISKS.forEach(r=>{state.scores[r.id]=0;state.levels[r.id]=r.defaultLevel;state.trends[r.id]='flat';state.notes[r.id]='';state.priorities[r.id]=false;state.detailNotes[r.id]='';state.detailActions[r.id]='';});['execRisks','execMitigation','execPriorities','execActions'].forEach(id=>document.getElementById(id).value='');buildTable();updateDashboard();autoSave();showToast('Reset');}
-function showToast(msg){const ex=document.querySelector('.toast');if(ex)ex.remove();const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2600);}
+function applyCurrentFilter() {
+  const counts = { 'very-high':0, 'high':0, 'medium':0, 'low':0, 'na':0 };
+  RISKS.forEach(r => {
+    const row = document.getElementById(`row_${r.id}`);
+    const detail = document.getElementById(`detail_${r.id}`);
+    const lv = state.levels[r.id];
+    counts[lv] = (counts[lv] || 0) + 1;
+    let show = true;
+    if (currentFilter === 'starred') show = !!state.priorities[r.id];
+    else if (currentFilter !== 'all') show = lv === currentFilter;
+    if (row) row.classList.toggle('hidden-row', !show);
+    if (detail && !show) {
+      detail.classList.remove('open');
+      const btn = document.getElementById(`expandBtn_${r.id}`);
+      if (btn) { btn.textContent = '▶'; btn.classList.remove('open'); }
+    }
+  });
+  const labels = {
+    'f-all': `All (${RISKS.length})`,
+    'f-vh': `Very High (${counts['very-high']||0})`,
+    'f-high': `High (${counts['high']||0})`,
+    'f-medium': `Medium (${counts['medium']||0})`,
+    'f-low': `Low (${counts['low']||0})`,
+    'f-star': `Priority (${Object.values(state.priorities).filter(Boolean).length})`
+  };
+  Object.entries(labels).forEach(([cls, label]) => {
+    const el = document.querySelector(`.filter-btn.${cls}`);
+    if (el) el.textContent = label;
+  });
+}
+function searchRisks(query) {
+  const q = query.toLowerCase().trim();
+  RISKS.forEach(r => {
+    const row = document.getElementById(`row_${r.id}`);
+    if (!row) return;
+    if (!q) { applyCurrentFilter(); return; }
+    const match = r.category.toLowerCase().includes(q) || r.mitigation.toLowerCase().includes(q) ||
+                  r.description.toLowerCase().includes(q) || r.owner.toLowerCase().includes(q) ||
+                  (state.notes[r.id] || '').toLowerCase().includes(q);
+    row.classList.toggle('hidden-row', !match);
+  });
+}
+function sortTable(col) {
+  if (state.sortCol === col) state.sortDir *= -1;
+  else { state.sortCol = col; state.sortDir = 1; }
+  ['category','level'].forEach(c => {
+    const el = document.getElementById(`sortIcon_${c}`);
+    if (el) el.textContent = c === col ? (state.sortDir === 1 ? '↑' : '↓') : '↕';
+  });
+  const tbody = document.getElementById('riskTableBody');
+  const pairs = RISKS.map(r => ({
+    id: r.id,
+    main: document.getElementById(`row_${r.id}`),
+    detail: document.getElementById(`detail_${r.id}`)
+  }));
+  pairs.sort((a, b) => {
+    const ra = RISKS.find(r => r.id === a.id);
+    const rb = RISKS.find(r => r.id === b.id);
+    if (col === 'category') return ra.category.localeCompare(rb.category) * state.sortDir;
+    if (col === 'level') return (LEVEL_ORDER[state.levels[b.id]] - LEVEL_ORDER[state.levels[a.id]]) * state.sortDir;
+    return 0;
+  });
+  pairs.forEach(p => {
+    if (p.main) tbody.appendChild(p.main);
+    if (p.detail) tbody.appendChild(p.detail);
+  });
+}
+function updateDashboard() {
+  const counts = { 'very-high':0, 'high':0, 'medium':0, 'low':0, 'na':0 };
+  RISKS.forEach(r => { const lv = state.levels[r.id] || 'na'; counts[lv] = (counts[lv] || 0) + 1; });
+  const scoredList = RISKS.filter(r => state.scores[r.id] > 0);
+  const scored = scoredList.length;
+  const total = RISKS.length;
+  const pct = Math.round(scored / total * 100);
+  const avgScore = scored > 0 ? scoredList.reduce((s, r) => s + state.scores[r.id], 0) / scored : 0;
+  const starCount = Object.values(state.priorities).filter(Boolean).length;
+
+  safeSet('cntVH', counts['very-high']);
+  safeSet('cntH', counts['high']);
+  safeSet('cntM', counts['medium']);
+  safeSet('cntL', counts['low']);
+  safeSet('cntStar', starCount);
+  safeSet('cntScored', `${scored}/${total}`);
+  safeSet('cntPct', `${pct}% complete`);
+  safeSet('cntAvg', avgScore > 0 ? avgScore.toFixed(1) : '—');
+  safeSet('cntAvgLabel', avgScore > 0 ? (SCORE_LABELS[Math.round(avgScore)] || '—') : 'Not yet scored');
+
+  const cb = document.getElementById('completionBar');
+  const ct = document.getElementById('completionText');
+  if (cb) cb.style.width = pct + '%';
+  if (ct) ct.textContent = `${scored} / ${total} scored`;
+
+  const ringFill = document.getElementById('ringFill');
+  const ringScore = document.getElementById('ringScore');
+  const ringLabel = document.getElementById('ringLabel');
+  const circumference = 2 * Math.PI * 50;
+  if (avgScore > 0 && ringFill && ringScore) {
+    const pctFill = avgScore / 5;
+    ringFill.style.strokeDashoffset = circumference * (1 - pctFill);
+    ringFill.style.stroke = SCORE_COLORS[Math.round(avgScore)] || '#ddd';
+    ringScore.textContent = avgScore.toFixed(1);
+    ringScore.style.color = SCORE_COLORS[Math.round(avgScore)] || '#ccc';
+    if (ringLabel) {
+      ringLabel.textContent = `Portfolio Risk Level: ${SCORE_LABELS[Math.round(avgScore)] || '—'}`;
+      ringLabel.style.color = SCORE_COLORS[Math.round(avgScore)];
+    }
+  } else {
+    if (ringFill) { ringFill.style.strokeDashoffset = circumference; ringFill.style.stroke = '#ddd'; }
+    if (ringScore) { ringScore.textContent = '—'; ringScore.style.color = '#ccc'; }
+    if (ringLabel) { ringLabel.textContent = 'Enter scores to begin assessment'; ringLabel.style.color = '#9c927d'; }
+  }
+
+  const ldEl = document.getElementById('levelDistChart');
+  if (ldEl) {
+    ldEl.innerHTML = ['very-high','high','medium','low'].map(lv =>
+      `<div class="chart-row"><div class="chart-label">${LEVEL_LABELS[lv]}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${counts[lv]/total*100}%;background:${LEVEL_COLORS[lv]};"><span>${counts[lv]>0?counts[lv]:''}</span></div></div><div class="chart-val">${counts[lv]}</div></div>`
+    ).join('');
+  }
+  const sdEl = document.getElementById('scoreDistChart');
+  if (sdEl) {
+    const scoreCounts = {1:0,2:0,3:0,4:0,5:0};
+    RISKS.forEach(r => { if (state.scores[r.id] > 0) scoreCounts[state.scores[r.id]]++; });
+    sdEl.innerHTML = [1,2,3,4,5].map(s =>
+      `<div class="chart-row"><div class="chart-label">${s} — ${SCORE_LABELS[s]}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${scoreCounts[s]/total*100}%;background:${SCORE_COLORS[s]};"><span>${scoreCounts[s]>0?scoreCounts[s]:''}</span></div></div><div class="chart-val">${scoreCounts[s]}</div></div>`
+    ).join('');
+  }
+  const hmLvEl = document.getElementById('hmLevelChart');
+  if (hmLvEl) {
+    hmLvEl.innerHTML = ['very-high','high','medium','low'].map(lv =>
+      `<div class="chart-row"><div class="chart-label">${LEVEL_LABELS[lv]}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${counts[lv]/total*100}%;background:${LEVEL_COLORS[lv]};"><span>${counts[lv]>0?counts[lv]:''}</span></div></div><div class="chart-val" style="color:${LEVEL_COLORS[lv]};">${counts[lv]}</div></div>`
+    ).join('');
+  }
+  const hmScEl = document.getElementById('hmScoreChart');
+  if (hmScEl) {
+    const scoredRisks = RISKS.filter(r => state.scores[r.id] > 0).sort((a,b) => state.scores[b.id] - state.scores[a.id]).slice(0, 8);
+    if (scoredRisks.length === 0) {
+      hmScEl.innerHTML = '<p style="color:#9c927d;font-size:0.78rem;padding:8px 0;">Score risks above to see distribution</p>';
+    } else {
+      hmScEl.innerHTML = scoredRisks.map(r => {
+        const sc = state.scores[r.id];
+        const shortName = r.category.length > 20 ? r.category.substring(0,20)+'…' : r.category;
+        return `<div class="chart-row"><div class="chart-label" title="${r.category}">${shortName}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${sc/5*100}%;background:${SCORE_COLORS[sc]};"><span>${SCORE_LABELS[sc]}</span></div></div><div class="chart-val" style="color:${SCORE_COLORS[sc]};">${sc}</div></div>`;
+      }).join('');
+    }
+  }
+  applyCurrentFilter();
+}
+function safeSet(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+function gatherData() {
+  return {
+    version: '2.0',
+    meta: {
+      company: document.getElementById('metaCompany').value,
+      analyst: document.getElementById('metaAnalyst').value,
+      date: document.getElementById('metaDate').value,
+      period: document.getElementById('metaPeriod').value,
+      stage: document.getElementById('metaStage').value,
+      status: document.getElementById('metaStatus').value
+    },
+    scores: state.scores, levels: state.levels, trends: state.trends,
+    notes: state.notes, priorities: state.priorities,
+    detailNotes: state.detailNotes, detailActions: state.detailActions,
+    summary: {
+      risks: document.getElementById('execRisks').value,
+      mitigation: document.getElementById('execMitigation').value,
+      priorities: document.getElementById('execPriorities').value,
+      actions: document.getElementById('execActions').value
+    },
+    savedAt: new Date().toISOString()
+  };
+}
+function autoSave() {
+  try {
+    localStorage.setItem('iag_risk_v2', JSON.stringify(gatherData()));
+    const el = document.getElementById('lastSaved');
+    if (el) { const now = new Date(); el.textContent = `Last saved: ${now.toLocaleTimeString()}`; }
+  } catch(e) { console.warn('AutoSave failed:', e); }
+}
+function saveData() { autoSave(); showToast('Progress saved'); }
+function loadData() {
+  const raw = localStorage.getItem('iag_risk_v2');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    if (d.meta) {
+      if (d.meta.company) document.getElementById('metaCompany').value = d.meta.company;
+      if (d.meta.analyst) document.getElementById('metaAnalyst').value = d.meta.analyst;
+      if (d.meta.date) document.getElementById('metaDate').value = d.meta.date;
+      if (d.meta.period) document.getElementById('metaPeriod').value = d.meta.period;
+      if (d.meta.stage) document.getElementById('metaStage').value = d.meta.stage;
+      if (d.meta.status) document.getElementById('metaStatus').value = d.meta.status;
+    }
+    if (d.scores) Object.entries(d.scores).forEach(([id, val]) => { if (val > 0) setScore(id, val); });
+    if (d.levels) Object.entries(d.levels).forEach(([id, val]) => {
+      state.levels[id] = val;
+      const sel = document.getElementById(`levelSel_${id}`);
+      if (sel) sel.value = val;
+      const row = document.getElementById(`row_${id}`);
+      if (row) row.dataset.level = val;
+      updateLevelBadge(id); updateResidual(id);
+    });
+    if (d.trends) Object.entries(d.trends).forEach(([id, val]) => {
+      state.trends[id] = val;
+      const sel = document.getElementById(`trendSel_${id}`);
+      if (sel) sel.value = val;
+      const dt = document.getElementById(`detailTrend_${id}`);
+      if (dt) dt.textContent = TREND_LABELS[val];
+    });
+    if (d.notes) Object.entries(d.notes).forEach(([id, val]) => {
+      state.notes[id] = val;
+      const el = document.getElementById(`notes_${id}`);
+      if (el) el.value = val;
+    });
+    if (d.priorities) Object.entries(d.priorities).forEach(([id, val]) => {
+      state.priorities[id] = val;
+      const star = document.getElementById(`star_${id}`);
+      if (star) star.classList.toggle('active', val);
+    });
+    if (d.detailNotes) Object.entries(d.detailNotes).forEach(([id, val]) => {
+      state.detailNotes[id] = val;
+      const el = document.getElementById(`detailNotes_${id}`);
+      if (el) el.value = val;
+    });
+    if (d.detailActions) Object.entries(d.detailActions).forEach(([id, val]) => {
+      state.detailActions[id] = val;
+      const el = document.getElementById(`detailActions_${id}`);
+      if (el) el.value = val;
+    });
+    if (d.summary) {
+      if (d.summary.risks) document.getElementById('execRisks').value = d.summary.risks;
+      if (d.summary.mitigation) document.getElementById('execMitigation').value = d.summary.mitigation;
+      if (d.summary.priorities) document.getElementById('execPriorities').value = d.summary.priorities;
+      if (d.summary.actions) document.getElementById('execActions').value = d.summary.actions;
+    }
+    updateHeader(); updateDashboard(); showToast('Previous session loaded');
+  } catch(e) { console.warn('Load error:', e); }
+}
+function exportJSON() {
+  const data = gatherData();
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const co = data.meta.company || 'IAG';
+  const dt = data.meta.date || new Date().toISOString().split('T')[0];
+  a.href = url; a.download = `IAG_Risk_Scorecard_${co}_${dt}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('JSON exported');
+}
+function exportCSV() {
+  const data = gatherData();
+  const headers = ['Risk Category','Score','Score Label','Risk Level','Impact','Trend','Residual Risk','Priority','Mitigation Notes','Risk Owner'];
+  const rows = RISKS.map(r => {
+    const sc = data.scores[r.id] || 0;
+    const lv = data.levels[r.id] || r.defaultLevel;
+    const tr = data.trends[r.id] || 'flat';
+    const nt = (data.notes[r.id] || '').replace(/"/g,'""');
+    const pri = data.priorities[r.id] ? 'Yes' : 'No';
+    const lvScore = LEVEL_ORDER[lv] || 3;
+    const residual = sc > 0 ? Math.round((sc + lvScore) / 2) : '';
+    const resLabel = residual ? ({1:'Very Low',2:'Low',3:'Moderate',4:'Elevated',5:'Critical'}[residual]||'') : '';
+    const trLabel = {'up':'Increasing','flat':'Stable','down':'Decreasing'}[tr] || '';
+    return [`"${r.category}"`, sc || '', sc ? `"${SCORE_LABELS[sc]}"` : '', `"${LEVEL_LABELS[lv]}"`, `"${r.impact}"`, `"${trLabel}"`, `"${resLabel}"`, pri, `"${nt}"`, `"${r.owner}"`];
+  });
+  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const co = data.meta.company || 'IAG';
+  const dt = data.meta.date || new Date().toISOString().split('T')[0];
+  a.href = url; a.download = `IAG_Risk_Scorecard_${co}_${dt}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('CSV exported');
+}
+function resetAll() {
+  if (!confirm('Reset all scores, levels, notes, and priorities? This cannot be undone.')) return;
+  RISKS.forEach(r => {
+    state.scores[r.id] = 0;
+    state.levels[r.id] = r.defaultLevel;
+    state.trends[r.id] = 'flat';
+    state.notes[r.id] = '';
+    state.priorities[r.id] = false;
+    state.detailNotes[r.id] = '';
+    state.detailActions[r.id] = '';
+  });
+  document.getElementById('execRisks').value = '';
+  document.getElementById('execMitigation').value = '';
+  document.getElementById('execPriorities').value = '';
+  document.getElementById('execActions').value = '';
+  buildTable(); updateDashboard(); autoSave();
+  showToast('All data reset');
+}
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2600);
+}
 </script>
 </template>
 
 <script>
-const SEED={books:[
-{num:1,id:'standards',title:'The Industrial Assistance Group Standard',tagline:'Who are we?',status:'done',chapters:[{title:'The Standard',sections:[
-{title:'Why This Document Exists',status:'done',owner:'Garret / Alex',content:'<p>The Industrial Assistance Group Standard defines how we make decisions. It establishes the principles that guide our leadership, acquisitions, operations, and long-term growth.</p><p>These standards exist to ensure that as Industrial Assistance Group grows, we never lose sight of who we are, what we believe, and how we conduct business.</p><p>When difficult decisions arise, this document becomes our guide.</p>'},
-{title:'Our Foundation — Trust Is Our Greatest Asset',status:'done',owner:'Garret / Alex',content:'<p>Everything we do begins with trust.</p><ul><li>Customers trust us with their most critical equipment.</li><li>Employees trust us with their careers.</li><li>Founders trust us with the businesses they spent decades building.</li><li>Banks trust us with their capital.</li><li>Investors trust us with their investment.</li></ul><p>Trust cannot be purchased. Trust cannot be demanded. Trust is earned through reliability, integrity, and consistent execution. Every decision we make should strengthen that trust.</p>'},
-{title:'Principle 1 — We Build Businesses, Not Deals',status:'done',owner:'Garret / Alex',content:'<p>Industrial Assistance Group does not exist to acquire companies. We exist to build exceptional businesses. Acquisitions are simply one of the tools we use to accomplish that mission.</p><p>Every acquisition should strengthen our organization, expand our capabilities, and create opportunities that neither business could have achieved independently.</p><p>We never forget that behind every acquisition is a founder who invested years of sacrifice, risk, and commitment to build something meaningful.</p>'},
-{title:'Principle 2 — Reliability Is How We Earn Trust',status:'done',owner:'Garret / Alex',content:'<p>Sales creates opportunity. Operational excellence earns trust. Growth comes from doing both consistently.</p><p>Reliability is the foundation of our reputation. Every business we own is expected to become the operational benchmark for our industry by consistently delivering:</p><ul><li>Safety</li><li>Quality</li><li>Reliability</li><li>On-Time Delivery</li><li>Accountability</li><li>Continuous Improvement</li></ul><p>Reliability builds trust, and trust is what our customers buy.</p>'},
-{title:'Principle 3 — Build Long-Term Value',status:'done',owner:'Garret / Alex',content:'<p>Every dollar we invest should strengthen the long-term value of Industrial Assistance Group. We prioritize disciplined growth over rapid growth.</p><p>Debt is a tool. Cash flow creates opportunity. Enterprise value is created through operational excellence, disciplined capital allocation, and long-term thinking — not short-term decisions.</p>'},
-{title:'Principle 4 — People Create Enterprise Value',status:'done',owner:'Garret / Alex',content:'<p>The value of Industrial Assistance Group is not created by equipment or facilities. It is created by exceptional people.</p><p>We are committed to building an organization where employees can:</p><ul><li>Build meaningful careers.</li><li>Continue developing professionally.</li><li>Share in the success they help create.</li><li>Be proud of the company they represent.</li></ul>'},
-{title:'Principle 5 — Every Business Strengthens the Platform',status:'done',owner:'Garret / Alex',content:'<p>Every company within Industrial Assistance Group has a responsibility to make the entire organization stronger.</p><p>Knowledge should be shared. Best practices should be adopted. Resources should be leveraged. Success should be multiplied across the platform.</p><p>We are not a collection of companies. We are one organization working toward a common purpose.</p>'},
-{title:'Principle 6 — Reputation Compounds',status:'done',owner:'Garret / Alex',content:'<p>A reputation takes years to build and moments to lose. Every interaction either strengthens or weakens the trust others place in us.</p><p>Our reputation is one of our most valuable assets, and protecting it is everyone\'s responsibility.</p>'},
-{title:'Our Definition of Success',status:'done',owner:'Garret / Alex',content:'<p>Industrial Assistance Group will not measure success by the number of acquisitions completed, revenue alone, headlines, or company size.</p><p>We will measure success by:</p><ul><li>The trust we earn from our employees, customers, founders, investors, and partners.</li><li>The opportunities we create for employees.</li><li>The businesses we improve.</li><li>The customers who continue to choose us.</li><li>The enterprise value we create.</li><li>The reputation we build.</li></ul>'},
-{title:'Leadership Commitment',status:'done',owner:'Garret / Alex',content:'<p>Every leader within Industrial Assistance Group is responsible for protecting these principles.</p><p>When faced with difficult decisions, we ask one question: <b>will this decision strengthen or weaken the trust others place in Industrial Assistance Group?</b></p><p>If it strengthens trust, it is likely the right decision. If it weakens trust, we will find another way.</p>'}
-]}]},
-{num:2,id:'blueprint',title:'Investment Blueprint',tagline:'Why should IAG exist?',status:'progress',chapters:[
-{num:1,title:'Executive Summary',sections:[{title:'Executive Summary',status:'pending',owner:'Alex',content:'<p>Industrial Assistance Group ("IAG") is being built to become the most trusted independent rotating equipment services platform in North America through the acquisition and integration of exceptional founder-owned industrial service businesses.</p><p>Our strategy is founded on a simple belief: trust is our greatest asset, reliability is how we earn it.</p><p>Our objective is not to become the largest organization in our industry. Our objective is to become the most trusted.</p>',notes:'Need Alex to approve'}]},
-{num:2,title:'Why This Industry?',sections:[
-{title:'Why rotating equipment?',status:'pending',owner:'Alex',content:'<p>Rotating equipment is the heartbeat of every industrial facility. When critical rotating equipment fails, production stops, and every hour of unplanned downtime can cost customers hundreds of thousands — or even millions — of dollars.</p>',notes:'Need Alex to approve'},
-{title:'Why now?',status:'notstarted',owner:'Alex',notes:'Need Alex input — aging ownership, labor shortage, outsourcing, PE interest.'},
-{title:'Why is the industry fragmented?',status:'progress',owner:'Alex',content:'<p>OEMs focus on new equipment. Independent service providers compete on responsiveness, flexibility, and long-term relationships. IAG aims to be the most trusted independent partner.</p>',notes:'Still open questions.'},
-{title:'Why will owners sell to us?',status:'notstarted',owner:'Alex',content:'<ol><li>Reputation for conserving what owners built.</li><li>Employees-first culture.</li><li>Clear growth path for the business and its people.</li></ol>',notes:'Need deeper input.'},
-{title:'Why will customers choose us?',status:'pending',owner:'Alex',content:'<p>Customers will choose IAG because we will become the most trusted independent rotating equipment service provider. We never misrepresent capabilities simply to win an order.</p>',notes:'Need Alex to approve'},
-{title:'Why will employees join us?',status:'pending',owner:'Alex',content:'<p>Our philosophy is simple: employees, then customers, then revenue. This has guided ATS and RMS.</p>',notes:'Need Alex to approve'}
-]},
-{num:3,title:'Why This Team',sections:[{title:'Why This Team',status:'pending',owner:'Alex',content:'<p><i>"We have spent decades earning trust in an industry where trust is the most valuable asset."</i></p><p>Garret and Alex bring complementary experience spanning operations, engineering, commercial growth, and ownership.</p>',notes:'Need Alex to approve'}]},
-{num:4,title:'How We Create Value',sections:[
-{title:'Commercial Excellence',status:'pending',owner:'Alex',content:'<p>Working questions: CRM, KPIs, cross-selling, pricing, pipeline, turnaround planning, dormant recovery.</p>',notes:'Need Alex to approve'},
-{title:'Operational Excellence',status:'pending',owner:'Alex',content:'<p>Working questions: Quality, turnaround time, on-time delivery, safety, productivity, SOPs, warranty reduction.</p>',notes:'Need Alex to approve'},
-{title:'People',status:'progress',owner:'Garret',content:'<h4>Leadership Development Program</h4><p>Identify, develop, and prepare the next generation of leaders through nominations, quarterly reviews, mentorship, and training.</p><h4>Bonuses</h4><p>Company-wide EBITDA bonus and project-based profit sharing — never at the expense of safety or quality.</p><h4>Training &amp; Career Paths</h4><p>Technical, leadership, safety, and financial training. Quarterly reviews and succession via the Leadership Development Program.</p>',notes:'Garret to complete'},
-{title:'Shared Services',status:'notstarted',owner:'Alex',notes:'Accounting, payroll, HR, IT, marketing, purchasing, legal, insurance, fleet, banking.'},
-{title:'Technology',status:'notstarted',owner:'Alex',notes:'ERP, CRM, dashboards, AI, field reporting, quoting, digital inspections, portals.'},
-{title:'Capital Allocation',status:'notstarted',owner:'Alex',notes:'Where cash goes: equipment, hiring, acquisitions, debt strategy, CapEx.'}
-]},
-{num:5,title:'The Ideal Acquisition Profile',sections:[{title:'The Ideal Acquisition Profile',status:'pending',owner:'Alex',content:'<p>Ideal acquisition: ~$2MM EBITDA, ~30% margins, $6–8MM revenue, 15–30 employees, low–moderate owner dependence, &lt;20% customer concentration, excellent safety, employee-first culture, Gulf Coast / strategic industrial markets.</p>',notes:'Need Alex to approve'}]}
-]},
-{num:3,id:'acquisition',title:'Acquisition Playbook',tagline:'How do we buy companies?',status:'locked',outline:['Finding Deals','Deal Flow','Relationship Management','Valuation','LOI','Due Diligence','Negotiation','Legal','Closing','Transition']},
-{num:4,id:'integration',title:'Integration Playbook',tagline:'What happens after closing?',status:'locked',outline:['Day 1','Week 1','30 Days','90 Days','180 Days','First Year','Employee meetings','Customer meetings','Financial reporting','Systems integration']},
-{num:5,id:'opsystem',title:'The IAG Operating System',tagline:'This becomes your company.',status:'locked',outline:['Commercial Excellence','Operational Excellence','Leadership Excellence','Technology','Finance','KPIs','Dashboards','Continuous Improvement']},
-{num:6,id:'financial',title:'Financial Playbook',tagline:'Protects capital allocation.',status:'locked',outline:['Financial model','Debt model','Cash flow','Returns','Capital allocation','Sensitivity analysis','Bank package']},
-{num:7,id:'capraise',title:'Capital Raise Package',tagline:'Ready to raise capital.',status:'locked',outline:['Investor Presentation','Executive Summary','Financial Model','Market Analysis','Management Team','Returns','Risk','Appendix']},
-{num:8,id:'seller',title:'Seller Presentation',tagline:'Why sell to IAG?',status:'locked',outline:['Why Sell to IAG?','Employee Philosophy','Legacy','Transition','Culture','The Future']},
-{num:9,id:'board',title:'Board Package',tagline:'Quarterly reporting to the board.',status:'locked',outline:['Quarterly Reporting','KPIs','Acquisitions','Capital Allocation','Risk','Strategy']}
-]};
+/* ═══════════════ SEED CONTENT (unchanged) ═══════════════ */
+const SEED = {
+  books: [
+    {
+      num:1, id:'standards', title:'The Industrial Assistance Group Standard', tagline:'Who are we?',
+      status:'done',
+      chapters:[
+        { title:'The Standard', sections:[
+          { title:'Why This Document Exists', status:'done', owner:'Garret / Alex',
+            content:`<p>The Industrial Assistance Group Standard defines how we make decisions. It establishes the principles that guide our leadership, acquisitions, operations, and long-term growth.</p>
+            <p>These standards exist to ensure that as Industrial Assistance Group grows, we never lose sight of who we are, what we believe, and how we conduct business.</p>
+            <p>When difficult decisions arise, this document becomes our guide.</p>` },
+          { title:'Our Foundation — Trust Is Our Greatest Asset', status:'done', owner:'Garret / Alex',
+            content:`<p>Everything we do begins with trust.</p>
+            <ul><li>Customers trust us with their most critical equipment.</li><li>Employees trust us with their careers.</li><li>Founders trust us with the businesses they spent decades building.</li><li>Banks trust us with their capital.</li><li>Investors trust us with their investment.</li></ul>
+            <p>Trust cannot be purchased. Trust cannot be demanded. Trust is earned through reliability, integrity, and consistent execution. Every decision we make should strengthen that trust.</p>` },
+          { title:'Principle 1 — We Build Businesses, Not Deals', status:'done', owner:'Garret / Alex',
+            content:`<p>Industrial Assistance Group does not exist to acquire companies. We exist to build exceptional businesses. Acquisitions are simply one of the tools we use to accomplish that mission.</p>
+            <p>Every acquisition should strengthen our organization, expand our capabilities, and create opportunities that neither business could have achieved independently.</p>
+            <p>We never forget that behind every acquisition is a founder who invested years of sacrifice, risk, and commitment to build something meaningful. We will always approach acquisitions with respect for the people who built the business before us.</p>` },
+          { title:'Principle 2 — Reliability Is How We Earn Trust', status:'done', owner:'Garret / Alex',
+            content:`<p>Sales creates opportunity. Operational excellence earns trust. Growth comes from doing both consistently.</p>
+            <p>Reliability is the foundation of our reputation. Every business we own is expected to become the operational benchmark for our industry by consistently delivering:</p>
+            <ul><li>Safety</li><li>Quality</li><li>Reliability</li><li>On-Time Delivery</li><li>Accountability</li><li>Continuous Improvement</li></ul>
+            <p>Reliability builds trust, and trust is what our customers buy.</p>` },
+          { title:'Principle 3 — Build Long-Term Value', status:'done', owner:'Garret / Alex',
+            content:`<p>Every dollar we invest should strengthen the long-term value of Industrial Assistance Group. We prioritize disciplined growth over rapid growth.</p>
+            <p>Debt is a tool. Cash flow creates opportunity. Enterprise value is created through operational excellence, disciplined capital allocation, and long-term thinking — not short-term decisions.</p>` },
+          { title:'Principle 4 — People Create Enterprise Value', status:'done', owner:'Garret / Alex',
+            content:`<p>The value of Industrial Assistance Group is not created by equipment or facilities. It is created by exceptional people.</p>
+            <p>We are committed to building an organization where employees can:</p>
+            <ul><li>Build meaningful careers.</li><li>Continue developing professionally.</li><li>Share in the success they help create.</li><li>Be proud of the company they represent.</li></ul>
+            <p>Great companies are built by great people. Our responsibility is to create an environment where both can thrive.</p>` },
+          { title:'Principle 5 — Every Business Strengthens the Platform', status:'done', owner:'Garret / Alex',
+            content:`<p>Every company within Industrial Assistance Group has a responsibility to make the entire organization stronger.</p>
+            <p>Knowledge should be shared. Best practices should be adopted. Resources should be leveraged. Success should be multiplied across the platform.</p>
+            <p>We are not a collection of companies. We are one organization working toward a common purpose.</p>` },
+          { title:'Principle 6 — Reputation Compounds', status:'done', owner:'Garret / Alex',
+            content:`<p>A reputation takes years to build and moments to lose. Every interaction either strengthens or weakens the trust others place in us.</p>
+            <p>Our reputation is one of our most valuable assets, and protecting it is everyone's responsibility. We will always choose the decision that strengthens our reputation over the one that delivers a short-term advantage.</p>` },
+          { title:'Our Definition of Success', status:'done', owner:'Garret / Alex',
+            content:`<p>Industrial Assistance Group will not measure success by the number of acquisitions completed, revenue alone, headlines, or company size.</p>
+            <p>We will measure success by:</p>
+            <ul><li>The trust we earn from our employees, customers, founders, investors, and partners.</li><li>The opportunities we create for employees.</li><li>The businesses we improve.</li><li>The customers who continue to choose us.</li><li>The enterprise value we create.</li><li>The reputation we build.</li></ul>` },
+          { title:'Leadership Commitment', status:'done', owner:'Garret / Alex',
+            content:`<p>Every leader within Industrial Assistance Group is responsible for protecting these principles.</p>
+            <p>When faced with difficult decisions, we ask one question: <b>will this decision strengthen or weaken the trust others place in Industrial Assistance Group?</b></p>
+            <p>If it strengthens trust, it is likely the right decision. If it weakens trust, we will find another way.</p>` }
+        ]}
+      ]
+    },
+    {
+      num:2, id:'blueprint', title:'Investment Blueprint', tagline:'Why should IAG exist?', status:'progress',
+      chapters:[
+        { num:1, title:'Executive Summary', sections:[
+          { title:'Executive Summary', status:'pending', owner:'Alex',
+            content:`<p>Industrial Assistance Group ("IAG") is being built to become the most trusted independent rotating equipment services platform in North America through the acquisition and integration of exceptional founder-owned industrial service businesses.</p>
+            <p>Our strategy is founded on a simple belief: trust is our greatest asset, reliability is how we earn it.</p>
+            <p>Unlike many consolidation strategies that focus primarily on financial engineering or rapid acquisition, IAG is an operator-led platform built on decades of real-world experience owning, operating, growing, and successfully exiting industrial service businesses.</p>
+            <p>The rotating equipment aftermarket represents one of the most attractive sectors within industrial services. Rotating equipment is the heartbeat of every industrial facility — when critical equipment fails, production stops, and every hour of downtime can cost customers hundreds of thousands, or even millions, of dollars.</p>
+            <p>The industry remains highly fragmented, with many founder-owned businesses approaching generational transition. We believe the greatest opportunity is not simply buying companies — it is building a platform that allows exceptional businesses to become stronger together without sacrificing the reputation, quality, culture, and customer relationships that made them successful.</p>
+            <p>Our objective is not to become the largest organization in our industry. Our objective is to become the most trusted.</p>`,
+            notes:'Done for now but need Alex to approve' }
+        ]},
+        { num:2, title:'Why This Industry?', sections:[
+          { title:'Why rotating equipment?', status:'pending', owner:'Alex',
+            content:`<p>Rotating equipment is the heartbeat of every industrial facility. When critical rotating equipment fails, production stops, and every hour of unplanned downtime can cost customers hundreds of thousands — or even millions — of dollars.</p>
+            <p>Unlike many industrial service markets, customers are not simply purchasing labor or equipment — they are placing trust in a company to restore critical assets safely, quickly, and correctly. That trust is earned over years of consistent performance.</p>
+            <p>The technical complexity of rotating equipment, combined with the critical nature of the equipment being serviced, creates meaningful barriers to entry and long-term customer relationships.</p>`,
+            notes:'Done for now but need Alex to approve' },
+          { title:'Why now?', status:'notstarted', owner:'Alex',
+            notes:'Need Alex to give input — open questions: aging ownership, skilled labor shortage, increasing reliability requirements, more outsourcing, fragmentation, private equity interest, energy infrastructure investment.' },
+          { title:'Why is the industry fragmented?', status:'progress', owner:'Alex',
+            content:`<p>OEMs play an essential role in the rotating equipment industry and have built outstanding businesses around equipment manufacturing, engineering, and replacement parts. However, their core business model has traditionally focused on selling new equipment and OEM components rather than becoming the preferred independent repair partner for every customer.</p>
+            <p>Independent service providers compete differently — responsiveness, flexibility, technical expertise, and long-term customer relationships. IAG believes there will always be an important role for both. Our objective is to become the most trusted independent partner for maintaining, repairing, and improving rotating equipment throughout its lifecycle.</p>`,
+            notes:'Need Alex to give input — still open: why haven\'t large consolidators already bought everyone, what keeps businesses independent.' },
+          { title:'Why will owners sell to us?', status:'notstarted', owner:'Alex',
+            content:`<ol><li>IAG will have a reputation for conserving what the owners have built.</li><li>IAG's reputation will be one of employees first.</li><li>We will show owners how we grow their business along with their employees.</li></ol>`,
+            notes:'Need Alex to give input — go deeper than "they\'re retiring": no succession, rising insurance costs, labor shortages, increasing technology requirements, capital investment needs, estate planning, burnout, desire for liquidity.' },
+          { title:'Why will customers choose us?', status:'pending', owner:'Alex',
+            content:`<p>Customers will choose IAG because we will become the most trusted independent rotating equipment service provider in the market. In an industry where a single day of downtime can cost millions of dollars, customers value honesty and reliability more than empty promises.</p>
+            <p>We will never misrepresent our capabilities simply to win an order. Over time, customers will know that when IAG commits to a schedule, a repair strategy, or a quality standard, we will deliver.</p>`,
+            notes:'Done for now but need Alex to approve' },
+          { title:'Why will employees join us?', status:'pending', owner:'Alex',
+            content:`<p>Industrial Assistance Group will become the employer of choice in the rotating equipment industry because our people will always come first. Our philosophy is simple: employees, then customers, then revenue.</p>
+            <p>This philosophy is not theoretical — it has guided the businesses we have built and led throughout our careers, including ATS and RMS, where investing in people strengthened customer relationships, improved retention, and created sustainable growth.</p>`,
+            notes:'Done for now but need Alex to approve' }
+        ]},
+        { num:3, title:'Why This Team', sections:[
+          { title:'Why This Team', status:'pending', owner:'Alex',
+            content:`<p><i>"We have spent decades earning trust in an industry where trust is the most valuable asset."</i></p>
+            <p>Industrial Assistance Group is being built by founders who have successfully built, operated, grown, and sold industrial service businesses. Together, Garret Lee and Alex bring complementary leadership experience spanning operations, engineering, commercial growth, business ownership, and executive leadership.</p>
+            <p>Alex has spent his career building high-performing commercial organizations within the rotating equipment industry. Through his leadership, RMS grew from approximately $50 million in annual revenue to more than $300 million.</p>
+            <p>Garret has built his career on operational excellence and leadership. As the founder of ATS, he built the business from the ground up, growing it from zero revenue into a highly profitable industrial services company before successfully selling it to RMS.</p>
+            <p>Industrial Assistance Group is not being built on financial engineering — it is being built by operators who understand what it takes to earn trust, build exceptional businesses, and create long-term value.</p>`,
+            notes:'Done for now but need Alex to approve' }
+        ]},
+        { num:4, title:'How We Create Value', sections:[
+          { title:'Commercial Excellence', status:'pending', owner:'Alex',
+            content:`<p>How do we grow revenue? Working questions for this section:</p>
+            <ul><li>How do we improve sales?</li><li>CRM implementation across all platforms</li><li>KPIs — use the KPIs already built</li><li>Cross-selling</li><li>Account management</li><li>Pricing</li><li>Pipeline management</li><li>Customer visits</li><li>Turnaround planning</li><li>Dormant customer recovery</li></ul>`,
+            notes:'Done for now but need Alex to approve' },
+          { title:'Operational Excellence', status:'pending', owner:'Alex',
+            content:`<p>How do we become the most reliable company? Working questions for this section:</p>
+            <ul><li>Quality</li><li>Turnaround time</li><li>On-time delivery</li><li>Safety</li><li>Shop productivity</li><li>Field execution</li><li>Standard operating procedures</li><li>Warranty reduction</li><li>Customer communication</li></ul>`,
+            notes:'Done for now but need Alex to approve' },
+          { title:'People', status:'progress', owner:'Garret',
+            content:`<h4>IAG Leadership Development Program</h4>
+            <p>The purpose of the program is to identify, develop, and prepare the next generation of leaders from within our organization — through employee nominations, quarterly reviews, mentorship, leadership projects, and technical, financial, communication, operations, and sales training.</p>
+            <h4>Bonuses</h4>
+            <p>When our employees create value, they should share in it. Compensation will consist of an annual company-wide bonus tied to EBITDA, and a project-based profit-sharing program. These rewards are never earned at the expense of our standards — no project qualifies for profit sharing if it results in a safety incident, quality deficiency, or customer issue.</p>
+            <h4>Training</h4>
+            <p>Training is one of the highest-return investments IAG can make — technical training, leadership development, safety, customer service, and financial understanding.</p>
+            <h4>Career Paths &amp; Succession Planning</h4>
+            <p>Quarterly reviews, individual goals, mentorship, and promotion opportunities through the Leadership Development Program, which also handles succession planning.</p>
+            <h4>Recruiting &amp; Retention</h4>
+            <p>Recruiting begins long before a position is posted — our reputation will become our greatest recruiting tool.</p>
+            <p><b>Our goal:</b> to build an elite organization that everyone in our industry respects, everyone wants to join, and one that continuously develops people into the very best version of themselves.</p>`,
+            notes:'Garret to complete' },
+          { title:'Shared Services', status:'notstarted', owner:'Alex', notes:'Need Alex to give input — what should every company stop doing individually: accounting, payroll, HR, IT, marketing, purchasing, legal, insurance, fleet, banking.' },
+          { title:'Technology', status:'notstarted', owner:'Alex', notes:'Need Alex to give input — ERP, CRM, dashboards, AI, field reporting, quoting, digital inspections, customer portals, data.' },
+          { title:'Capital Allocation', status:'notstarted', owner:'Alex', notes:'Need Alex to give input — this is the CEO chapter. Where does cash go? When do we buy equipment, hire, acquire? Debt strategy, CapEx, working capital.' }
+        ]},
+        { num:5, title:'The Ideal Acquisition Profile', sections:[
+          { title:'The Ideal Acquisition Profile', status:'pending', owner:'Alex',
+            content:`<p>Industrial Assistance Group's ideal acquisition is a business generating approximately $2 million in EBITDA with EBITDA margins approaching 30%. We believe businesses of this size represent an attractive balance between operational maturity and future growth potential.</p>
+            <p>Our objective is not to acquire turnaround situations. We seek fundamentally strong businesses with proven profitability that can become even more valuable as part of Industrial Assistance Group.</p>
+            <table class="spec">
+              <tr><th>Attribute</th><th>Target</th><th>Why It Matters</th></tr>
+              <tr><td>Revenue</td><td>~$6–8MM</td><td>Proven scale while maintaining significant growth potential</td></tr>
+              <tr><td>EBITDA</td><td>~$2MM</td><td>Strong cash flow to support growth, debt service, and future acquisitions</td></tr>
+              <tr><td>EBITDA Margin</td><td>~30%</td><td>Demonstrates operational excellence and pricing discipline</td></tr>
+              <tr><td>Employees</td><td>15–30</td><td>Sufficient leadership depth while remaining entrepreneurial</td></tr>
+              <tr><td>Owner Dependence</td><td>Low to Moderate</td><td>Enables a successful ownership transition</td></tr>
+              <tr><td>Customer Concentration</td><td>&lt;20%</td><td>Reduces customer concentration risk</td></tr>
+              <tr><td>Safety Record</td><td>Excellent</td><td>Protects employees, customers, and the IAG reputation</td></tr>
+              <tr><td>Culture</td><td>Employee-first</td><td>Aligns with the IAG philosophy and long-term culture</td></tr>
+              <tr><td>Reputation</td><td>Trusted</td><td>Demonstrates years of consistent execution and customer confidence</td></tr>
+              <tr><td>Geographic Position</td><td>Gulf Coast &amp; other strategic industrial markets</td><td>Supports operational density, customer relationships, and expansion</td></tr>
+              <tr><td>Service Mix</td><td>Balanced shop, field, emergency response</td><td>Creates diversified revenue streams</td></tr>
+              <tr><td>End Markets</td><td>Petrochemical, Refining, LNG, Pipeline, Power Gen</td><td>Mission-critical industries, recurring demand</td></tr>
+              <tr><td>Leadership Team</td><td>Strong second layer</td><td>Supports ownership transition and continuity</td></tr>
+              <tr><td>Growth Potential</td><td>Clear commercial/operational upside</td><td>Ensures every acquisition adds enterprise value</td></tr>
+            </table>`,
+            notes:'Done for now but need Alex to approve' }
+        ]}
+      ]
+    },
+    { num:3, id:'acquisition', title:'Acquisition Playbook', tagline:'How do we buy companies?', status:'locked',
+      outline:['Finding Deals','Deal Flow','Relationship Management','Valuation','LOI','Due Diligence','Negotiation','Legal','Closing','Transition'] },
+    { num:4, id:'integration', title:'Integration Playbook', tagline:'What happens after closing?', status:'locked',
+      outline:['Day 1','Week 1','30 Days','90 Days','180 Days','First Year','Communication — Employee meetings','Communication — Customer meetings','Financial reporting','Systems integration'] },
+    { num:5, id:'opsystem', title:'The IAG Operating System', tagline:'This becomes your company.', status:'locked',
+      outline:['Commercial Excellence','Operational Excellence','Leadership Excellence','Technology','Finance','KPIs','Dashboards','Continuous Improvement'] },
+    { num:6, id:'financial', title:'Financial Playbook', tagline:'Protects capital allocation.', status:'locked',
+      outline:['Financial model','Debt model','Cash flow','Returns','Capital allocation','Sensitivity analysis','Bank package'] },
+    { num:7, id:'capraise', title:'Capital Raise Package', tagline:'Ready to raise capital.', status:'locked',
+      outline:['Investor Presentation','Executive Summary','Financial Model','Market Analysis','Management Team','Returns','Risk','Appendix'] },
+    { num:8, id:'seller', title:'Seller Presentation', tagline:'Why sell to IAG? — emotional, not financial.', status:'locked',
+      outline:['Why Sell to IAG?','Employee Philosophy','Legacy','Transition','Culture','The Future'] },
+    { num:9, id:'board', title:'Board Package', tagline:'Quarterly reporting to the board.', status:'locked',
+      outline:['Quarterly Reporting','KPIs','Acquisitions','Capital Allocation','Risk','Strategy'] }
+  ]
+};
 
-const STATUS_LABEL={done:'Done',pending:'Pending Approval',progress:'In Progress',notstarted:'Not Started',locked:'Not Started'};
-const STATUS_CLASS={done:'status-done',pending:'status-pending',progress:'status-progress',notstarted:'status-notstarted',locked:'status-locked'};
+const STATUS_LABEL = {done:'Done', pending:'Pending Approval', progress:'In Progress', notstarted:'Not Started', locked:'Not Started'};
+const STATUS_CLASS = {done:'status-done', pending:'status-pending', progress:'status-progress', notstarted:'status-notstarted', locked:'status-locked'};
 
-let DATA=SEED,LINKS={},currentView='library',currentBook=DATA.books[0],EDIT_MODE=false;
+let DATA = SEED;
+let LINKS = {};
+let currentView = 'library';
+let currentBook = DATA.books[0];
+let EDIT_MODE = false;
 
-function toggleRail(){const r=document.getElementById('rail'),b=document.getElementById('railBackdrop');const open=r.classList.toggle('open');b.classList.toggle('open',open);}
-function closeRail(){document.getElementById('rail').classList.remove('open');document.getElementById('railBackdrop').classList.remove('open');}
-
-async function loadContent(){try{const r=await window.storage.get('iag-content',true);DATA=JSON.parse(r.value);}catch(e){DATA=SEED;try{await window.storage.set('iag-content',JSON.stringify(DATA),true);}catch(e2){}}currentBook=DATA.books.find(b=>b.id===currentBook.id)||DATA.books[0];}
-async function saveContent(){try{await window.storage.set('iag-content',JSON.stringify(DATA),true);toast('Published.');}catch(e){toast('Save failed.');}}
-async function loadLinks(){try{const r=await window.storage.get('iag-links',true);LINKS=JSON.parse(r.value);}catch(e){LINKS={};try{await window.storage.set('iag-links',JSON.stringify(LINKS),true);}catch(e2){}}}
-async function saveLinks(){try{await window.storage.set('iag-links',JSON.stringify(LINKS),true);}catch(e){}}
-
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>{t.style.display='none';},3600);}
-function makeCode(){return Math.random().toString(36).slice(2,7).toUpperCase();}
-async function generateLink(bookId,chIdx,secIdx){const code=makeCode();LINKS[code]={bookId,chapterIdx:chIdx===undefined?null:chIdx,sectionIdx:secIdx===undefined?null:secIdx};await saveLinks();const url=location.origin+location.pathname+'?s='+code;try{await navigator.clipboard.writeText(url);toast('Link copied');}catch(e){toast('Link: '+url);}}
-function resolveDeepLink(){const code=new URLSearchParams(location.search).get('s');if(!code||!LINKS[code])return false;const t=LINKS[code],book=DATA.books.find(b=>b.id===t.bookId);if(!book)return false;currentBook=book;currentView='library';renderRail();renderMain();if(t.chapterIdx!==null){setTimeout(()=>{const elId=t.sectionIdx!==null?`sec-${book.id}-${t.chapterIdx}-${t.sectionIdx}`:`ch-${book.id}-${t.chapterIdx}`;const el=document.getElementById(elId);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});el.classList.add('flash');}},80);}return true;}
-
-function bookPercent(b){if(!b.chapters||!b.chapters.length)return 0;let secs=[];b.chapters.forEach(ch=>secs.push(...(ch.sections||[])));if(!secs.length)return 0;const w={done:100,pending:90,progress:50,notstarted:0};return Math.round(secs.reduce((a,s)=>a+(w[s.status]||0),0)/secs.length);}
-function gaugeSVG(pct,size){size=size||34;const r=size*.42,cx=size/2,cy=size*.55,frac=Math.max(0,Math.min(1,pct/100)),angle=Math.PI-frac*Math.PI;const x1=cx+r*Math.cos(Math.PI),y1=cy+r*Math.sin(Math.PI),x2=cx+r*Math.cos(0),y2=cy+r*Math.sin(0),xm=cx+r*Math.cos(angle),ym=cy+r*Math.sin(angle),large=frac>.5?1:0,nl=r*.85,nx=cx+nl*Math.cos(angle),ny=cy+nl*Math.sin(angle);return`<svg viewBox="0 0 ${size} ${size*.6}" width="${size}" height="${size*.6}"><path d="M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y2}" fill="none" stroke="#3a3a34" stroke-width="${size*.09}" stroke-linecap="round" opacity=".25"/><path d="M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${xm} ${ym}" fill="none" stroke="#B8894F" stroke-width="${size*.09}" stroke-linecap="round"/><line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="#211E1A" stroke-width="1.4"/><circle cx="${cx}" cy="${cy}" r="${size*.05}" fill="#211E1A"/></svg>`;}
-
-function renderRail(){
-  document.getElementById('spines').innerHTML=DATA.books.map(b=>{
-    const locked=b.status==='locked',pct=bookPercent(b);
-    return`<div class="spine ${locked?'locked':''} ${currentView==='library'&&currentBook.id===b.id?'active':''}" onclick="selectBook('${b.id}');closeRail()">
-      <div class="spine-num">${String(b.num).padStart(2,'0')}</div>
-      <div class="gauge-mini">${gaugeSVG(pct,34)}</div>
-      <div class="spine-body"><div class="spine-title">${b.title}</div><div class="spine-tag">${locked?'Not yet written':STATUS_LABEL[b.status]+' · '+pct+'%'}</div></div>
-    </div>`;
-  }).join('');
-  document.getElementById('toolsNav').innerHTML=`<div class="tool-item ${currentView==='risk'?'active':''}" onclick="openRiskTool();closeRail()"><div class="tool-icon">📊</div><div class="tool-title">Risk Scorecard</div></div>`;
+/* ═══════════════ PERSISTENCE ═══════════════ */
+async function loadContent(){
+  try { const r = await window.storage.get('iag-content', true); DATA = JSON.parse(r.value); }
+  catch(e){ DATA = SEED; try{ await window.storage.set('iag-content', JSON.stringify(DATA), true); }catch(e2){} }
+  currentBook = DATA.books.find(b=>b.id===currentBook.id) || DATA.books[0];
+}
+async function saveContent(){
+  try{ await window.storage.set('iag-content', JSON.stringify(DATA), true); toast('Published — everyone opening this app now sees this revision.'); }
+  catch(e){ toast('Save failed — try again.'); }
+}
+async function loadLinks(){
+  try { const r = await window.storage.get('iag-links', true); LINKS = JSON.parse(r.value); }
+  catch(e){ LINKS = {}; try{ await window.storage.set('iag-links', JSON.stringify(LINKS), true); }catch(e2){} }
+}
+async function saveLinks(){
+  try{ await window.storage.set('iag-links', JSON.stringify(LINKS), true); }catch(e){}
 }
 
-function selectBook(id){currentBook=DATA.books.find(b=>b.id===id);currentView='library';document.getElementById('searchbox').value='';document.getElementById('btn-library').classList.add('on');document.getElementById('btn-command').classList.remove('on');renderRail();renderMain();}
-function setView(view){currentView=view;document.getElementById('btn-library').classList.toggle('on',view==='library');document.getElementById('btn-command').classList.toggle('on',view==='command');renderRail();renderMain();}
-function toggleEdit(){EDIT_MODE=!EDIT_MODE;const btn=document.getElementById('editToggle');btn.classList.toggle('on',EDIT_MODE);btn.textContent='✎ Edit Mode: '+(EDIT_MODE?'On':'Off');renderMain();}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>{ t.style.display='none'; }, 3600);
+}
 
+/* ═══════════════ SHARE LINKS ═══════════════ */
+function makeCode(){ return Math.random().toString(36).slice(2,7).toUpperCase(); }
+async function generateLink(bookId, chapterIdx, sectionIdx){
+  const code = makeCode();
+  LINKS[code] = { bookId, chapterIdx: chapterIdx===undefined?null:chapterIdx, sectionIdx: sectionIdx===undefined?null:sectionIdx };
+  await saveLinks();
+  const url = location.origin + location.pathname + '?s=' + code;
+  try{ await navigator.clipboard.writeText(url); toast('Link copied: '+url); }
+  catch(e){ toast('Link created: '+url+' (copy manually — clipboard blocked)'); }
+}
+function resolveDeepLink(){
+  const params = new URLSearchParams(location.search);
+  const code = params.get('s');
+  if(!code || !LINKS[code]) return false;
+  const target = LINKS[code];
+  const book = DATA.books.find(b=>b.id===target.bookId);
+  if(!book) return false;
+  currentBook = book;
+  currentView = 'library';
+  renderRail();
+  renderMain();
+  if(target.chapterIdx!==null){
+    setTimeout(()=>{
+      const elId = target.sectionIdx!==null ? `sec-${book.id}-${target.chapterIdx}-${target.sectionIdx}` : `ch-${book.id}-${target.chapterIdx}`;
+      const el = document.getElementById(elId);
+      if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); el.classList.add('flash'); }
+    }, 80);
+  }
+  return true;
+}
+
+/* ═══════════════ GAUGE ═══════════════ */
+function bookPercent(b){
+  if(!b.chapters || b.chapters.length===0) return 0;
+  let secs=[]; b.chapters.forEach(ch=>secs.push(...ch.sections));
+  if(secs.length===0) return 0;
+  const w = {done:100, pending:90, progress:50, notstarted:0};
+  const sum = secs.reduce((a,s)=>a+(w[s.status]||0),0);
+  return Math.round(sum/secs.length);
+}
+function gaugeSVG(percent, size){
+  size = size||34;
+  const r = size*0.42, cx=size/2, cy=size*0.55;
+  const frac = Math.max(0,Math.min(1,percent/100));
+  const angle = Math.PI - frac*Math.PI;
+  const x1 = cx + r*Math.cos(Math.PI), y1 = cy + r*Math.sin(Math.PI);
+  const x2 = cx + r*Math.cos(0), y2 = cy + r*Math.sin(0);
+  const xm = cx + r*Math.cos(angle), ym = cy + r*Math.sin(angle);
+  const largeArc = frac>0.5?1:0;
+  const needleLen = r*0.85;
+  const nx = cx + needleLen*Math.cos(angle), ny = cy + needleLen*Math.sin(angle);
+  return `<svg viewBox="0 0 ${size} ${size*0.6}" width="${size}" height="${size*0.6}">
+    <path d="M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y2}" fill="none" stroke="#3a3a34" stroke-width="${size*0.09}" stroke-linecap="round" opacity="0.25"/>
+    <path d="M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${xm} ${ym}" fill="none" stroke="#B8894F" stroke-width="${size*0.09}" stroke-linecap="round"/>
+    <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="#211E1A" stroke-width="1.4"/>
+    <circle cx="${cx}" cy="${cy}" r="${size*0.05}" fill="#211E1A"/>
+  </svg>`;
+}
+
+/* ═══════════════ RAIL ═══════════════ */
+function renderRail(){
+  const el = document.getElementById('spines');
+  el.innerHTML = DATA.books.map(b=>{
+    const locked = b.status==='locked';
+    const pct = bookPercent(b);
+    return `<div class="spine ${locked?'locked':''} ${currentView==='library' && currentBook.id===b.id?'active':''}" onclick="selectBook('${b.id}')">
+      <div class="spine-num">${String(b.num).padStart(2,'0')}</div>
+      <div class="gauge-mini">${gaugeSVG(pct,34)}</div>
+      <div class="spine-body">
+        <div class="spine-title">${b.title}</div>
+        <div class="spine-tag">${locked?'Not yet written':STATUS_LABEL[b.status]+' · '+pct+'%'}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('toolsNav').innerHTML = `
+    <div class="tool-item ${currentView==='risk'?'active':''}" onclick="openRiskTool()">
+      <div class="tool-icon">📊</div><div class="tool-title">Risk Scorecard</div>
+    </div>`;
+}
+
+function selectBook(id){
+  currentBook = DATA.books.find(b=>b.id===id);
+  currentView = 'library';
+  document.getElementById('searchbox').value='';
+  document.getElementById('btn-library').classList.add('on');
+  document.getElementById('btn-command').classList.remove('on');
+  renderRail();
+  renderMain();
+}
+function setView(view){
+  currentView = view;
+  document.getElementById('btn-library').classList.toggle('on', view==='library');
+  document.getElementById('btn-command').classList.toggle('on', view==='command');
+  renderRail();
+  renderMain();
+}
+function toggleEdit(){
+  EDIT_MODE = !EDIT_MODE;
+  const btn = document.getElementById('editToggle');
+  btn.classList.toggle('on', EDIT_MODE);
+  btn.textContent = '✎ Edit Mode: ' + (EDIT_MODE ? 'On' : 'Off');
+  renderMain();
+}
+
+/* ═══════════════ RISK TOOL ═══════════════ */
 function openRiskTool(){
   currentView='risk';
   document.getElementById('btn-library').classList.remove('on');
   document.getElementById('btn-command').classList.remove('on');
   document.getElementById('searchbox').style.display='none';
-  document.getElementById('crumb').textContent='TOOLS · RISK SCORECARD';
-  const content=document.getElementById('content');
-  content.style.padding='0';content.style.maxWidth='none';
-  content.innerHTML='<iframe id="riskFrame" title="Risk Scorecard"></iframe>';
-  document.getElementById('riskFrame').srcdoc=document.getElementById('riskTemplate').innerHTML;
+  document.getElementById('crumb').textContent = 'TOOLS · PORTFOLIO RISK SCORECARD';
+  const content = document.getElementById('content');
+  content.style.padding = '0';
+  content.style.maxWidth = 'none';
+  content.innerHTML = '<iframe id="riskFrame"></iframe>';
+  document.getElementById('riskFrame').srcdoc = document.getElementById('riskTemplate').innerHTML;
   renderRail();
 }
 
+/* ═══════════════ MAIN RENDER ═══════════════ */
 function renderMain(){
-  document.getElementById('searchbox').style.display=currentView==='risk'?'none':'block';
-  const content=document.getElementById('content');
-  content.style.padding='';content.style.maxWidth='';
-  if(currentView==='command'){document.getElementById('crumb').textContent='COMMAND VIEW · STATUS';renderCommand();return;}
-  if(currentView==='risk')return;
-  const b=currentBook;
-  document.getElementById('crumb').textContent='BOOK '+String(b.num).padStart(2,'0')+' · '+b.title.toUpperCase();
+  document.getElementById('searchbox').style.display = currentView==='risk' ? 'none' : 'block';
+  const content = document.getElementById('content');
+  content.style.padding = '40px 60px 100px';
+  content.style.maxWidth = '800px';
+
+  if(currentView==='command'){ document.getElementById('crumb').textContent='COMMAND VIEW · STATUS'; renderCommand(); return; }
+  if(currentView==='risk') return;
+
+  const b = currentBook;
+  document.getElementById('crumb').textContent = 'BOOK '+String(b.num).padStart(2,'0')+' · '+b.title.toUpperCase();
+
   if(b.status==='locked'){
-    content.innerHTML=`<div class="locked-page"><div class="lockicon">🔒</div><div class="answers">This answers: ${b.tagline}</div><h1>${b.title}</h1><div class="outline">${(b.outline||[]).map(o=>'— '+o).join('<br>')}</div>${EDIT_MODE?`<button class="start-writing-btn" onclick="startWriting('${b.id}')">＋ Start Writing This Book</button>`:''}</div>`;
+    content.innerHTML = `<div class="locked-page">
+      <div class="lockicon">&#128274;</div>
+      <div class="answers">This answers: ${b.tagline}</div>
+      <h1>${b.title}</h1>
+      <div class="outline">${b.outline.map(o=>'— '+o).join('<br>')}</div>
+      ${EDIT_MODE ? `<button class="start-writing-btn" onclick="startWriting('${b.id}')">＋ Start Writing This Book</button>` : ''}
+    </div>`;
     return;
   }
-  const pct=bookPercent(b);
-  let html=`<div class="titleblock">
+
+  const pct = bookPercent(b);
+  let html = `<div class="titleblock">
     <div class="tb-cell"><div class="tb-label">Book</div><div class="tb-value">${String(b.num).padStart(2,'0')}</div></div>
     <div class="tb-cell"><div class="tb-label">Status</div><div class="tb-value"><span class="status-pill ${STATUS_CLASS[b.status]}">${STATUS_LABEL[b.status]}</span></div></div>
     <div class="tb-cell"><div class="tb-label">Completion</div><div class="tb-value">${pct}%</div></div>
     <div class="tb-cell"><div class="tb-label">Rev.</div><div class="tb-value">2.0</div></div>
-    <div class="tb-cell wide"><div><div class="tb-label">${b.tagline}</div><div class="tb-value book-title">${b.title}</div></div><button class="link-btn" onclick="generateLink('${b.id}')">🔗 Share</button></div>
+    <div class="tb-cell wide">
+      <div><div class="tb-label">${b.tagline}</div><div class="tb-value book-title">${b.title}</div></div>
+      <button class="link-btn" onclick="generateLink('${b.id}')">🔗 Share this book</button>
+    </div>
   </div>`;
-  if(EDIT_MODE)html+=`<div class="toolbar-row"><button class="save-book-btn" onclick="saveBookEdits('${b.id}')">💾 Save &amp; Publish</button></div>`;
-  (b.chapters||[]).forEach((ch,chIdx)=>{
-    html+=`<section class="chapter" id="ch-${b.id}-${chIdx}"><div class="chapter-head"><h2 class="chapter-title">${ch.num?'Chapter '+ch.num+' — ':''}${ch.title}</h2><button class="link-btn" onclick="generateLink('${b.id}',${chIdx})">🔗</button></div>`;
-    (ch.sections||[]).forEach((s,secIdx)=>{
-      const fid=`f-${b.id}-${chIdx}-${secIdx}`;
+
+  if(EDIT_MODE){
+    html += `<div class="toolbar-row"><button class="save-book-btn" onclick="saveBookEdits('${b.id}')">💾 Save &amp; Publish This Book</button></div>`;
+  }
+
+  b.chapters.forEach((ch, chIdx)=>{
+    html += `<section class="chapter" id="ch-${b.id}-${chIdx}">`;
+    html += `<div class="chapter-head"><h2 class="chapter-title">${ch.num?'Chapter '+ch.num+' — ':''}${ch.title}</h2><button class="link-btn" onclick="generateLink('${b.id}',${chIdx})">🔗</button></div>`;
+    ch.sections.forEach((s, secIdx)=>{
+      const fieldId = `f-${b.id}-${chIdx}-${secIdx}`;
       if(EDIT_MODE){
-        html+=`<div class="sec-block" id="sec-${b.id}-${chIdx}-${secIdx}"><div class="edit-row">
-          <input type="text" id="${fid}-title" value="${(s.title||'').replace(/"/g,'&quot;')}" style="flex:1;min-width:120px">
-          <select id="${fid}-status"><option value="notstarted" ${s.status==='notstarted'?'selected':''}>Not Started</option><option value="progress" ${s.status==='progress'?'selected':''}>In Progress</option><option value="pending" ${s.status==='pending'?'selected':''}>Pending Approval</option><option value="done" ${s.status==='done'?'selected':''}>Done</option></select>
-          <input type="text" id="${fid}-owner" value="${(s.owner||'').replace(/"/g,'&quot;')}" placeholder="Owner" style="width:100px">
-        </div><textarea class="edit-field" id="${fid}-content">${(s.content||'').trim()}</textarea>
-        <input type="text" id="${fid}-notes" value="${(s.notes||'').replace(/"/g,'&quot;')}" placeholder="Note" style="width:100%;margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:6px 8px;border:1px solid var(--hairline)"></div>`;
-      }else{
-        html+=`<div class="sec-block" id="sec-${b.id}-${chIdx}-${secIdx}"><div class="sec-head"><h3 class="sec-title">${s.title}</h3><div class="sec-meta"><span class="status-pill ${STATUS_CLASS[s.status]}">${STATUS_LABEL[s.status]}</span> ${s.owner||''} <button class="link-btn" onclick="generateLink('${b.id}',${chIdx},${secIdx})">🔗</button></div></div>
-        <div class="sec-body">${s.content||'<p style="color:#9c927d;font-style:italic">No draft yet.</p>'}</div>${s.notes?`<div class="note-box"><b>Note:</b> ${s.notes}</div>`:''}</div>`;
+        html += `<div class="sec-block" id="sec-${b.id}-${chIdx}-${secIdx}">
+          <div class="edit-row">
+            <input type="text" id="${fieldId}-title" value="${(s.title||'').replace(/"/g,'&quot;')}" style="flex:1;min-width:180px;">
+            <select id="${fieldId}-status">
+              <option value="notstarted" ${s.status==='notstarted'?'selected':''}>Not Started</option>
+              <option value="progress" ${s.status==='progress'?'selected':''}>In Progress</option>
+              <option value="pending" ${s.status==='pending'?'selected':''}>Pending Approval</option>
+              <option value="done" ${s.status==='done'?'selected':''}>Done</option>
+            </select>
+            <input type="text" id="${fieldId}-owner" value="${(s.owner||'').replace(/"/g,'&quot;')}" placeholder="Owner" style="width:120px;">
+          </div>
+          <textarea class="edit-field" id="${fieldId}-content" placeholder="Section content (HTML: <p>, <ul><li>, <h4>, <table class=&quot;spec&quot;> all supported)">${(s.content||'').trim()}</textarea>
+          <input type="text" id="${fieldId}-notes" value="${(s.notes||'').replace(/"/g,'&quot;')}" placeholder="Note (e.g. who still needs to weigh in)" style="width:100%;margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:6px 8px;border:1px solid var(--hairline);">
+        </div>`;
+      } else {
+        html += `<div class="sec-block" id="sec-${b.id}-${chIdx}-${secIdx}">
+          <div class="sec-head">
+            <h3 class="sec-title">${s.title}</h3>
+            <div class="sec-meta"><span class="status-pill ${STATUS_CLASS[s.status]}">${STATUS_LABEL[s.status]}</span> ${s.owner||''} <button class="link-btn" onclick="generateLink('${b.id}',${chIdx},${secIdx})">🔗</button></div>
+          </div>
+          <div class="sec-body">${s.content||'<p style="color:#9c927d;font-style:italic;">No draft yet.</p>'}</div>
+          ${s.notes?`<div class="note-box"><b>Note:</b> ${s.notes}</div>`:''}
+        </div>`;
       }
     });
-    if(EDIT_MODE)html+=`<button class="add-btn" onclick="addSection('${b.id}',${chIdx})">＋ Add Section</button>`;
-    html+=`</section>`;
+    if(EDIT_MODE){
+      html += `<button class="add-btn" onclick="addSection('${b.id}',${chIdx})">＋ Add Section to This Chapter</button>`;
+    }
+    html += `</section>`;
   });
-  if(EDIT_MODE)html+=`<button class="add-btn" onclick="addChapter('${b.id}')">＋ Add Chapter</button>`;
-  content.innerHTML=html;
+  if(EDIT_MODE){
+    html += `<button class="add-btn" onclick="addChapter('${b.id}')">＋ Add Chapter</button>`;
+  }
+  content.innerHTML = html;
 }
 
-function startWriting(id){const b=DATA.books.find(x=>x.id===id);b.chapters=(b.outline||[]).map(t=>({title:t,sections:[{title:t,status:'notstarted',owner:'',content:'',notes:''}]}));b.status='progress';renderRail();renderMain();}
-function addSection(id,chIdx){const t=prompt('Section title:');if(!t)return;DATA.books.find(x=>x.id===id).chapters[chIdx].sections.push({title:t,status:'notstarted',owner:'',content:'',notes:''});renderMain();}
-function addChapter(id){const t=prompt('Chapter title:');if(!t)return;DATA.books.find(x=>x.id===id).chapters.push({title:t,sections:[]});renderMain();}
-async function saveBookEdits(id){const b=DATA.books.find(x=>x.id===id);b.chapters.forEach((ch,ci)=>{(ch.sections||[]).forEach((s,si)=>{const f=`f-${b.id}-${ci}-${si}`;const te=document.getElementById(f+'-title');if(!te)return;s.title=te.value;s.status=document.getElementById(f+'-status').value;s.owner=document.getElementById(f+'-owner').value;s.content=document.getElementById(f+'-content').value;s.notes=document.getElementById(f+'-notes').value;});});await saveContent();renderRail();renderMain();}
+/* ═══════════════ EDIT ACTIONS ═══════════════ */
+function startWriting(bookId){
+  const b = DATA.books.find(x=>x.id===bookId);
+  b.chapters = b.outline.map(title => ({ title, sections:[{ title, status:'notstarted', owner:'', content:'', notes:'' }] }));
+  b.status = 'progress';
+  renderRail();
+  renderMain();
+}
+function addSection(bookId, chIdx){
+  const title = prompt('Title for the new section:');
+  if(!title) return;
+  const b = DATA.books.find(x=>x.id===bookId);
+  b.chapters[chIdx].sections.push({ title, status:'notstarted', owner:'', content:'', notes:'' });
+  renderMain();
+}
+function addChapter(bookId){
+  const title = prompt('Title for the new chapter:');
+  if(!title) return;
+  const b = DATA.books.find(x=>x.id===bookId);
+  b.chapters.push({ title, sections:[] });
+  renderMain();
+}
+async function saveBookEdits(bookId){
+  const b = DATA.books.find(x=>x.id===bookId);
+  b.chapters.forEach((ch, chIdx)=>{
+    ch.sections.forEach((s, secIdx)=>{
+      const fieldId = `f-${b.id}-${chIdx}-${secIdx}`;
+      const titleEl = document.getElementById(`${fieldId}-title`);
+      if(!titleEl) return;
+      s.title = document.getElementById(`${fieldId}-title`).value;
+      s.status = document.getElementById(`${fieldId}-status`).value;
+      s.owner = document.getElementById(`${fieldId}-owner`).value;
+      s.content = document.getElementById(`${fieldId}-content`).value;
+      s.notes = document.getElementById(`${fieldId}-notes`).value;
+    });
+  });
+  await saveContent();
+  renderRail();
+  renderMain();
+}
 
+/* ═══════════════ COMMAND VIEW ═══════════════ */
 function renderCommand(){
-  const content=document.getElementById('content');
-  let all=[];DATA.books.forEach(b=>{(b.chapters||[]).forEach(ch=>{(ch.sections||[]).forEach(s=>all.push({bookNum:b.num,chapter:ch.title,section:s.title,status:s.status,owner:s.owner});});});
-  const counts={done:0,pending:0,progress:0,notstarted:0};all.forEach(s=>counts[s.status]++);
-  const alex=all.filter(s=>s.owner&&s.owner.includes('Alex')).length,garret=all.filter(s=>s.owner&&s.owner.includes('Garret')&&!s.owner.includes('Alex')).length;
-  let html=`<div class="cmd-header"><h1>IAG Status Dashboard</h1><div class="mono">Document Completion Tracker</div></div>
+  const content = document.getElementById('content');
+  let allSections = [];
+  DATA.books.forEach(b=>{ (b.chapters||[]).forEach(ch=>{ (ch.sections||[]).forEach(s=>{
+    allSections.push({book:b.title, bookId:b.id, bookNum:b.num, chapter:ch.title, section:s.title, status:s.status, owner:s.owner, notes:s.notes});
+  })})});
+  const counts = {done:0,pending:0,progress:0,notstarted:0};
+  allSections.forEach(s=>counts[s.status]++);
+  const alexItems = allSections.filter(s=>s.owner && s.owner.includes('Alex')).length;
+  const garretItems = allSections.filter(s=>s.owner && s.owner.includes('Garret') && !s.owner.includes('Alex')).length;
+
+  let html = `<div class="cmd-header"><h1>IAG Status Dashboard</h1><div class="mono">Document Completion Tracker</div></div>
   <div class="metrics-row">
-    <div class="metric"><div class="num">${all.length}</div><div class="lbl">Total Workstreams</div></div>
+    <div class="metric"><div class="num">${allSections.length}</div><div class="lbl">Total Workstreams</div></div>
     <div class="metric"><div class="num">${counts.pending}</div><div class="lbl">Pending Approval</div></div>
     <div class="metric"><div class="num">${counts.progress}</div><div class="lbl">In Progress</div></div>
     <div class="metric"><div class="num">${counts.notstarted}</div><div class="lbl">Not Started</div></div>
-    <div class="metric"><div class="num">${alex}/${garret}</div><div class="lbl">Alex / Garret</div></div>
-  </div><div class="gauge-grid">`;
-  DATA.books.forEach(b=>{const pct=bookPercent(b);html+=`<div class="gauge-card" onclick="selectBook('${b.id}')"><div class="book-num">BOOK ${String(b.num).padStart(2,'0')}</div><div class="book-name">${b.title}</div>${gaugeSVG(pct,90)}<div class="mono" style="margin-top:6px;font-size:11px">${pct}%</div></div>`;});
-  html+=`</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table class="board"><tr><th>Book</th><th>Chapter</th><th>Section</th><th>Status</th><th>Owner</th></tr>
-  ${all.map(s=>`<tr><td class="mono">Bk ${s.bookNum}</td><td>${s.chapter}</td><td>${s.section}</td><td><span class="status-pill ${STATUS_CLASS[s.status]}">${STATUS_LABEL[s.status]}</span></td><td class="owner-tag">${s.owner||''}</td></tr>`).join('')}</table></div>`;
-  content.innerHTML=html;
+    <div class="metric"><div class="num">${alexItems}/${garretItems}</div><div class="lbl">Alex / Garret Items</div></div>
+  </div>
+  <div class="gauge-grid">`;
+  DATA.books.forEach(b=>{
+    const pct = bookPercent(b);
+    html += `<div class="gauge-card" onclick="selectBook('${b.id}')">
+      <div class="book-num">BOOK ${String(b.num).padStart(2,'0')}</div>
+      <div class="book-name">${b.title}</div>
+      ${gaugeSVG(pct,90)}
+      <div class="mono" style="margin-top:6px;font-size:11px;">${pct}%</div>
+    </div>`;
+  });
+  html += `</div>
+  <table class="board">
+    <tr><th>Book</th><th>Chapter</th><th>Section</th><th>Status</th><th>Owner</th></tr>
+    ${allSections.map(s=>`<tr>
+      <td class="mono">Bk ${s.bookNum}</td><td>${s.chapter}</td><td>${s.section}</td>
+      <td><span class="status-pill ${STATUS_CLASS[s.status]}">${STATUS_LABEL[s.status]}</span></td>
+      <td class="owner-tag">${s.owner||''}</td>
+    </tr>`).join('')}
+  </table>`;
+  content.innerHTML = html;
 }
 
+/* ═══════════════ SEARCH ═══════════════ */
 function onSearch(q){
-  q=q.trim().toLowerCase();
-  if(!q){if(currentView!=='risk')renderMain();return;}
-  let hits=[];DATA.books.forEach(b=>{(b.chapters||[]).forEach(ch=>{(ch.sections||[]).forEach(s=>{if((s.title+' '+(s.content||'')+' '+(s.notes||'')).toLowerCase().includes(q))hits.push({book:b,section:s});});});});
-  const content=document.getElementById('content');
-  document.getElementById('crumb').textContent=`SEARCH · "${q}" · ${hits.length} RESULT${hits.length===1?'':'S'}`;
-  if(!hits.length){content.innerHTML=`<div class="locked-page"><h1>No matches</h1><div class="mono" style="color:#9c927d">Try a different keyword.</div></div>`;return;}
-  content.innerHTML=hits.map(h=>`<div class="sec-block"><div class="sec-head"><h3 class="sec-title">${h.book.title} — ${h.section.title}</h3><div class="sec-meta"><span class="status-pill ${STATUS_CLASS[h.section.status]}">${STATUS_LABEL[h.section.status]}</span></div></div><div class="sec-body">${h.section.content||'<p style="color:#9c927d;font-style:italic">No draft yet.</p>'}</div></div>`).join('');
+  q = q.trim().toLowerCase();
+  if(!q){ if(currentView!=='risk') renderMain(); return; }
+  let hits = [];
+  DATA.books.forEach(b=>{ (b.chapters||[]).forEach(ch=>{ (ch.sections||[]).forEach(s=>{
+    const hay = (s.title+' '+(s.content||'')+' '+(s.notes||'')).toLowerCase();
+    if(hay.includes(q)) hits.push({book:b, chapter:ch, section:s});
+  })})});
+  const content = document.getElementById('content');
+  document.getElementById('crumb').textContent = 'SEARCH · "'+q+'" · '+hits.length+' RESULT'+(hits.length===1?'':'S');
+  if(hits.length===0){ content.innerHTML = `<div class="locked-page"><h1>No matches</h1><div class="mono" style="color:#9c927d;">Try a different keyword.</div></div>`; return; }
+  content.innerHTML = hits.map(h=>`<div class="sec-block">
+    <div class="sec-head"><h3 class="sec-title">${h.book.title} — ${h.section.title}</h3><div class="sec-meta"><span class="status-pill ${STATUS_CLASS[h.section.status]}">${STATUS_LABEL[h.section.status]}</span></div></div>
+    <div class="sec-body">${h.section.content||'<p style="color:#9c927d;font-style:italic;">No draft yet — '+(h.section.notes||'')+'</p>'}</div>
+  </div>`).join('');
 }
 
-async function initApp(){await loadContent();await loadLinks();if(!resolveDeepLink()){renderRail();renderMain();}}
+/* ═══════════════ INIT ═══════════════ */
+async function initApp(){
+  await loadContent();
+  await loadLinks();
+  const deepLinked = resolveDeepLink();
+  if(!deepLinked){ renderRail(); renderMain(); }
+}
 initApp();
 </script>
 </body>

@@ -65,8 +65,8 @@
   .edit-toggle.on{background:var(--rust);color:#fff;border-color:var(--rust);}
 
   /* ---------- MAIN ---------- */
-  #main{flex:1;background:var(--paper);overflow-y:auto;position:relative;}
-  .topbar{position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--hairline);padding:16px 40px;display:flex;justify-content:space-between;align-items:center;z-index:5;}
+  #main{flex:1;background:var(--paper);overflow-y:auto;position:relative;min-width:0;}
+  .topbar{position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--hairline);padding:16px 40px;display:flex;justify-content:space-between;align-items:center;z-index:5;gap:12px;}
   #searchbox{font-family:'IBM Plex Mono',monospace;font-size:12px;border:1px solid var(--hairline);background:var(--paper-2);padding:8px 12px;width:260px;color:var(--ink);outline:none;}
   #searchbox::placeholder{color:#9c927d;}
   #content{padding:40px 60px 100px;max-width:800px;}
@@ -104,7 +104,8 @@
   .sec-body h4{font-family:'Zilla Slab',serif;font-size:14.5px;margin:16px 0 6px;}
   .note-box{background:var(--paper-2);border-left:3px solid var(--rust);padding:10px 14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);margin-top:10px;}
   .note-box b{color:var(--ink);}
-  table.spec{width:100%;border-collapse:collapse;font-size:12.5px;margin:14px 0 20px;}
+  .table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0 20px;}
+  table.spec{width:100%;border-collapse:collapse;font-size:12.5px;margin:0;min-width:640px;}
   table.spec th{font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;text-align:left;background:var(--graphite);color:var(--paper);padding:7px 10px;}
   table.spec td{padding:7px 10px;border-bottom:1px solid var(--hairline);vertical-align:top;}
   table.spec tr:nth-child(even){background:var(--paper-2);}
@@ -135,7 +136,8 @@
   .gauge-card{border:1px solid var(--ink);background:var(--paper-2);padding:16px;text-align:center;cursor:pointer;}
   .gauge-card .book-num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--brass);}
   .gauge-card .book-name{font-family:'Zilla Slab',serif;font-size:13px;font-weight:600;margin:2px 0 10px;min-height:34px;}
-  .board{border:1px solid var(--ink);border-collapse:collapse;width:100%;}
+  .board-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .board{border:1px solid var(--ink);border-collapse:collapse;width:100%;min-width:560px;}
   .board th{background:var(--graphite);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;text-align:left;}
   .board td{padding:8px 10px;font-size:12.5px;border-bottom:1px solid var(--hairline);}
   .board tr:nth-child(even) td{background:var(--paper-2);}
@@ -146,10 +148,56 @@
   #toast{position:fixed;bottom:24px;left:320px;background:var(--graphite);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:11.5px;padding:10px 18px;border-left:3px solid var(--brass-bright);box-shadow:0 6px 20px rgba(0,0,0,.3);z-index:999;display:none;max-width:420px;word-break:break-all;}
 
   #riskFrame{width:100%;height:calc(100vh - 0px);border:none;display:block;}
+
+  /* ---------- MOBILE NAV TOGGLE ---------- */
+  #menuToggle{display:none;background:none;border:1px solid var(--ink);color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:16px;padding:6px 11px;cursor:pointer;line-height:1;flex-shrink:0;}
+  #railScrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:19;}
+  #railScrim.show{display:block;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:900px){
+    #content{padding:28px 24px 90px;}
+    .gauge-grid{grid-template-columns:repeat(2,1fr);}
+  }
+
+  @media (max-width:720px){
+    body{overflow:auto;height:auto;min-height:100vh;}
+    #menuToggle{display:inline-flex;align-items:center;justify-content:center;}
+    #rail{
+      position:fixed;top:0;left:0;bottom:0;z-index:20;
+      transform:translateX(-100%);
+      transition:transform .25s ease;
+      width:82vw;max-width:320px;min-width:0;
+      box-shadow:4px 0 24px rgba(0,0,0,.35);
+    }
+    #rail.open{transform:translateX(0);}
+    #main{width:100%;}
+    .topbar{padding:14px 16px;flex-wrap:wrap;}
+    #searchbox{width:100%;order:3;}
+    #content{padding:20px 16px 80px;max-width:100%;}
+    .titleblock{grid-template-columns:1fr 1fr;}
+    .tb-cell.wide{grid-column:span 2;flex-direction:column;align-items:flex-start;gap:10px;}
+    .tb-value.book-title{font-size:19px;}
+    .metrics-row{grid-template-columns:repeat(2,1fr);}
+    .gauge-grid{grid-template-columns:1fr;}
+    .sec-head{flex-direction:column;align-items:flex-start;gap:6px;}
+    .chapter-head{flex-direction:column;align-items:flex-start;gap:8px;}
+    #toast{left:16px;right:16px;max-width:none;bottom:16px;}
+    .edit-row{flex-direction:column;}
+    .edit-row input,.edit-row select{width:100%;}
+  }
+
+  @media (max-width:480px){
+    .cmd-header h1{font-size:21px;}
+    .locked-page h1{font-size:21px;}
+    h2.chapter-title{font-size:17px;}
+    h3.sec-title{font-size:14.5px;}
+  }
 </style>
 </head>
 <body>
 
+<div id="railScrim" onclick="closeMobileNav()"></div>
 <nav id="rail">
   <div class="rail-head">
     <div class="wordmark">INDUSTRIAL<span> ASSISTANCE</span> GROUP</div>
@@ -172,6 +220,7 @@
 
 <main id="main">
   <div class="topbar" id="topbar">
+    <button id="menuToggle" onclick="openMobileNav()" aria-label="Open menu">☰</button>
     <div class="doc-kicker mono" id="crumb">INDUSTRIAL ASSISTANCE GROUP</div>
     <input id="searchbox" placeholder="Search the library…" oninput="onSearch(this.value)">
   </div>
@@ -530,6 +579,7 @@
   .table-wrap {
     border: 1px solid var(--ink);
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     margin-bottom: 22px;
   }
   .risk-table {
@@ -876,15 +926,20 @@
   }
 
   @media (max-width: 600px) {
+    .header { padding: 16px 18px 14px; }
     .header h1 { font-size: 1.2rem; }
     .container { padding: 12px; }
     .meta-bar { padding: 10px; gap: 10px; }
+    .meta-group input, .meta-group select { width: 100% !important; }
+    .completion-wrap { margin-left: 0; text-align: left; width: 100%; }
+    .dashboard-summary { grid-template-columns: repeat(2,1fr); }
+    .overall-risk-inner { flex-direction: column; }
+    .chart-label { width: 92px; font-size: 0.62rem; }
+    .filter-bar { padding: 8px; }
+    .search-input { width: 100%; margin-left: 0; }
+    .action-bar .btn { flex: 1 1 45%; justify-content: center; }
+    .footer-note { padding: 8px 12px 16px; }
   }
-
-  ::-webkit-scrollbar { width: 7px; height: 7px; }
-  ::-webkit-scrollbar-track { background: var(--paper-2); }
-  ::-webkit-scrollbar-thumb { background: #b0a890; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--brass); }
 </style>
 
 <div class="header">
@@ -1686,7 +1741,7 @@ const SEED = {
           { title:'The Ideal Acquisition Profile', status:'pending', owner:'Alex',
             content:`<p>Industrial Assistance Group's ideal acquisition is a business generating approximately $2 million in EBITDA with EBITDA margins approaching 30%. We believe businesses of this size represent an attractive balance between operational maturity and future growth potential.</p>
             <p>Our objective is not to acquire turnaround situations. We seek fundamentally strong businesses with proven profitability that can become even more valuable as part of Industrial Assistance Group.</p>
-            <table class="spec">
+            <div class="table-scroll"><table class="spec">
               <tr><th>Attribute</th><th>Target</th><th>Why It Matters</th></tr>
               <tr><td>Revenue</td><td>~$6–8MM</td><td>Proven scale while maintaining significant growth potential</td></tr>
               <tr><td>EBITDA</td><td>~$2MM</td><td>Strong cash flow to support growth, debt service, and future acquisitions</td></tr>
@@ -1702,7 +1757,7 @@ const SEED = {
               <tr><td>End Markets</td><td>Petrochemical, Refining, LNG, Pipeline, Power Gen</td><td>Mission-critical industries, recurring demand</td></tr>
               <tr><td>Leadership Team</td><td>Strong second layer</td><td>Supports ownership transition and continuity</td></tr>
               <tr><td>Growth Potential</td><td>Clear commercial/operational upside</td><td>Ensures every acquisition adds enterprise value</td></tr>
-            </table>`,
+            </table></div>`,
             notes:'Done for now but need Alex to approve' }
         ]}
       ]
@@ -1732,6 +1787,16 @@ let LINKS = {};
 let currentView = 'library';
 let currentBook = DATA.books[0];
 let EDIT_MODE = false;
+
+/* ═══════════════ MOBILE NAV ═══════════════ */
+function openMobileNav(){
+  document.getElementById('rail').classList.add('open');
+  document.getElementById('railScrim').classList.add('show');
+}
+function closeMobileNav(){
+  document.getElementById('rail').classList.remove('open');
+  document.getElementById('railScrim').classList.remove('show');
+}
 
 /* ═══════════════ PERSISTENCE ═══════════════ */
 async function loadContent(){
@@ -1847,6 +1912,7 @@ function selectBook(id){
   document.getElementById('btn-command').classList.remove('on');
   renderRail();
   renderMain();
+  closeMobileNav();
 }
 function setView(view){
   currentView = view;
@@ -1854,6 +1920,7 @@ function setView(view){
   document.getElementById('btn-command').classList.toggle('on', view==='command');
   renderRail();
   renderMain();
+  closeMobileNav();
 }
 function toggleEdit(){
   EDIT_MODE = !EDIT_MODE;
@@ -1876,14 +1943,15 @@ function openRiskTool(){
   content.innerHTML = '<iframe id="riskFrame"></iframe>';
   document.getElementById('riskFrame').srcdoc = document.getElementById('riskTemplate').innerHTML;
   renderRail();
+  closeMobileNav();
 }
 
 /* ═══════════════ MAIN RENDER ═══════════════ */
 function renderMain(){
   document.getElementById('searchbox').style.display = currentView==='risk' ? 'none' : 'block';
   const content = document.getElementById('content');
-  content.style.padding = '40px 60px 100px';
-  content.style.maxWidth = '800px';
+  content.style.padding = '';
+  content.style.maxWidth = '';
 
   if(currentView==='command'){ document.getElementById('crumb').textContent='COMMAND VIEW · STATUS'; renderCommand(); return; }
   if(currentView==='risk') return;
@@ -1944,7 +2012,7 @@ function renderMain(){
             <h3 class="sec-title">${s.title}</h3>
             <div class="sec-meta"><span class="status-pill ${STATUS_CLASS[s.status]}">${STATUS_LABEL[s.status]}</span> ${s.owner||''} <button class="link-btn" onclick="generateLink('${b.id}',${chIdx},${secIdx})">🔗</button></div>
           </div>
-          <div class="sec-body">${s.content||'<p style="color:#9c927d;font-style:italic;">No draft yet.</p>'}</div>
+          <div class="sec-body">${(s.content||'<p style="color:#9c927d;font-style:italic;">No draft yet.</p>').replace('<table class="spec">','<div class="table-scroll"><table class="spec">').replace('</table>','</table></div>')}</div>
           ${s.notes?`<div class="note-box"><b>Note:</b> ${s.notes}</div>`:''}
         </div>`;
       }
@@ -2032,14 +2100,14 @@ function renderCommand(){
     </div>`;
   });
   html += `</div>
-  <table class="board">
+  <div class="board-scroll"><table class="board">
     <tr><th>Book</th><th>Chapter</th><th>Section</th><th>Status</th><th>Owner</th></tr>
     ${allSections.map(s=>`<tr>
       <td class="mono">Bk ${s.bookNum}</td><td>${s.chapter}</td><td>${s.section}</td>
       <td><span class="status-pill ${STATUS_CLASS[s.status]}">${STATUS_LABEL[s.status]}</span></td>
       <td class="owner-tag">${s.owner||''}</td>
     </tr>`).join('')}
-  </table>`;
+  </table></div>`;
   content.innerHTML = html;
 }
 

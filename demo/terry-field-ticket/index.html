@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Terry Equipment Inc — Field Service Ticket</title>
+<meta name="description" content="Field service ticketing for Terry Equipment Inc — labor, parts, photos, signature, and outsourced vendor tracking in one ticket.">
+<meta property="og:title" content="Terry Equipment Inc — Field Service Ticket">
+<meta property="og:description" content="Same-day invoicing from the job site. A working demo by Seegson Solutions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================
+   TERRY EQUIPMENT INC — FIELD SERVICE TICKET  v2
+   Demo build · Seegson Solutions
+   ========================================================== */
+:root{
+  --steel-950:#0B1015; --steel-900:#11161B; --steel-850:#151C22; --steel-800:#1A2129;
+  --steel-700:#27313B; --steel-600:#37444F; --steel-500:#4C5B67; --steel-400:#6C7B88;
+  --concrete:#CFD1CC;
+  --paper:#F2F2EF; --paper-2:#E6E6E0; --paper-3:#D4D4CD;
+  --amber:#F5A302; --amber-dk:#B87B00;
+  --go:#2C8A57; --alert:#CB3A21; --wty:#4A7FB5; --out:#8A6BB0;
+  --ink:#161A1D; --ink-2:#4C555C;
+  --f-disp:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-body:"Barlow","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",Consolas,monospace;
+  --pad:16px; --rail:296px; --office:360px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{background:var(--steel-950);font-family:var(--f-body);color:var(--ink);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit}
+.app{display:flex;flex-direction:column;height:100%;min-height:100vh}
+
+/* masthead */
+.mast{background:var(--steel-950);border-bottom:1px solid #000}
+.mast-in{display:flex;align-items:center;gap:14px;padding:10px var(--pad);max-width:1720px;margin:0 auto;width:100%}
+.plate{background:#fff;border-radius:3px;padding:7px 10px;flex:none;display:grid;place-items:center;min-width:56px;min-height:38px;box-shadow:0 1px 0 rgba(255,255,255,.14)}
+.plate img{display:block;height:26px;width:auto;max-width:150px}
+.plate .fallback{font-family:var(--f-disp);font-weight:700;font-size:17px;letter-spacing:.02em;text-transform:uppercase;color:#11161B;line-height:1;text-align:center}
+.plate .fallback b{color:#B87B00;display:block;font-size:9px;letter-spacing:.24em;margin-top:2px}
+.brand{min-width:0;flex:1}
+.brand-name{font-family:var(--f-disp);font-weight:700;font-size:21px;letter-spacing:.05em;text-transform:uppercase;color:#fff;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-sub{font-family:var(--f-disp);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel-400);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-sub b{color:var(--amber);font-weight:600}
+.mast-meta{margin-left:auto;display:flex;align-items:center;gap:22px;flex:none}
+.meta-i{text-align:right;line-height:1.25}
+.meta-i .l{font-family:var(--f-disp);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--steel-500)}
+.meta-i .v{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--concrete)}
+.meta-i .v a{color:var(--amber);text-decoration:none}
+.hide-sm{display:none}
+.roles{display:flex;border-top:1px solid var(--steel-800);background:var(--steel-950)}
+.roles button{flex:1;background:none;border:0;border-bottom:3px solid transparent;color:var(--steel-400);font-family:var(--f-disp);font-weight:700;font-size:14px;letter-spacing:.16em;text-transform:uppercase;padding:11px 4px 8px;cursor:pointer}
+.roles button[aria-current="true"]{color:#fff;border-bottom-color:var(--amber)}
+.roles button:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+
+/* panes */
+.panes{flex:1;min-height:0;display:flex;width:100%;max-width:1720px;margin:0 auto;background:var(--paper)}
+.pane{display:flex;flex-direction:column;min-height:0;min-width:0}
+.pane-rail{display:none;width:var(--rail);flex:none;background:var(--steel-900);border-right:1px solid #000}
+.pane-main{flex:1;background:var(--paper)}
+.pane-office{display:none;width:var(--office);flex:none;background:var(--steel-900);border-left:1px solid #000}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}
+@media (max-width:1079px){
+  .panes{display:block;height:auto}.pane{height:auto}
+  .app[data-role="field"] .pane-office{display:none}
+  .app[data-role="office"] .pane-office{display:flex;width:auto}
+  .app[data-role="office"] .pane-main,.app[data-role="office"] .pane-rail{display:none}
+  .app[data-role="field"][data-screen="list"] .pane-rail{display:flex;width:auto;background:var(--paper);border-right:0}
+  .app[data-role="field"][data-screen="list"] .pane-main{display:none}
+  .app[data-role="field"]:not([data-screen="list"]) .pane-rail{display:none}
+}
+@media (min-width:1080px){
+  .roles{display:none}.hide-sm{display:block}
+  .pane-rail,.pane-office{display:flex}.panes{height:0}
+  .backbar{display:none!important}
+}
+
+h1,h2,h3{margin:0;font-family:var(--f-disp);font-weight:700;letter-spacing:.01em}
+h1{font-size:28px;text-transform:uppercase;line-height:1.03}
+h2{font-size:16px;text-transform:uppercase;letter-spacing:.1em}
+.eyebrow{font-family:var(--f-disp);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2);margin:0 0 9px}
+.muted{color:var(--ink-2)}
+.rail-head{padding:13px var(--pad) 10px;display:flex;align-items:baseline;gap:8px;border-bottom:1px solid var(--steel-800)}
+.rail-head h2{color:#fff}
+.rail-head .count{margin-left:auto;font-family:var(--f-mono);font-size:12px;color:var(--steel-400)}
+
+.card{display:block;width:100%;text-align:left;background:var(--steel-850);border:0;border-left:4px solid var(--steel-600);border-bottom:1px solid var(--steel-800);padding:12px var(--pad);cursor:pointer;color:var(--concrete)}
+.card:hover{background:var(--steel-800)}
+.card:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.card.hot{border-left-color:var(--alert)}
+.card.done{border-left-color:var(--go)}
+.card.out{border-left-color:var(--out)}
+.card[aria-current="true"]{background:var(--steel-800);border-left-color:var(--amber)}
+.card-top{display:flex;align-items:center;gap:7px;margin-bottom:3px;flex-wrap:wrap}
+.tid{font-family:var(--f-mono);font-weight:600;font-size:12px;color:var(--steel-400)}
+.tag{font-family:var(--f-disp);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:2px 6px;border-radius:2px;color:#fff;background:var(--steel-600)}
+.tag.hot{background:var(--alert)}.tag.done{background:var(--go)}
+.tag.wty{background:var(--wty)}.tag.out{background:var(--out)}
+.tag.age0{background:var(--go)}.tag.age1{background:var(--amber);color:#241800}.tag.age2{background:var(--alert)}
+.card-cust{font-family:var(--f-disp);font-size:19px;font-weight:700;text-transform:uppercase;line-height:1.1;color:#fff}
+.card-mach{font-size:13px;color:var(--steel-400);margin-top:1px}
+.card-foot{display:flex;gap:8px;align-items:center;margin-top:7px;font-family:var(--f-mono);font-size:12px;color:var(--steel-400);flex-wrap:wrap}
+.card-amt{margin-left:auto;font-weight:700;color:var(--amber)}
+@media (max-width:1079px){
+  .app[data-screen="list"] .rail-head{background:var(--paper);border-bottom:1px solid var(--paper-3)}
+  .app[data-screen="list"] .rail-head h2{color:var(--ink)}
+  .app[data-screen="list"] .rail-head .count{color:var(--ink-2)}
+  .app[data-screen="list"] .pane-rail .card{background:#fff;color:var(--ink);border-bottom-color:var(--paper-3)}
+  .app[data-screen="list"] .pane-rail .card-cust{color:var(--ink)}
+  .app[data-screen="list"] .pane-rail .card-mach,
+  .app[data-screen="list"] .pane-rail .card-foot,
+  .app[data-screen="list"] .pane-rail .tid{color:var(--ink-2)}
+  .app[data-screen="list"] .pane-rail .card-amt{color:var(--ink)}
+}
+
+.money{background:var(--amber);color:#241800;display:flex;align-items:center;gap:16px;padding:11px var(--pad);border-bottom:2px solid var(--amber-dk);flex:none}
+.money-lab{font-family:var(--f-disp);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;opacity:.7;line-height:1.1}
+.money-brk{font-family:var(--f-mono);font-size:12px;line-height:1.35;opacity:.82;font-variant-numeric:tabular-nums}
+.money-val{font-family:var(--f-mono);font-weight:700;font-size:30px;letter-spacing:-.025em;line-height:1;margin-left:auto;font-variant-numeric:tabular-nums}
+.money.bump{animation:bump .5s ease-out}
+@keyframes bump{0%{background:#FFD470}100%{background:var(--amber)}}
+.money.pend{background:var(--out);color:#fff;border-bottom-color:#6B4E90}
+
+.backbar{display:flex;align-items:center;gap:10px;padding:9px var(--pad);background:var(--paper-2);border-bottom:1px solid var(--paper-3);flex:none}
+.back{background:none;border:0;font-family:var(--f-disp);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);cursor:pointer;padding:4px 2px}
+.back:focus-visible{outline:2px solid var(--amber)}
+
+.wrap{max-width:780px;margin:0 auto;width:100%}
+.sec{border-top:1px solid var(--paper-3);padding:18px var(--pad)}
+.sec:first-child{border-top:0}
+.grid2{display:grid;gap:0}
+@media (min-width:760px){
+  .grid2{grid-template-columns:1fr 1fr;gap:0 28px}
+  .grid2 .sec{border-top:1px solid var(--paper-3);padding-left:0;padding-right:0}
+  .grid2 > .sec:nth-child(1),.grid2 > .sec:nth-child(2){border-top:0}
+  .wrap{padding:0 var(--pad)}.wrap .sec{padding-left:0;padding-right:0}
+}
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--paper-3);border:1px solid var(--paper-3);margin-top:12px}
+.spec div{background:#fff;padding:8px 10px}
+.spec dt{font-family:var(--f-disp);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2)}
+.spec dd{margin:1px 0 0;font-family:var(--f-mono);font-size:14px;font-weight:600;word-break:break-word}
+.spec .wide{grid-column:1/-1}
+.complaint{background:var(--steel-800);color:var(--concrete);padding:12px 14px;margin-top:12px;font-size:15px;border-left:3px solid var(--amber)}
+
+.hm{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+.hm label{font-family:var(--f-disp);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2)}
+.hm input{font-family:var(--f-mono);font-weight:700;font-size:19px;background:var(--steel-900);color:var(--amber);border:0;padding:8px 11px;width:120px;text-align:right;border-radius:3px;box-shadow:inset 0 2px 5px rgba(0,0,0,.6);font-variant-numeric:tabular-nums}
+.hm input:focus{outline:2px solid var(--amber);outline-offset:1px}
+.hm span{font-family:var(--f-mono);font-size:12px;color:var(--ink-2)}
+
+.timer{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--paper-3);padding:11px 12px;margin-bottom:8px}
+.timer.run{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber)}
+.timer-txt{flex:1;min-width:0}
+.timer-name{font-family:var(--f-disp);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.timer-rate{font-family:var(--f-mono);font-size:11px;color:var(--ink-2)}
+.timer-el{font-family:var(--f-mono);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.timer.run .timer-el{color:var(--amber-dk)}
+.tbtn{border:0;border-radius:3px;cursor:pointer;font-family:var(--f-disp);font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;padding:11px 0;width:78px;flex:none;background:var(--steel-800);color:#fff}
+.tbtn.stop{background:var(--alert)}
+.tbtn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+.part{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--paper-3);padding:9px 10px;margin-bottom:6px;flex-wrap:wrap}
+.part.iswty{border-left:3px solid var(--wty)}
+.part-txt{flex:1;min-width:130px}
+.part-name{font-size:15px;font-weight:600;line-height:1.2}
+.part-no{font-family:var(--f-mono);font-size:11px;color:var(--ink-2)}
+.qty{display:flex;flex:none}
+.qty button{width:34px;height:34px;border:1px solid var(--paper-3);background:var(--paper-2);font-size:20px;line-height:1;cursor:pointer;color:var(--ink);font-family:var(--f-mono)}
+.qty button:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.qty span{width:34px;height:34px;display:grid;place-items:center;font-family:var(--f-mono);font-weight:700;font-size:15px;border-top:1px solid var(--paper-3);border-bottom:1px solid var(--paper-3);background:#fff}
+.part-amt{font-family:var(--f-mono);font-size:13px;font-weight:600;width:66px;text-align:right;flex:none}
+.part-amt.wty{color:var(--wty)}
+.wtybtn{border:1px solid var(--paper-3);background:var(--paper-2);color:var(--ink-2);cursor:pointer;font-family:var(--f-disp);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:8px 9px;border-radius:3px;flex:none}
+.wtybtn[aria-pressed="true"]{background:var(--wty);border-color:var(--wty);color:#fff}
+.wtybtn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+.addbtn{width:100%;background:var(--steel-800);color:#fff;border:0;padding:13px;font-family:var(--f-disp);font-weight:700;font-size:15px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:3px}
+.addbtn.ghost{background:none;color:var(--ink-2);border:1px dashed var(--paper-3)}
+.addbtn.violet{background:var(--out)}
+.addbtn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px;margin-top:4px}
+.shot{position:relative;aspect-ratio:1;background:var(--paper-2);border:1px solid var(--paper-3);overflow:hidden}
+.shot img{width:100%;height:100%;object-fit:cover;display:block}
+.shot em{position:absolute;left:0;right:0;bottom:0;background:rgba(11,16,21,.84);color:var(--concrete);font-family:var(--f-disp);font-size:10px;font-style:normal;letter-spacing:.14em;text-transform:uppercase;padding:2px 4px;text-align:center}
+.shot-add{display:grid;place-items:center;cursor:pointer;border:1px dashed var(--steel-400);color:var(--ink-2);font-family:var(--f-disp);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:4px}
+.shot-add:focus-within{outline:2px solid var(--amber)}
+.shot-add input{position:absolute;width:1px;height:1px;opacity:0}
+
+textarea,.fld{width:100%;font-family:var(--f-body);font-size:15px;border:1px solid var(--paper-3);padding:11px;background:#fff;border-radius:3px}
+textarea{min-height:88px;resize:vertical}
+textarea:focus,.fld:focus{outline:2px solid var(--amber);outline-offset:-1px}
+.fldrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.fldrow > div{flex:1;min-width:130px}
+.fldlab{font-family:var(--f-disp);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);margin-bottom:4px}
+
+.foot{padding:12px var(--pad);background:var(--steel-900);border-top:1px solid #000;flex:none}
+.foot-in{max-width:780px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap}
+.foot-in > *{flex:1;min-width:180px}
+.cta{width:100%;border:0;border-radius:3px;cursor:pointer;background:var(--amber);color:#241800;font-family:var(--f-disp);font-weight:700;font-size:18px;letter-spacing:.12em;text-transform:uppercase;padding:15px}
+.cta.alt{background:var(--out);color:#fff}
+.cta:disabled{background:var(--steel-700);color:var(--steel-400);cursor:not-allowed}
+.cta:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.foot-note{font-family:var(--f-mono);font-size:11px;color:var(--steel-400);text-align:center;margin-top:7px;flex-basis:100%}
+
+.sigwrap{background:#fff;border:1px solid var(--paper-3);margin-top:8px;position:relative}
+canvas{display:block;width:100%;height:190px;touch-action:none;cursor:crosshair}
+.sigline{position:absolute;left:18px;right:18px;bottom:36px;border-bottom:1px solid var(--paper-3);pointer-events:none}
+.sighint{position:absolute;left:18px;bottom:13px;font-family:var(--f-disp);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-3);pointer-events:none}
+.clr{background:none;border:0;font-family:var(--f-disp);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);cursor:pointer;padding:6px 0;margin-top:2px}
+
+.tot{width:100%;border-collapse:collapse;margin-top:8px;background:#fff}
+.tot th,.tot td{padding:9px 11px;border-bottom:1px solid var(--paper-3);text-align:left;font-size:14px}
+.tot th{font-family:var(--f-disp);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.tot td:last-child,.tot th:last-child{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.tot tr.wtyrow td{color:var(--wty)}
+.tot tr.grand td{background:var(--steel-900);color:var(--amber);font-weight:700;font-size:19px;font-family:var(--f-mono);border-bottom:0}
+.tot tr.grand td:first-child{font-family:var(--f-disp);letter-spacing:.14em;text-transform:uppercase;font-size:14px;color:#fff}
+
+/* office */
+.ohead{padding:14px var(--pad);border-bottom:1px solid var(--steel-800)}
+.ohead h2{color:#fff}
+.ohead p{margin:3px 0 0;font-size:13px;color:var(--steel-400)}
+.stat{padding:16px var(--pad);border-bottom:1px solid var(--steel-800)}
+.stat-lab{font-family:var(--f-disp);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--steel-500)}
+.stat-big{font-family:var(--f-mono);font-weight:700;font-size:36px;color:var(--amber);line-height:1.05;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.stat-big.blue{color:var(--wty);font-size:27px}
+.stat-big.violet{color:#B79BD8;font-size:27px}
+.stat-sub{font-size:13px;color:var(--steel-400);margin-top:3px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--steel-700);margin-top:14px}
+.cmp div{background:var(--steel-850);padding:10px}
+.cmp .k{font-family:var(--f-mono);font-size:22px;font-weight:700;line-height:1.1}
+.cmp .k.bad{color:var(--steel-400)}.cmp .k.good{color:var(--go)}
+.cmp .l{font-family:var(--f-disp);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--steel-500);margin-top:3px}
+.sendbtn{border:0;background:var(--steel-700);color:#fff;cursor:pointer;font-family:var(--f-disp);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border-radius:3px}
+.sendbtn.sent{background:var(--go)}
+.sendbtn.violet{background:var(--out)}
+.sendbtn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+/* vendor scorecard */
+.score{padding:6px var(--pad) 14px;border-bottom:1px solid var(--steel-800)}
+.srow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--steel-850)}
+.srow:last-child{border-bottom:0}
+.sname{flex:1;min-width:0}
+.sname b{display:block;font-family:var(--f-disp);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--concrete);line-height:1.15}
+.sname span{font-family:var(--f-mono);font-size:11px;color:var(--steel-500)}
+.sbar{width:80px;height:6px;background:var(--steel-800);border-radius:3px;overflow:hidden;flex:none}
+.sbar i{display:block;height:100%;background:var(--go)}
+.sbar i.mid{background:var(--amber)}
+.sbar i.slow{background:var(--alert)}
+.sdays{font-family:var(--f-mono);font-weight:700;font-size:15px;width:56px;text-align:right;flex:none;color:var(--concrete);font-variant-numeric:tabular-nums}
+
+.empty{padding:52px var(--pad);text-align:center;color:var(--ink-2)}
+.empty h2{color:var(--ink-2)}
+.empty p{font-size:15px;margin:8px auto 0;max-width:340px}
+.empty.dark{color:var(--steel-400)}.empty.dark h2{color:var(--steel-400)}
+
+.letter{background:#fff;border:1px solid var(--paper-3);padding:22px;margin-top:14px}
+.letter-head{display:flex;align-items:center;gap:14px;border-bottom:2px solid var(--steel-900);padding-bottom:14px;flex-wrap:wrap}
+.letter-head .plate{box-shadow:none;padding:0;min-height:0}
+.letter-head .rt{margin-left:auto;text-align:right;font-family:var(--f-mono);font-size:11px;color:var(--ink-2);line-height:1.5}
+.letter-name{font-family:var(--f-disp);font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:.05em}
+.letter-sub{font-family:var(--f-disp);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2)}
+
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--steel-950);color:#fff;padding:12px 20px;border-radius:2px;font-family:var(--f-disp);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;z-index:120;border-left:3px solid var(--amber);box-shadow:0 10px 40px rgba(0,0,0,.6);max-width:92vw}
+.scrim{position:fixed;inset:0;background:rgba(11,16,21,.66);z-index:90}
+.sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:560px;background:var(--paper);z-index:100;max-height:86vh;display:flex;flex-direction:column}
+@media (min-width:1080px){.sheet{bottom:auto;top:50%;transform:translate(-50%,-50%);max-height:78vh;border-radius:4px;overflow:hidden}}
+.sheet-head{padding:14px var(--pad);background:var(--steel-950);color:#fff;display:flex;align-items:center;gap:10px}
+.sheet-head h2{color:#fff;flex:1}
+.sheet-head button{background:none;border:0;color:var(--concrete);font-size:27px;line-height:1;cursor:pointer;padding:0 4px}
+.sheet-search{padding:10px var(--pad);background:var(--steel-900)}
+.sheet-search input{width:100%;padding:10px 12px;border:0;border-radius:3px;font-family:var(--f-body);font-size:15px;background:var(--steel-800);color:#fff}
+.sheet-search input:focus{outline:2px solid var(--amber)}
+.sheet-search input::placeholder{color:var(--steel-500)}
+.sheet-body{overflow-y:auto;padding:10px var(--pad) 22px}
+.pick{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:1px solid var(--paper-3);padding:11px 12px;margin-top:6px;cursor:pointer;color:inherit}
+.pick:hover{border-color:var(--amber)}
+.pick:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.pick .part-amt{width:auto}
+.pick.vend b{display:block;font-family:var(--f-disp);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.pick.vend span{font-family:var(--f-mono);font-size:11px;color:var(--ink-2)}
+
+.credit{padding:16px var(--pad) 30px;background:var(--steel-950);color:var(--steel-500);font-family:var(--f-mono);font-size:11px;line-height:1.7;text-align:center}
+.credit b{color:var(--steel-400);font-weight:600}
+.credit a{color:var(--amber);text-decoration:none}
+.credit button{background:none;border:1px solid var(--steel-700);color:var(--steel-400);font-family:var(--f-disp);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:6px 12px;margin-top:10px;cursor:pointer;border-radius:2px}
+
+@media print{
+  .mast,.roles,.pane-rail,.pane-office,.foot,.backbar,.credit,.toast{display:none!important}
+  body,.panes,.pane-main{background:#fff}
+  .letter{border:0;margin:0;padding:0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app" data-role="field" data-screen="list">
+  <header class="mast">
+    <div class="mast-in">
+      <div class="plate">
+        <img src="https://www.terryequipment.com/siteart/logo.png" alt="Terry Equipment Inc"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="fallback" style="display:none">Terry<b>Equipment</b></div>
+      </div>
+      <div class="brand">
+        <div class="brand-name">Terry Equipment Inc</div>
+        <div class="brand-sub">Field Service Ticket <b>·</b> Riverside <b>·</b> Sacramento</div>
+      </div>
+      <div class="mast-meta">
+        <div class="meta-i hide-sm"><div class="l">Dispatch</div><div class="v"><a href="tel:18003509230">1-800-350-9230</a></div></div>
+        <div class="meta-i" id="who"></div>
+      </div>
+    </div>
+    <div class="roles" role="tablist">
+      <button id="tab-field" role="tab" aria-current="true">Field</button>
+      <button id="tab-office" role="tab" aria-current="false">Office</button>
+    </div>
+  </header>
+  <div class="panes">
+    <aside class="pane pane-rail" id="rail"></aside>
+    <section class="pane pane-main" id="main"></section>
+    <aside class="pane pane-office" id="office"></aside>
+  </div>
+</div>
+
+<script>
+"use strict";
+const DAY=864e5;
+const RATES={travel:95,diag:145,repair:145,emerg:215};
+
+const CATALOG=[
+ {no:"4-1250",name:"Stringline sensor, GOMACO",price:486.00},
+ {no:"2-3311",name:"Sensor mount arm",price:128.50},
+ {no:"A3C-HD",name:"Minnich A-3C vibrator head",price:612.00},
+ {no:"HH-0348",name:'Hydraulic hose, 3/8" x 48"',price:74.25},
+ {no:"GS-BR8",name:"Global broom segment set (8)",price:340.00},
+ {no:"EZ-210B",name:"EZ Drill 210 dust boot",price:96.00},
+ {no:"GB-SK4",name:"Gearbox seal kit",price:158.75},
+ {no:"HF-221",name:"Hydraulic filter element",price:62.00},
+ {no:"WP-880",name:"High-pressure water pump seal kit",price:214.00},
+ {no:"SL-1000",name:'String line, 1/8" nylon, 1000 ft',price:88.00},
+ {no:"MQ-SS12",name:"Multiquip Super Screed blade",price:298.00},
+ {no:"TM-DS78",name:'TAMCO drill steel, 7/8" hex',price:176.50},
+ {no:"GR-EP2",name:"Grease, EP-2 (14 oz)",price:9.40}
+];
+
+const VENDORS=[
+ {id:"cvr", name:"Central Valley Rigging", area:"Fresno / Bakersfield — transport"},
+ {id:"hdf", name:"High Desert Field Service", area:"Sparks, NV — service"},
+ {id:"kes", name:"Kona Equipment Services",  area:"Hilo, HI — service"},
+ {id:"prm", name:"Pacific Rim Machine Support", area:"Tamuning, GU — service"}
+];
+/* prior confirmations, in days — the history the scorecard is built on */
+const HISTORY={ cvr:[1,2,1,1,2,1,2,1,1], hdf:[2,3,1,2,2,3], kes:[6,8,5,9], prm:[8,11,9] };
+
+const SEED=()=>([
+ {id:"TE-4417",emergency:true,status:"open",
+  customer:"Inland Paving Co.",contact:"Ray Okafor",
+  machine:"GOMACO Commander III",serial:"CM3-2214-88",
+  site:"I-15 widening — Fontana, CA",hours:"3,418.6",warranty:true,
+  complaint:"Stringline sensor drifting. Paver walking off grade on night pour. Crew is down.",
+  labor:{travel:0,diag:0,repair:0},parts:[],photos:[],notes:"",
+  vendor:null,dispatchedAt:null,confirmedAt:null,vendorCost:0,closedAt:null,invoiced:false},
+
+ {id:"TE-4418",emergency:false,status:"open",
+  customer:"Delta Flatwork Inc.",contact:"Sandra Beltran",
+  machine:"Somero S-940 laser screed",serial:"S940-7731",
+  site:"Warehouse pad — Riverside, CA",hours:"1,207.2",warranty:false,
+  complaint:"Laser head not holding elevation. 500-hour service also due.",
+  labor:{travel:0,diag:0,repair:0},parts:[],photos:[],notes:"",
+  vendor:null,dispatchedAt:null,confirmedAt:null,vendorCost:0,closedAt:null,invoiced:false},
+
+ {id:"TE-4419",emergency:false,status:"open",
+  customer:"Sierra Concrete Constructors",contact:"Dale Whitmore",
+  machine:"Global M3 sweeper",serial:"GM3-0455",
+  site:"Yard — Sacramento, CA",hours:"6,041.9",warranty:false,
+  complaint:"Broom won't engage. Hydraulic pressure reading low at the pump.",
+  labor:{travel:0,diag:0,repair:0},parts:[],photos:[],notes:"",
+  vendor:null,dispatchedAt:null,confirmedAt:null,vendorCost:0,closedAt:null,invoiced:false},
+
+ {id:"TE-4414",emergency:false,status:"out",
+  customer:"Pacific Shoreline Paving",contact:"Nolan Ka'aihue",
+  machine:"GOMACO GP-4 slipform paver",serial:"GP4-1180",
+  site:"Harbor access road — Hilo, HI",hours:"2,655.0",warranty:true,
+  complaint:"Track drive losing power on grade. Customer needs it before Monday's pour.",
+  labor:{travel:0,diag:0,repair:0},parts:[],photos:[],notes:"",
+  vendor:"kes",dispatchedAt:Date.now()-6*DAY,confirmedAt:null,vendorCost:0,closedAt:null,invoiced:false},
+
+ {id:"TE-4415",emergency:false,status:"out",
+  customer:"Truckee Meadows Concrete",contact:"Britt Salazar",
+  machine:"Allen Riding Trowel HDX-740",serial:"HDX-6621",
+  site:"Distribution center — Sparks, NV",hours:"418.5",warranty:false,
+  complaint:"Deliver rebuilt trowel and check gearbox oil on site.",
+  labor:{travel:0,diag:0,repair:0},parts:[],photos:[],notes:"",
+  vendor:"hdf",dispatchedAt:Date.now()-2*DAY,confirmedAt:null,vendorCost:0,closedAt:null,invoiced:false},
+
+ {id:"TE-4416",emergency:false,status:"closed",
+  customer:"Valley Dowel & Drill",contact:"Marco Ruiz",
+  machine:"EZ Drill 210B SRA",serial:"EZ210-3390",
+  site:"SR-99 shoulder — Bakersfield, CA",hours:"884.0",warranty:false,
+  complaint:"Dust collection blocked, drill steel binding in the guide.",
+  labor:{travel:1.8*3600,diag:.7*3600,repair:2.4*3600},
+  parts:[{no:"EZ-210B",qty:2,wty:false},{no:"GR-EP2",qty:3,wty:false}],
+  photos:[],notes:"Replaced both dust boots, cleared guide, greased carriage. Advised daily blow-down.",
+  vendor:null,dispatchedAt:null,confirmedAt:null,vendorCost:0,
+  closedAt:Date.now()-26*36e5,invoiced:false}
+]);
+
+let S={role:"field",screen:"list",openId:null,tickets:SEED(),running:null,sheet:null,q:"",
+       conf:{hours:"",cost:"",notes:""}};
+
+const $=s=>document.querySelector(s);
+const money=n=>"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const part=no=>CATALOG.find(p=>p.no===no);
+const vend=id=>VENDORS.find(v=>v.id===id);
+const tkt=id=>S.tickets.find(t=>t.id===id);
+const days=ms=>Math.max(0,Math.floor((Date.now()-ms)/DAY));
+
+function clock(sec){sec=Math.floor(sec);
+  return [Math.floor(sec/3600),Math.floor(sec%3600/60),sec%60].map(n=>String(n).padStart(2,"0")).join(":");}
+function secs(t,k){let v=t.labor[k]||0;
+  if(S.running&&S.running.ticketId===t.id&&S.running.kind===k)v+=(Date.now()-S.running.since)/1000;
+  return v;}
+const rateFor=(t,k)=>k==="travel"?RATES.travel:(t.emergency?RATES.emerg:RATES[k]);
+const laborTotal=t=>["travel","diag","repair"].reduce((s,k)=>s+secs(t,k)/3600*rateFor(t,k),0);
+const partsBillable=t=>t.parts.filter(p=>!p.wty).reduce((s,p)=>s+(part(p.no)?.price||0)*p.qty,0);
+const partsWarranty=t=>t.parts.filter(p=>p.wty).reduce((s,p)=>s+(part(p.no)?.price||0)*p.qty,0);
+const total=t=>laborTotal(t)+partsBillable(t);
+
+/* vendor scorecard: seeded history + anything confirmed live */
+function vendorStats(){
+  return VENDORS.map(v=>{
+    const live=S.tickets.filter(t=>t.vendor===v.id&&t.dispatchedAt&&t.confirmedAt)
+      .map(t=>Math.max(1,Math.round((t.confirmedAt-t.dispatchedAt)/DAY)));
+    const all=[...(HISTORY[v.id]||[]),...live];
+    const avg=all.length?all.reduce((a,b)=>a+b,0)/all.length:0;
+    return {...v,avg,n:all.length};
+  }).sort((a,b)=>a.avg-b.avg);
+}
+
+/* ---------- render ---------- */
+function render(){
+  const app=$("#app");
+  app.dataset.role=S.role; app.dataset.screen=S.screen;
+  $("#tab-field").setAttribute("aria-current",S.role==="field");
+  $("#tab-office").setAttribute("aria-current",S.role==="office");
+  $("#who").innerHTML=S.role==="office"
+    ?'<div class="l">Billing</div><div class="v">Riverside</div>'
+    :'<div class="l">Technician</div><div class="v">A. Reyes · Truck 4</div>';
+  $("#rail").innerHTML=viewRail();
+  $("#main").innerHTML=viewMain();
+  $("#office").innerHTML=viewOffice();
+  if(S.screen==="sign")initSig();
+  S.sheet?mountSheet():unmountSheet();
+}
+
+function ageTag(t){
+  const d=days(t.dispatchedAt);
+  const cls=d<3?"age0":(d<7?"age1":"age2");
+  return `<span class="tag ${cls}">${d===0?"today":d+"d"}</span>`;
+}
+
+function cardHTML(t){
+  const cls=t.status==="closed"?"done":(t.status==="out"?"out":(t.emergency?"hot":""));
+  let tag='<span class="tag">Scheduled</span>';
+  if(t.status==="closed")tag='<span class="tag done">Signed</span>';
+  else if(t.status==="out")tag=`<span class="tag out">Out — ${esc(vend(t.vendor).name.split(" ")[0])}</span>`+ageTag(t);
+  else if(t.emergency)tag='<span class="tag hot">Emergency</span>';
+  const w=t.warranty?'<span class="tag wty">Wty</span>':"";
+  const amt=total(t)>0?`<span class="card-amt">${money(total(t))}</span>`:"";
+  return `<button class="card ${cls}" data-open="${t.id}" aria-current="${S.openId===t.id}">
+    <div class="card-top"><span class="tid">${t.id}</span>${tag}${w}</div>
+    <div class="card-cust">${esc(t.customer)}</div>
+    <div class="card-mach">${esc(t.machine)}</div>
+    <div class="card-foot"><span>${esc(t.site.split("—").pop().trim())}</span>${amt}</div>
+  </button>`;
+}
+
+function viewRail(){
+  const open=S.tickets.filter(t=>t.status==="open");
+  const out=S.tickets.filter(t=>t.status==="out");
+  const done=S.tickets.filter(t=>t.status==="closed");
+  const grp=(title,arr,n)=>arr.length?`<div class="rail-head" ${n?'style="border-top:1px solid var(--steel-800)"':""}><h2>${title}</h2><span class="count">${arr.length}</span></div>${arr.map(cardHTML).join("")}`:"";
+  return `<div class="rail-head"><h2>My tickets</h2><span class="count">${open.length} open</span></div>
+   <div class="scroll">
+     ${open.map(cardHTML).join("")||'<div class="empty dark"><h2>All clear</h2><p>Dispatch will push new work here.</p></div>'}
+     ${grp("Out with vendors",out,1)}
+     ${grp("Signed",done,1)}
+   </div>`;
+}
+
+function viewMain(){
+  if(S.screen==="sign")return viewSign();
+  if(S.screen==="receipt")return viewReceipt();
+  if(!S.openId)return `<div class="scroll"><div class="empty"><h2>No ticket open</h2>
+    <p>Pick a ticket to start logging travel, labor and parts — or send it out to a vendor.</p></div>${credit()}</div>`;
+  return viewTicket();
+}
+
+function viewTicket(){
+  const t=tkt(S.openId);
+  if(t.status==="out")return viewPending(t);
+  const running=S.running&&S.running.ticketId===t.id;
+
+  const timer=(k,label)=>{
+    const on=running&&S.running.kind===k;
+    return `<div class="timer ${on?"run":""}">
+      <div class="timer-txt"><div class="timer-name">${label}</div>
+      <div class="timer-rate">${money(rateFor(t,k))}/hr${t.emergency&&k!=="travel"?" · after hours":""}</div></div>
+      <div class="timer-el" data-live="clock-${k}">${clock(secs(t,k))}</div>
+      <button class="tbtn ${on?"stop":""}" data-timer="${k}">${on?"Stop":"Start"}</button></div>`;
+  };
+  const partRow=p=>{const c=part(p.no);
+    return `<div class="part ${p.wty?"iswty":""}">
+      <div class="part-txt"><div class="part-name">${esc(c.name)}</div>
+      <div class="part-no">${c.no} · ${money(c.price)} ea</div></div>
+      <div class="qty"><button data-qty="${p.no}" data-d="-1" aria-label="Remove one">−</button>
+      <span>${p.qty}</span><button data-qty="${p.no}" data-d="1" aria-label="Add one">+</button></div>
+      <button class="wtybtn" data-wty="${p.no}" aria-pressed="${!!p.wty}" title="Bill to OEM warranty instead of the customer">Wty</button>
+      <div class="part-amt ${p.wty?"wty":""}">${p.wty?"claim":money(c.price*p.qty)}</div></div>`;};
+
+  const canClose=total(t)>0||partsWarranty(t)>0;
+  return `
+  <div class="backbar"><button class="back" data-back>‹ Tickets</button><span class="tid">${t.id}</span></div>
+  ${moneyBar(t)}
+  <div class="scroll"><div class="wrap">
+    <div class="sec">
+      <h1>${esc(t.customer)}</h1>
+      <div class="muted">${esc(t.site)} · ${esc(t.contact)}</div>
+      <dl class="spec">
+        <div class="wide"><dt>Machine</dt><dd>${esc(t.machine)}</dd></div>
+        <div><dt>Serial</dt><dd>${esc(t.serial)}</dd></div>
+        <div><dt>Ticket</dt><dd>${t.id}</dd></div></dl>
+      <div class="complaint">${esc(t.complaint)}</div>
+      <div class="hm"><label for="hm">Hour meter</label>
+        <input id="hm" inputmode="decimal" value="${esc(t.hours)}" data-hours>
+        <span>hrs${t.warranty?" · required for the warranty claim":""}</span></div>
+    </div>
+    <div class="grid2">
+      <div class="sec"><p class="eyebrow">Labor — one clock at a time</p>
+        ${timer("travel","Travel")}${timer("diag","Diagnose")}${timer("repair","Repair")}</div>
+      <div class="sec"><p class="eyebrow">Parts off the truck</p>
+        ${t.parts.map(partRow).join("")}
+        <button class="addbtn ${t.parts.length?"ghost":""}" data-sheet="parts">+ Add part</button></div>
+    </div>
+    <div class="sec"><p class="eyebrow">Photos — ${t.photos.length} on file${t.warranty?" · OEM needs before &amp; after":""}</p>
+      <div class="shots">
+        ${t.photos.map((p,i)=>`<div class="shot"><img src="${p.src}" alt="Job photo ${i+1}"><em>${p.tag}</em></div>`).join("")}
+        <label class="shot shot-add">Before<input type="file" accept="image/*" capture="environment" data-shot="Before"></label>
+        <label class="shot shot-add">After<input type="file" accept="image/*" capture="environment" data-shot="After"></label>
+      </div></div>
+    <div class="sec"><p class="eyebrow">Work performed</p>
+      <textarea data-notes placeholder="What you found, what you did, what the customer should watch.">${esc(t.notes)}</textarea></div>
+  </div>${credit()}</div>
+  <div class="foot"><div class="foot-in">
+    <button class="cta" data-sign ${canClose?"":"disabled"}>Close &amp; get signature</button>
+    <button class="cta alt" data-sheet="dispatch">Send out to vendor</button>
+    <div class="foot-note">${canClose?"Customer signs on the glass — invoice goes out today":"Log labor or parts to close, or send this one out"}</div>
+  </div></div>`;
+}
+
+function viewPending(t){
+  const v=vend(t.vendor), d=days(t.dispatchedAt);
+  const st=vendorStats().find(x=>x.id===t.vendor);
+  return `<div class="backbar"><button class="back" data-back>‹ Tickets</button><span class="tid">${t.id}</span></div>
+  <div class="money pend">
+    <div><div class="money-lab">Out with vendor</div>
+    <div class="money-brk">${esc(v.name)} · sent ${d===0?"today":d+" day"+(d===1?"":"s")+" ago"}</div></div>
+    <div class="money-val">${d}d</div></div>
+  <div class="scroll"><div class="wrap">
+    <div class="sec">
+      <h1>${esc(t.customer)}</h1>
+      <div class="muted">${esc(t.site)} · ${esc(t.contact)}</div>
+      <dl class="spec">
+        <div class="wide"><dt>Machine</dt><dd>${esc(t.machine)}</dd></div>
+        <div><dt>Serial</dt><dd>${esc(t.serial)}</dd></div>
+        <div><dt>Ticket</dt><dd>${t.id}</dd></div>
+        <div class="wide"><dt>Assigned vendor</dt><dd>${esc(v.name)} — ${esc(v.area)}</dd></div>
+      </dl>
+      <div class="complaint">${esc(t.complaint)}</div>
+      <p class="muted" style="font-size:14px;margin-top:14px">
+        This ticket stays open and keeps aging until ${esc(v.name.split(" ")[0])} confirms.
+        ${st&&st.n?`Their average turnaround is ${st.avg.toFixed(1)} days across ${st.n} jobs.`:""}
+      </p>
+    </div>
+  </div>${credit()}</div>
+  <div class="foot"><div class="foot-in">
+    <button class="cta" data-sheet="confirm">Log vendor confirmation</button>
+    <button class="cta alt" data-vendorlink>Text ticket link to vendor</button>
+    <div class="foot-note">Either the vendor fills it in, or the office keys it in when they call</div>
+  </div></div>`;
+}
+
+function moneyBar(t){
+  const n=t.parts.reduce((a,x)=>a+x.qty,0), w=partsWarranty(t);
+  return `<div class="money" id="moneybar">
+    <div><div class="money-lab">Ticket value</div>
+    <div class="money-brk" data-live="brk">${clock(secs(t,"travel")+secs(t,"diag")+secs(t,"repair"))} labor · ${n} part${n===1?"":"s"}${w>0?` · ${money(w)} warranty`:""}</div></div>
+    <div class="money-val" data-live="total">${money(total(t))}</div></div>`;
+}
+
+function viewSign(){
+  const t=tkt(S.openId);
+  const rows=["travel","diag","repair"].filter(k=>secs(t,k)>0).map(k=>{
+    const h=secs(t,k)/3600,nm={travel:"Travel",diag:"Diagnose",repair:"Repair"}[k];
+    return `<tr><td>${nm} — ${h.toFixed(2)} hr @ ${money(rateFor(t,k))}</td><td>${money(h*rateFor(t,k))}</td></tr>`;}).join("");
+  const prows=t.parts.map(p=>{const c=part(p.no);
+    return `<tr class="${p.wty?"wtyrow":""}"><td>${esc(c.name)} × ${p.qty}${p.wty?" — OEM warranty claim":""}</td><td>${p.wty?"—":money(c.price*p.qty)}</td></tr>`;}).join("");
+  return `<div class="backbar"><button class="back" data-backticket>‹ Edit ticket</button><span class="tid">${t.id}</span></div>
+  <div class="scroll"><div class="wrap">
+    <div class="sec"><h1>Review &amp; sign</h1>
+      <div class="muted">${esc(t.customer)} · ${esc(t.machine)} · ${esc(t.serial)}</div>
+      <table class="tot"><tr><th>Line</th><th>Amount</th></tr>${rows}${prows}
+        <tr class="grand"><td>Customer total</td><td>${money(total(t))}</td></tr></table>
+      ${partsWarranty(t)>0?`<p class="muted" style="font-size:13px;margin-top:9px">${money(partsWarranty(t))} in parts is flagged to the OEM warranty claim, not billed here.</p>`:""}
+    </div>
+    <div class="sec"><p class="eyebrow">Customer signature — ${esc(t.contact)}</p>
+      <div class="sigwrap"><canvas id="sig"></canvas><div class="sigline"></div><div class="sighint" id="sighint">Sign above</div></div>
+      <button class="clr" data-clear>Clear signature</button></div>
+  </div>${credit()}</div>
+  <div class="foot"><div class="foot-in">
+    <button class="cta" data-finish disabled>Close ticket &amp; send</button>
+    <div class="foot-note">Signed PDF emails to the customer before you leave the yard</div>
+  </div></div>`;
+}
+
+function viewReceipt(){
+  const t=tkt(S.openId), v=t.vendor?vend(t.vendor):null;
+  const turn=t.dispatchedAt&&t.confirmedAt?Math.max(1,Math.round((t.confirmedAt-t.dispatchedAt)/DAY)):null;
+  return `<div class="scroll"><div class="wrap">
+    <div class="sec"><h1>Ticket closed</h1>
+      <div class="muted">${v?`Confirmed by ${esc(v.name)}${turn?` after ${turn} day${turn===1?"":"s"}`:""}`:`Signed by ${esc(t.contact)}`} · queued for billing</div>
+      <div class="letter">
+        <div class="letter-head">
+          <div class="plate"><img src="https://www.terryequipment.com/siteart/logo.png" alt=""
+            onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div class="fallback" style="display:none">Terry<b>Equipment</b></div></div>
+          <div><div class="letter-name">Terry Equipment Inc</div>
+          <div class="letter-sub">Service · Parts · Rentals</div></div>
+          <div class="rt">${t.id}<br>1-800-350-9230<br>Riverside · Sacramento</div>
+        </div>
+        <table class="tot">
+          <tr><th>${esc(t.customer)}</th><th>Amount</th></tr>
+          <tr><td>Labor</td><td>${money(laborTotal(t))}</td></tr>
+          <tr><td>Parts</td><td>${money(partsBillable(t))}</td></tr>
+          ${partsWarranty(t)>0?`<tr class="wtyrow"><td>OEM warranty claim (not billed)</td><td>${money(partsWarranty(t))}</td></tr>`:""}
+          ${t.vendorCost>0?`<tr><td>Vendor cost — ${esc(v.name)}</td><td>−${money(t.vendorCost)}</td></tr>
+            <tr><td><b>Margin on this job</b></td><td><b>${money(total(t)-t.vendorCost)}</b></td></tr>`:""}
+          <tr class="grand"><td>Total due</td><td>${money(total(t))}</td></tr>
+        </table>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+        <button class="addbtn" style="width:auto;flex:1;min-width:150px" data-print>Print copy</button>
+        <button class="addbtn ghost" style="width:auto;flex:1;min-width:150px" data-back>Back to tickets</button>
+      </div>
+    </div></div>${credit()}</div>`;
+}
+
+function viewOffice(){
+  const out=S.tickets.filter(t=>t.status==="out");
+  const done=S.tickets.filter(t=>t.status==="closed");
+  const ready=done.filter(t=>!t.invoiced);
+  const sum=ready.reduce((n,t)=>n+total(t),0);
+  const wty=S.tickets.reduce((n,t)=>n+partsWarranty(t),0);
+  const oldest=out.length?Math.max(...out.map(t=>days(t.dispatchedAt))):0;
+
+  const outRow=t=>{const v=vend(t.vendor),d=days(t.dispatchedAt);
+    return `<div class="card out" style="cursor:pointer" data-open="${t.id}">
+      <div class="card-top"><span class="tid">${t.id}</span><span class="tag out">${esc(v.name)}</span>${ageTag(t)}</div>
+      <div class="card-cust">${esc(t.customer)}</div>
+      <div class="card-mach">${esc(t.machine)}</div>
+      <div class="card-foot"><span>Sent ${d===0?"today":d+"d ago"}</span>
+        <button class="sendbtn violet" data-sheet="confirm" data-for="${t.id}">Log confirmation</button></div></div>`;};
+
+  const doneRow=t=>`<div class="card done" style="cursor:default">
+      <div class="card-top"><span class="tid">${t.id}</span>${t.invoiced?'<span class="tag done">Sent</span>':'<span class="tag">Ready</span>'}</div>
+      <div class="card-cust">${esc(t.customer)}</div>
+      <div class="card-mach">${esc(t.machine)} · ${esc(t.serial)}</div>
+      <div class="card-foot">
+        <button class="sendbtn ${t.invoiced?"sent":""}" data-invoice="${t.id}" ${t.invoiced?"disabled":""}>${t.invoiced?"Sent to books":"Send to books"}</button>
+        <span class="card-amt">${money(total(t))}</span></div></div>`;
+
+  const stats=vendorStats();
+  const worst=Math.max(...stats.map(s=>s.avg),1);
+  const scoreRow=s=>{
+    const pct=Math.round(s.avg/worst*100);
+    const cls=s.avg<3?"":(s.avg<6?"mid":"slow");
+    return `<div class="srow"><div class="sname"><b>${esc(s.name)}</b><span>${esc(s.area)} · ${s.n} jobs</span></div>
+      <div class="sbar"><i class="${cls}" style="width:${pct}%"></i></div>
+      <div class="sdays">${s.avg.toFixed(1)}d</div></div>`;};
+
+  return `<div class="ohead"><h2>Office</h2><p>Riverside &amp; Sacramento billing</p></div>
+  <div class="scroll">
+    <div class="stat"><div class="stat-lab">Ready to invoice</div>
+      <div class="stat-big">${money(sum)}</div>
+      <div class="stat-sub">${ready.length} signed ticket${ready.length===1?"":"s"} waiting</div>
+      <div class="cmp"><div><div class="k good">Today</div><div class="l">Invoice goes out</div></div>
+      <div><div class="k bad">19 days</div><div class="l">Paper ticket average</div></div></div></div>
+
+    <div class="stat"><div class="stat-lab">Out with vendors</div>
+      <div class="stat-big violet">${out.length} ticket${out.length===1?"":"s"}</div>
+      <div class="stat-sub">${out.length?`Oldest has been out ${oldest} days and is still unbilled.`:"Nothing sitting with a vendor."}</div></div>
+
+    <div class="stat"><div class="stat-lab">OEM warranty claims</div>
+      <div class="stat-big blue">${money(wty)}</div>
+      <div class="stat-sub">Serial, hour meter and photos captured — claim-ready.</div></div>
+
+    <div class="rail-head"><h2>Vendor turnaround</h2><span class="count">avg days</span></div>
+    <div class="score">${stats.map(scoreRow).join("")}</div>
+
+    ${out.length?`<div class="rail-head"><h2>Waiting on vendor</h2><span class="count">${out.length}</span></div>${out.map(outRow).join("")}`:""}
+    <div class="rail-head"><h2>Signed tickets</h2><span class="count">${done.length}</span></div>
+    ${done.length?done.map(doneRow).join(""):'<div class="empty dark"><h2>Nothing signed yet</h2><p>Close a ticket and it lands here instantly.</p></div>'}
+    ${credit()}</div>`;
+}
+
+function credit(){
+  return `<div class="credit"><b>Working demo — sample data only.</b> Nothing is saved or sent.<br>
+    Built by <a href="https://seegsonsolutions.com" target="_blank" rel="noopener">Seegson Solutions</a>
+    <br><button data-reset>Reset demo</button></div>`;
+}
+
+/* ---------- sheets ---------- */
+function mountSheet(){
+  const existing=document.getElementById("sheet");
+  if(existing&&existing.dataset.kind===S.sheet){ if(S.sheet==="parts")paintPicks(); return; }
+  unmountSheet();
+  const w=document.createElement("div");
+  w.id="sheet"; w.dataset.kind=S.sheet;
+  w.innerHTML=`<div class="scrim" data-closesheet></div><div class="sheet" role="dialog">${sheetInner()}</div>`;
+  document.body.appendChild(w);
+  if(S.sheet==="parts"){
+    paintPicks();
+    const q=document.getElementById("q"); q.value=S.q; q.focus();
+    q.addEventListener("input",e=>{S.q=e.target.value;paintPicks();});
+  }
+}
+function sheetInner(){
+  if(S.sheet==="parts")return `<div class="sheet-head"><h2>Truck stock</h2><button data-closesheet aria-label="Close">×</button></div>
+    <div class="sheet-search"><input id="q" placeholder="Search part or number…" autocomplete="off"></div>
+    <div class="sheet-body" id="picks"></div>`;
+
+  if(S.sheet==="dispatch")return `<div class="sheet-head"><h2>Send out to vendor</h2><button data-closesheet aria-label="Close">×</button></div>
+    <div class="sheet-body">
+      <p class="muted" style="font-size:14px;margin:2px 0 10px">The ticket stays open and starts aging until they confirm.</p>
+      ${vendorStats().map(v=>`<button class="pick vend" data-dispatch="${v.id}">
+        <div class="part-txt"><b>${esc(v.name)}</b><span>${esc(v.area)}${v.n?` · avg ${v.avg.toFixed(1)}d`:""}</span></div>
+        <div class="part-amt">${v.n?v.avg.toFixed(1)+"d":"—"}</div></button>`).join("")}
+    </div>`;
+
+  if(S.sheet==="confirm"){
+    const t=tkt(S.openId), v=t&&t.vendor?vend(t.vendor):null;
+    return `<div class="sheet-head"><h2>Vendor confirmation</h2><button data-closesheet aria-label="Close">×</button></div>
+    <div class="sheet-body">
+      <p class="muted" style="font-size:14px;margin:2px 0 10px">${v?esc(v.name):"Vendor"} reported back on ${t?esc(t.id):""}. Key in what they did.</p>
+      <div class="fldrow">
+        <div><div class="fldlab">Labor hours</div><input class="fld" id="cHours" inputmode="decimal" placeholder="0.0" value="${esc(S.conf.hours)}"></div>
+        <div><div class="fldlab">Vendor invoiced us</div><input class="fld" id="cCost" inputmode="decimal" placeholder="0.00" value="${esc(S.conf.cost)}"></div>
+      </div>
+      <div style="margin-top:10px"><div class="fldlab">Work performed</div>
+        <textarea id="cNotes" placeholder="What the vendor reported.">${esc(S.conf.notes)}</textarea></div>
+      <button class="addbtn" style="margin-top:12px" data-confirm>Close ticket &amp; queue invoice</button>
+    </div>`;
+  }
+  return "";
+}
+function paintPicks(){
+  const box=document.getElementById("picks"); if(!box)return;
+  const q=S.q.trim().toLowerCase();
+  const list=CATALOG.filter(c=>!q||c.name.toLowerCase().includes(q)||c.no.toLowerCase().includes(q));
+  box.innerHTML=list.length?list.map(c=>`<button class="pick" data-pick="${c.no}">
+      <div class="part-txt"><div class="part-name">${esc(c.name)}</div><div class="part-no">${c.no}</div></div>
+      <div class="part-amt">${money(c.price)}</div></button>`).join("")
+    :`<div class="empty"><h2>No match</h2><p>Try the part number, or add it as a special order.</p></div>`;
+}
+function unmountSheet(){document.getElementById("sheet")?.remove();}
+
+/* ---------- signature ---------- */
+function initSig(){
+  const c=document.getElementById("sig"); if(!c)return;
+  const ctx=c.getContext("2d"),dpr=window.devicePixelRatio||1,r=c.getBoundingClientRect();
+  c.width=r.width*dpr; c.height=r.height*dpr; ctx.scale(dpr,dpr);
+  Object.assign(ctx,{lineWidth:2.2,lineCap:"round",lineJoin:"round",strokeStyle:"#161A1D"});
+  let drawing=false,inked=false;
+  const pos=e=>{const b=c.getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top]};
+  c.addEventListener("pointerdown",e=>{drawing=true;c.setPointerCapture(e.pointerId);const[x,y]=pos(e);ctx.beginPath();ctx.moveTo(x,y)});
+  c.addEventListener("pointermove",e=>{if(!drawing)return;const[x,y]=pos(e);ctx.lineTo(x,y);ctx.stroke();
+    if(!inked){inked=true;document.getElementById("sighint")?.remove();
+      const b=document.querySelector("[data-finish]");if(b)b.disabled=false;}});
+  ["pointerup","pointercancel","pointerleave"].forEach(ev=>c.addEventListener(ev,()=>drawing=false));
+  document.querySelector("[data-clear]")?.addEventListener("click",()=>{
+    ctx.clearRect(0,0,c.width,c.height);inked=false;
+    const b=document.querySelector("[data-finish]");if(b)b.disabled=true;});
+}
+
+/* ---------- tick ---------- */
+setInterval(()=>{
+  if(!S.running||S.screen!=="ticket")return;
+  const t=tkt(S.running.ticketId); if(!t)return;
+  const el=document.querySelector(`[data-live="clock-${S.running.kind}"]`);
+  if(el)el.textContent=clock(secs(t,S.running.kind));
+  const tot=document.querySelector('[data-live="total"]');
+  if(tot)tot.textContent=money(total(t));
+  const brk=document.querySelector('[data-live="brk"]');
+  const n=t.parts.reduce((a,x)=>a+x.qty,0),w=partsWarranty(t);
+  if(brk)brk.textContent=`${clock(secs(t,"travel")+secs(t,"diag")+secs(t,"repair"))} labor · ${n} part${n===1?"":"s"}${w>0?` · ${money(w)} warranty`:""}`;
+},1000);
+
+/* ---------- events ---------- */
+function toast(m){document.querySelector(".toast")?.remove();
+  const d=document.createElement("div");d.className="toast";d.textContent=m;
+  document.body.appendChild(d);setTimeout(()=>d.remove(),2400);}
+function bank(){if(!S.running)return;const t=tkt(S.running.ticketId);
+  if(t)t.labor[S.running.kind]+=(Date.now()-S.running.since)/1000;S.running=null;}
+function flashMoney(){const m=document.getElementById("moneybar");if(!m)return;
+  m.classList.remove("bump");void m.offsetWidth;m.classList.add("bump");}
+function grabConf(){
+  const h=document.getElementById("cHours"),c=document.getElementById("cCost"),n=document.getElementById("cNotes");
+  if(h)S.conf.hours=h.value; if(c)S.conf.cost=c.value; if(n)S.conf.notes=n.value;
+}
+
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-open],[data-back],[data-backticket],[data-timer],[data-qty],[data-wty],[data-sheet],[data-closesheet],[data-pick],[data-sign],[data-finish],[data-invoice],[data-reset],[data-print],[data-dispatch],[data-confirm],[data-vendorlink]");
+  if(!el)return;
+
+  if(el.dataset.sheet!==undefined){
+    if(el.dataset.for)S.openId=el.dataset.for;
+    S.sheet=el.dataset.sheet; S.q=""; S.conf={hours:"",cost:"",notes:""};
+    return render();
+  }
+  if(el.hasAttribute("data-closesheet")){S.sheet=null;return unmountSheet();}
+
+  if(el.dataset.open!==undefined){S.openId=el.dataset.open;S.screen="ticket";S.role="field";return render();}
+  if(el.hasAttribute("data-back")){bank();S.screen="list";return render();}
+  if(el.hasAttribute("data-backticket")){S.screen="ticket";return render();}
+  if(el.hasAttribute("data-print"))return window.print();
+
+  if(el.dataset.timer){
+    const k=el.dataset.timer;
+    const same=S.running&&S.running.ticketId===S.openId&&S.running.kind===k;
+    bank(); if(!same)S.running={ticketId:S.openId,kind:k,since:Date.now()};
+    return render();
+  }
+  if(el.dataset.qty){
+    const t=tkt(S.openId),line=t.parts.find(p=>p.no===el.dataset.qty);
+    if(line){line.qty+=Number(el.dataset.d);if(line.qty<=0)t.parts=t.parts.filter(p=>p.no!==el.dataset.qty);}
+    render();return flashMoney();
+  }
+  if(el.dataset.wty){
+    const line=tkt(S.openId).parts.find(p=>p.no===el.dataset.wty);
+    if(line)line.wty=!line.wty; render();flashMoney();
+    return toast(line.wty?"Flagged to OEM warranty":"Billing to customer");
+  }
+  if(el.dataset.pick){
+    const t=tkt(S.openId),line=t.parts.find(p=>p.no===el.dataset.pick);
+    if(line)line.qty+=1; else t.parts.push({no:el.dataset.pick,qty:1,wty:false});
+    S.sheet=null; render();flashMoney();
+    return toast("Added — "+part(el.dataset.pick).name);
+  }
+
+  if(el.dataset.dispatch){
+    const t=tkt(S.openId),v=vend(el.dataset.dispatch);
+    bank(); t.status="out"; t.vendor=v.id; t.dispatchedAt=Date.now();
+    S.sheet=null; S.screen="ticket"; render();
+    return toast("Sent to "+v.name);
+  }
+  if(el.hasAttribute("data-vendorlink")){
+    S.sheet=null; render();
+    return toast("Ticket link copied — text it to the vendor");
+  }
+  if(el.hasAttribute("data-confirm")){
+    grabConf();
+    const t=tkt(S.openId);
+    const hrs=parseFloat(S.conf.hours)||0, cost=parseFloat(S.conf.cost)||0;
+    if(hrs<=0){toast("Enter the labor hours first");return;}
+    t.labor.repair=hrs*3600; t.vendorCost=cost;
+    if(S.conf.notes)t.notes=S.conf.notes;
+    t.status="closed"; t.confirmedAt=Date.now(); t.closedAt=Date.now(); t.invoiced=false;
+    S.sheet=null; S.screen="receipt"; S.role="field"; render();
+    return toast(t.id+" closed — "+money(total(t))+" queued");
+  }
+
+  if(el.hasAttribute("data-sign")){bank();S.screen="sign";return render();}
+  if(el.hasAttribute("data-finish")){
+    const t=tkt(S.openId); bank();
+    t.status="closed";t.closedAt=Date.now();t.invoiced=false;
+    S.screen="receipt";render();
+    return toast("Signed PDF sent to "+t.contact.split(" ")[0]);
+  }
+  if(el.dataset.invoice){
+    const t=tkt(el.dataset.invoice);t.invoiced=true;render();
+    return toast(t.id+" — "+money(total(t))+" billed");
+  }
+  if(el.hasAttribute("data-reset")){
+    S={role:S.role,screen:"list",openId:null,tickets:SEED(),running:null,sheet:null,q:"",conf:{hours:"",cost:"",notes:""}};
+    render();return toast("Demo reset");
+  }
+});
+
+document.addEventListener("input",e=>{
+  if(["cHours","cCost","cNotes"].includes(e.target.id)){grabConf();return;}
+  const t=tkt(S.openId); if(!t)return;
+  if(e.target.hasAttribute("data-notes"))t.notes=e.target.value;
+  if(e.target.hasAttribute("data-hours"))t.hours=e.target.value;
+});
+document.addEventListener("change",e=>{
+  const tag=e.target.dataset?.shot;
+  if(!tag||!e.target.files?.[0])return;
+  const t=tkt(S.openId),fr=new FileReader();
+  fr.onload=()=>{t.photos.push({src:fr.result,tag});render();toast(tag+" photo attached");};
+  fr.readAsDataURL(e.target.files[0]);
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.sheet){S.sheet=null;unmountSheet();}});
+
+$("#tab-field").addEventListener("click",()=>{S.role="field";render()});
+$("#tab-office").addEventListener("click",()=>{bank();S.role="office";render()});
+
+render();
+</script>
+</body>
+</html>

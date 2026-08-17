@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seegson Solutions — Team Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:    #0f1623;
+    --navy2:   #1a2540;
+    --navy3:   #232f52;
+    --gold:    #c9a84c;
+    --gold2:   #e0c179;
+    --cream:   #f4f1ec;
+    --white:   #ffffff;
+    --border:  #e2ddd3;
+    --text:    #1a1614;
+    --sub:     #5a5650;
+    --green:   #1a7a4a;
+    --green-bg:#e9f3ec;
+    --red:     #b83232;
+    --red-bg:  #f6e9e9;
+    --amber:   #c47d0e;
+    --amber-bg:#f7f0e2;
+    --blue:    #2e5f9e;
+    --blue-bg: #e8eff8;
+    --purple:  #6b4f9e;
+    --purple-bg:#efe9f7;
+    --radius:  10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    background: var(--navy);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-brand {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.3px;
+    line-height: 1;
+  }
+
+  .brand-dot { color: var(--gold); }
+
+  .brand-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-top: 4px;
+  }
+
+  .nav-section { padding: 16px 12px; }
+
+  .nav-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    padding: 0 10px 8px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 7px;
+    color: rgba(255,255,255,0.65);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+  .nav-item.active { background: rgba(201,168,76,0.15); color: var(--gold2); }
+  .nav-icon { font-size: 15px; width: 18px; text-align: center; flex-shrink: 0; }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 8px;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 14px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .user-switcher {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+
+  .user-switcher:hover { background: rgba(255,255,255,0.05); }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    color: var(--navy);
+  }
+
+  .user-info { flex: 1; min-width: 0; }
+  .user-name { font-size: 12.5px; font-weight: 600; color: var(--white); }
+  .user-role { font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; color: rgba(255,255,255,0.4); letter-spacing: 0.5px; }
+  .switcher-arrow { color: rgba(255,255,255,0.3); font-size: 10px; }
+
+  .main { padding: 28px 36px 60px; max-width: 1400px; }
+
+  .page { display: none; }
+  .page.active { display: block; animation: fadeUp 0.25s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 20px;
+  }
+
+  .page-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .page-sub { font-size: 13.5px; color: var(--sub); margin-top: 6px; max-width: 560px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:hover { background: var(--navy2); }
+  .btn-gold { background: var(--gold); color: var(--navy); }
+  .btn-gold:hover { background: var(--gold2); }
+  .btn-ghost { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--navy); }
+  .btn-sm { padding: 6px 12px; font-size: 11.5px; border-radius: 6px; }
+  .btn-danger-ghost { background: var(--white); color: var(--red); border: 1.5px solid var(--red-bg); }
+  .btn-danger-ghost:hover { background: var(--red-bg); }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .kpi-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .kpi-card.k1::before { background: var(--gold); }
+  .kpi-card.k2::before { background: var(--green); }
+  .kpi-card.k3::before { background: var(--blue); }
+  .kpi-card.k4::before { background: var(--purple); }
+
+  .kpi-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--sub);
+    margin-bottom: 8px;
+  }
+
+  .kpi-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .kpi-delta { font-size: 11px; color: var(--green); margin-top: 6px; font-weight: 500; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .activity-list { display: flex; flex-direction: column; gap: 0; }
+
+  .activity-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .activity-item:last-child { border-bottom: none; }
+
+  .activity-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    color: var(--navy);
+  }
+
+  .activity-body { flex: 1; min-width: 0; }
+  .activity-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .activity-text strong { font-weight: 600; }
+  .activity-time { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--sub); margin-top: 3px; }
+
+  .activity-type-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8.5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    margin-left: 6px;
+  }
+
+  .pipeline-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .pipe-col {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    min-height: 200px;
+  }
+
+  .pipe-col-head {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .pipe-col-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--sub);
+  }
+
+  .pipe-col-count {
+    background: var(--cream);
+    color: var(--sub);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  .pipe-col-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; min-height: 140px; }
+
+  .deal-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .deal-card:hover { border-color: var(--gold); transform: translateY(-1px); }
+
+  .deal-name { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 3px; }
+  .deal-company { font-size: 11px; color: var(--sub); margin-bottom: 6px; }
+  .deal-meta { display: flex; justify-content: space-between; align-items: center; }
+  .deal-value { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700; color: var(--green); }
+  .deal-owner-chip {
+    width: 20px; height: 20px; border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 10px;
+    color: var(--navy);
+  }
+
+  .deal-drop-zone { min-height: 30px; border-radius: 6px; transition: background 0.15s; }
+  .deal-drop-zone.drag-over { background: rgba(201,168,76,0.15); border: 1.5px dashed var(--gold); }
+
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--sub);
+    padding: 8px 12px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .data-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    vertical-align: middle;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--cream); }
+
+  .doc-icon-cell { display: flex; align-items: center; gap: 10px; }
+  .doc-icon {
+    width: 34px; height: 34px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;
+  }
+  .doc-name-text { font-weight: 600; color: var(--navy); }
+  .doc-meta-text { font-size: 11px; color: var(--sub); }
+
+  .link-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--blue);
+    text-decoration: none;
+    background: var(--blue-bg);
+    padding: 4px 9px;
+    border-radius: 6px;
+  }
+  .link-chip:hover { text-decoration: underline; }
+
+  .badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    text-transform: uppercase;
+  }
+  .badge-green  { background: var(--green-bg);  color: var(--green); }
+  .badge-amber  { background: var(--amber-bg);  color: var(--amber); }
+  .badge-red    { background: var(--red-bg);    color: var(--red); }
+  .badge-blue   { background: var(--blue-bg);   color: var(--blue); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple); }
+  .badge-gray   { background: var(--cream);     color: var(--sub); }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--sub); }
+  .empty-icon { font-size: 28px; margin-bottom: 10px; opacity: 0.5; }
+  .empty-text { font-size: 13px; }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,22,35,0.6);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--white);
+    border-radius: 14px;
+    border-top: 3px solid var(--gold);
+    width: 100%;
+    max-width: 520px;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 24px 26px 26px;
+    animation: modalIn 0.2s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  .modal-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--sub);
+    margin-bottom: 18px;
+  }
+
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--sub);
+    margin-bottom: 6px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13.5px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    resize: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+  .modal-actions .btn { flex: 1; justify-content: center; }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--navy);
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 11px 22px;
+    border-radius: 10px;
+    z-index: 400;
+    transition: transform 0.3s ease, opacity 0.3s;
+    opacity: 0;
+    white-space: nowrap;
+    border-left: 3px solid var(--gold);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  .fab-row { display: flex; gap: 10px; }
+
+  .upload-zone {
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 20px;
+  }
+  .upload-zone:hover, .upload-zone.drag-over { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+  .upload-icon { font-size: 26px; margin-bottom: 8px; }
+  .upload-text { font-size: 13px; color: var(--sub); }
+  .upload-text strong { color: var(--navy); }
+
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .team-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    text-align: center;
+  }
+  .team-avatar-lg {
+    width: 60px; height: 60px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 24px;
+    margin: 0 auto 12px; color: var(--navy);
+  }
+  .team-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 700; color: var(--navy); }
+  .team-role { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--gold); text-transform: uppercase; margin-top: 2px; margin-bottom: 12px; }
+  .team-stats { display: flex; justify-content: center; gap: 20px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .team-stat-val { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--navy); }
+  .team-stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; color: var(--sub); text-transform: uppercase; letter-spacing: 0.5px; }
+  .team-contact { font-size: 11.5px; color: var(--sub); margin-top: 10px; }
+
+  .progress-wrap { background: var(--border); border-radius: 4px; height: 6px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold2)); border-radius: 4px; transition: width 0.4s ease; }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+
+  @media (max-width: 1000px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { position: relative; height: auto; flex-direction: row; overflow-x: auto; }
+    .sidebar-brand { display: none; }
+    .nav-section { display: flex; padding: 10px; }
+    .nav-label { display: none; }
+    .sidebar-footer { display: none; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .pipeline-cols { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: 1fr; }
+    .main { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">Seegson<span class="brand-dot">.</span></div>
+      <div class="brand-sub">Team Command Center</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <div class="nav-item active" data-page="dashboard" onclick="Nav.go('dashboard')">
+        <span class="nav-icon">◆</span> Dashboard
+      </div>
+      <div class="nav-item" data-page="activity" onclick="Nav.go('activity')">
+        <span class="nav-icon">◈</span> Updates
+        <span class="nav-badge" id="nav-badge-activity">0</span>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Business</div>
+      <div class="nav-item" data-page="pipeline" onclick="Nav.go('pipeline')">
+        <span class="nav-icon">◇</span> Sales Pipeline
+      </div>
+      <div class="nav-item" data-page="demos" onclick="Nav.go('demos')">
+        <span class="nav-icon">▣</span> Demo Links
+      </div>
+      <div class="nav-item" data-page="documents" onclick="Nav.go('documents')">
+        <span class="nav-icon">▤</span> Documents
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Company</div>
+      <div class="nav-item" data-page="team" onclick="Nav.go('team')">
+        <span class="nav-icon">●</span> Team
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-switcher" onclick="Nav.cycleUser()">
+        <div class="user-avatar" id="current-user-avatar">B</div>
+        <div class="user-info">
+          <div class="user-name" id="current-user-name">Bobby Julian</div>
+          <div class="user-role" id="current-user-role">Founder</div>
+        </div>
+        <div class="switcher-arrow">⇄</div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-eyebrow">Command Center</div>
+          <div class="page-title" id="dashboard-greeting">Good to see you, Bobby.</div>
+          <div class="page-sub">Everything Seegson, in one place. Here's where things stand.</div>
+        </div>
+        <div class="fab-row">
+          <button class="btn btn-ghost" onclick="Modal.open('updateModal')">✎ Post Update</button>
+          <button class="btn btn-gold" onclick="Modal.open('dealModal')">＋ New Lead</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">Recent Activity</div>
+            <span style="font-size:11px;color:var(--sub);cursor:pointer;" onclick="Nav.go('activity')">View all →</span>
+          </div>
+          <div class="activity-list" id="dashboard-activity-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">Pipeline Snapshot</div>
+            <span style="font-size:11px;color:var(--sub);cursor:pointer;" onclick="Nav.go('pipeline')">View board →</span>
+          </div>
+          <div id="dashboard-pipeline-summary"></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">Latest Demos</div>
+            <span style="font-size:11px;color:var(--sub);cursor:pointer;" onclick="Nav.go('demos')">View all →</span>
+          </div>
+          <div id="dashboard-demos-list"></div>
+        </div>
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">Recent Documents</div>
+            <span style="font-size:11px;color:var(--sub);cursor:pointer;" onclick="Nav.go('documents')">View all →</span>
+          </div>
+          <div id="dashboard-docs-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-activity">
+      <div class="page-header">
+        <div>
+          <div class="page-eyebrow">Team Log</div>
+          <div class="page-title">Updates</div>
+          <div class="page-sub">Post wins, blockers, or anything the team should know. Everyone sees everything.</div>
+        </div>
+        <button class="btn btn-gold" onclick="Modal.open('updateModal')">✎ Post Update</button>
+      </div>
+      <div class="card">
+        <div class="activity-list" id="full-activity-list"></div>
+      </div>
+    </div>
+
+    <div class="page" id="page-pipeline">
+      <div class="page-header">
+        <div>
+          <div class="page-eyebrow">Business Development</div>
+          <div class="page-title">Sales Pipeline</div>
+          <div class="page-sub">Drag cards between stages as leads move. Track every deal from first contact to close.</div>
+        </div>
+        <button class="btn btn-gold" onclick="Modal.open('dealModal')">＋ New Lead</button>
+      </div>
+      <div class="pipeline-cols" id="pipeline-board"></div>
+    </div>
+
+    <div class="page" id="page-demos">
+      <div class="page-header">
+        <div>
+          <div class="page-eyebrow">Product Suite</div>
+          <div class="page-title">Demo Links</div>
+          <div class="page-sub">Every live demo, personalized build, and product URL in one place.</div>
+        </div>
+        <button class="btn btn-gold" onclick="Modal.open('demoModal')">＋ Add Demo</button>
+      </div>
+      <div class="card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Demo</th>
+              <th>Product</th>
+              <th>Client</th>
+              <th>Status</th>
+              <th>Link</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="demos-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page" id="page-documents">
+      <div class="page-header">
+        <div>
+          <div class="page-eyebrow">File Library</div>
+          <div class="page-title">Documents</div>
+          <div class="page-sub">Proposals, contracts, business plans — shared access for the whole team.</div>
+        </div>
+        <button class="btn btn-gold" onclick="Modal.open('docModal')">＋ Add Document</button>
+      </div>
+      <div class="upload-zone" onclick="Modal.open('docModal')">
+        <div class="upload-icon">⬆</div>
+        <div class="upload-text"><strong>Click to log a document</strong> — paste a Drive/Dropbox link or note a file name</div>
+      </div>
+      <div class="card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Document</th>
+              <th>Category</th>
+              <th>Added By</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="docs-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page" id="page-team">
+      <div class="page-header">
+        <div>
+          <div class="page-eyebrow">Who We Are</div>
+          <div class="page-title">Team</div>
+          <div class="page-sub">Bobby, Chase, and Will — what each of us owns.</div>
+        </div>
+      </div>
+      <div class="team-grid" id="team-grid"></div>
+    </div>
+
+  </main>
+</div>
+
+<div class="modal-overlay" id="updateModal">
+  <div class="modal">
+    <div class="modal-title">Post an Update</div>
+    <div class="modal-sub">Visible to the whole team</div>
+    <div class="field">
+      <label>Update Type</label>
+      <select id="update-type">
+        <option value="win">🏆 Win</option>
+        <option value="update">📋 Status Update</option>
+        <option value="blocker">⚠ Blocker</option>
+        <option value="note">💬 Note</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>What's happening?</label>
+      <textarea id="update-text" rows="4" placeholder="e.g. Sent the DocVault demo to Jesse Farmer at B&E Resources — waiting to hear back"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="Modal.close('updateModal')">Cancel</button>
+      <button class="btn btn-gold" onclick="App.addUpdate()">Post Update</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="dealModal">
+  <div class="modal">
+    <div class="modal-title">New Lead</div>
+    <div class="modal-sub">Add to Sales Pipeline</div>
+    <div class="field">
+      <label>Company Name</label>
+      <input type="text" id="deal-company" placeholder="e.g. Terry Equipment Inc">
+    </div>
+    <div class="field">
+      <label>Contact Name</label>
+      <input type="text" id="deal-contact" placeholder="e.g. Jesse Farmer">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Est. Value ($)</label>
+        <input type="number" id="deal-value" placeholder="3000">
+      </div>
+      <div class="field">
+        <label>Stage</label>
+        <select id="deal-stage">
+          <option value="lead">Lead</option>
+          <option value="demo">Demo Sent</option>
+          <option value="negotiating">Negotiating</option>
+          <option value="closed">Closed Won</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Owner</label>
+      <select id="deal-owner">
+        <option value="bobby">Bobby</option>
+        <option value="chase">Chase</option>
+        <option value="will">Will</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Notes</label>
+      <textarea id="deal-notes" rows="2" placeholder="Any context worth remembering..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="Modal.close('dealModal')">Cancel</button>
+      <button class="btn btn-gold" onclick="App.addDeal()">Add Lead</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="demoModal">
+  <div class="modal">
+    <div class="modal-title">Add Demo</div>
+    <div class="modal-sub">Log a live demo link</div>
+    <div class="field">
+      <label>Demo Name</label>
+      <input type="text" id="demo-name" placeholder="e.g. DocVault — Gulfspan Industrial">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Product</label>
+        <select id="demo-product">
+          <option>FieldTrack</option>
+          <option>ServiceTrack</option>
+          <option>SafeLog</option>
+          <option>DocVault</option>
+          <option>SignFlow</option>
+          <option>PSMS Scorecard</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Client / Prospect</label>
+        <input type="text" id="demo-client" placeholder="e.g. Gulfspan Industrial">
+      </div>
+    </div>
+    <div class="field">
+      <label>Demo URL</label>
+      <input type="text" id="demo-url" placeholder="https://seegsonsolutions.com/demo/...">
+    </div>
+    <div class="field">
+      <label>Status</label>
+      <select id="demo-status">
+        <option value="live">Live</option>
+        <option value="draft">In Progress</option>
+        <option value="sent">Sent to Client</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="Modal.close('demoModal')">Cancel</button>
+      <button class="btn btn-gold" onclick="App.addDemo()">Add Demo</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="docModal">
+  <div class="modal">
+    <div class="modal-title">Add Document</div>
+    <div class="modal-sub">Log a shared file</div>
+    <div class="field">
+      <label>Document Name</label>
+      <input type="text" id="doc-name" placeholder="e.g. Seegson Business Plan v2">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Category</label>
+        <select id="doc-category">
+          <option>Business Plan</option>
+          <option>Contract</option>
+          <option>Proposal</option>
+          <option>Pricing</option>
+          <option>Presentation</option>
+          <option>Legal</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Added By</label>
+        <select id="doc-owner">
+          <option value="bobby">Bobby</option>
+          <option value="chase">Chase</option>
+          <option value="will">Will</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Link (Drive, Dropbox, etc.)</label>
+      <input type="text" id="doc-url" placeholder="https://drive.google.com/...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="Modal.close('docModal')">Cancel</button>
+      <button class="btn btn-gold" onclick="App.addDoc()">Add Document</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="dealDetailModal">
+  <div class="modal">
+    <div class="modal-title" id="dd-company">Company</div>
+    <div class="modal-sub" id="dd-contact">Contact</div>
+    <div class="field-row" style="margin-bottom:18px;">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Value</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--green);" id="dd-value">$0</div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Owner</div>
+        <div style="font-size:14px;font-weight:600;color:var(--navy);" id="dd-owner">Bobby</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Notes</label>
+      <div style="font-size:13px;color:var(--text);background:var(--cream);padding:10px 12px;border-radius:7px;" id="dd-notes">—</div>
+    </div>
+    <div class="field">
+      <label>Move to Stage</label>
+      <select id="dd-stage-select"></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger-ghost" onclick="App.deleteDeal()">Delete</button>
+      <button class="btn btn-gold" onclick="App.updateDealStage()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   SEEGSON SOLUTIONS — TEAM DASHBOARD
+   All event listeners and onclick handlers are attached via
+   the objects below (Nav, Modal, App, Actions, DragDrop).
+   Data lives in State, modeled entirely with objects/arrays,
+   persisted to localStorage so it survives reloads.
+   ══════════════════════════════════════════════════════════ */
+
+const TEAM = {
+  bobby: { name: 'Bobby Julian', role: 'Founder · Development', initials: 'B', color: '#c9a84c', email: 'bobby@seegsonsolutions.com', phone: '832-806-5186' },
+  chase: { name: 'Chase Hanson',  role: 'Sales & Partnerships',  initials: 'C', color: '#7fb8e0', email: 'chase@seegsonsolutions.com', phone: '—' },
+  will:  { name: 'Will Jimenez',  role: 'Technical Support',     initials: 'W', color: '#8fd0a8', email: 'will@seegsonsolutions.com', phone: '—' }
+};
+
+const STAGES = [
+  { id: 'lead',        label: 'Lead' },
+  { id: 'demo',        label: 'Demo Sent' },
+  { id: 'negotiating', label: 'Negotiating' },
+  { id: 'closed',       label: 'Closed Won' }
+];
+
+const State = {
+  currentUser: 'bobby',
+
+  deals: [
+    { id: 'd1', company: 'B&E Resources', contact: 'Jesse Farmer', value: 3000, stage: 'demo', owner: 'bobby', notes: 'PSMS Scorecard demo built and deployed. Warm intro via Will Jimenez.' },
+    { id: 'd2', company: 'Gulfspan Industrial', contact: 'Blake Smalley', value: 4500, stage: 'demo', owner: 'bobby', notes: 'FieldTrack + DocVault demos delivered in Husky toolbox package.' },
+    { id: 'd3', company: 'Fusion Sign and Design', contact: 'Loren Hanson', value: 500, stage: 'closed', owner: 'chase', notes: 'First paying client — custom PowerPoint. Wants pricing before next step.' },
+    { id: 'd4', company: 'Schoolhouse Daycare', contact: 'Loren Hanson (intro)', value: 2500, stage: 'lead', owner: 'chase', notes: 'Practice/test client via Hanson Capital. Waiting on finalized pricing model.' },
+    { id: 'd5', company: 'SoCal Construction Co.', contact: 'TBD', value: 8000, stage: 'lead', owner: 'chase', notes: "Chase's target for the real first official sale." }
+  ],
+
+  demos: [
+    { id: 'de1', name: 'DocVault — Gulfspan Industrial', product: 'DocVault', client: 'Gulfspan Industrial', url: 'https://seegsonsolutions.com/demo/docvault', status: 'live' },
+    { id: 'de2', name: 'PSMS Scorecard — B&E Resources', product: 'PSMS Scorecard', client: 'B&E Resources', url: 'https://seegsonsolutions.com/demo/be-psms', status: 'live' },
+    { id: 'de3', name: 'FieldTrack — JAC Rentals', product: 'FieldTrack', client: 'JAC Rentals', url: 'https://seegsonsolutions.com/demo/jacrentals', status: 'live' },
+    { id: 'de4', name: 'SignFlow — Fusion Sign and Design', product: 'SignFlow', client: 'Fusion Sign and Design', url: 'https://seegsonsolutions.com/demo/fusionsign', status: 'live' }
+  ],
+
+  documents: [
+    { id: 'doc1', name: 'Seegson Business Plan v2', category: 'Business Plan', owner: 'bobby', url: '#', date: '2026-08-10' },
+    { id: 'doc2', name: 'Client Intake Questionnaire', category: 'Proposal', owner: 'bobby', url: '#', date: '2026-08-09' },
+    { id: 'doc3', name: 'Pricing Decision Tree', category: 'Pricing', owner: 'chase', url: '#', date: '2026-08-08' },
+    { id: 'doc4', name: 'On-Call Support Proposal — Loren', category: 'Proposal', owner: 'bobby', url: '#', date: '2026-08-11' }
+  ],
+
+  activity: [
+    { id: 'a1', user: 'bobby', type: 'win',     text: 'Closed the first Seegson sale — $500 custom PowerPoint for Loren Hanson.', time: '2 days ago' },
+    { id: 'a2', user: 'chase', type: 'update',  text: 'Talked to my dad — he wants to be our first official client under the new pricing model.', time: '2 days ago' },
+    { id: 'a3', user: 'bobby', type: 'update',  text: 'Deployed the B&E PSMS Scorecard demo. Ready to send to Jesse Farmer.', time: '1 day ago' },
+    { id: 'a4', user: 'will',  type: 'note',    text: 'Data handling pipeline is ready — can turn around client spreadsheets in about an hour.', time: '18 hours ago' },
+    { id: 'a5', user: 'chase', type: 'update',  text: 'Built a pricing decision tree in Excel — automated quote calculator based on scope inputs.', time: '14 hours ago' },
+    { id: 'a6', user: 'bobby', type: 'blocker', text: 'Need the LLC filed before we can open a business bank account — top priority this week.', time: '6 hours ago' }
+  ],
+
+  save() {
+    try {
+      localStorage.setItem('seegson_state', JSON.stringify({
+        currentUser: this.currentUser,
+        deals: this.deals,
+        demos: this.demos,
+        documents: this.documents,
+        activity: this.activity
+      }));
+    } catch(e) {}
+  },
+
+  load() {
+    try {
+      const raw = localStorage.getItem('seegson_state');
+      if (raw) Object.assign(this, JSON.parse(raw));
+    } catch(e) {}
+  }
+};
+
+const Nav = {
+  go(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelector('.nav-item[data-page="' + pageId + '"]').classList.add('active');
+
+    if (pageId === 'dashboard') Render.dashboard();
+    if (pageId === 'activity') Render.fullActivity();
+    if (pageId === 'pipeline') Render.pipeline();
+    if (pageId === 'demos') Render.demos();
+    if (pageId === 'documents') Render.documents();
+    if (pageId === 'team') Render.team();
+  },
+
+  cycleUser() {
+    const order = ['bobby', 'chase', 'will'];
+    const idx = order.indexOf(State.currentUser);
+    State.currentUser = order[(idx + 1) % order.length];
+    State.save();
+    Render.userSwitcher();
+    Render.dashboard();
+    Toast.show('Switched to ' + TEAM[State.currentUser].name);
+  }
+};
+
+const Modal = {
+  open(id) { document.getElementById(id).classList.add('open'); },
+  close(id) { document.getElementById(id).classList.remove('open'); }
+};
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+const Toast = {
+  show(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  }
+};
+
+const App = {
+  addUpdate() {
+    const type = document.getElementById('update-type').value;
+    const text = document.getElementById('update-text').value.trim();
+    if (!text) { Toast.show('Write something first'); return; }
+
+    State.activity.unshift({ id: 'a' + Date.now(), user: State.currentUser, type: type, text: text, time: 'just now' });
+    State.save();
+
+    document.getElementById('update-text').value = '';
+    Modal.close('updateModal');
+    Render.dashboard();
+    Render.fullActivity();
+    Toast.show('Update posted');
+  },
+
+  addDeal() {
+    const company = document.getElementById('deal-company').value.trim();
+    const contact = document.getElementById('deal-contact').value.trim();
+    const value = parseFloat(document.getElementById('deal-value').value) || 0;
+    const stage = document.getElementById('deal-stage').value;
+    const owner = document.getElementById('deal-owner').value;
+    const notes = document.getElementById('deal-notes').value.trim();
+
+    if (!company) { Toast.show('Company name is required'); return; }
+
+    State.deals.push({ id: 'd' + Date.now(), company, contact, value, stage, owner, notes });
+    State.activity.unshift({ id: 'a' + Date.now(), user: State.currentUser, type: 'update', text: 'Added a new lead: <strong>' + company + '</strong>', time: 'just now' });
+    State.save();
+
+    ['deal-company','deal-contact','deal-value','deal-notes'].forEach(id => document.getElementById(id).value = '');
+    Modal.close('dealModal');
+    Render.pipeline();
+    Render.dashboard();
+    Toast.show('Lead added to pipeline');
+  },
+
+  addDemo() {
+    const name = document.getElementById('demo-name').value.trim();
+    const product = document.getElementById('demo-product').value;
+    const client = document.getElementById('demo-client').value.trim();
+    const url = document.getElementById('demo-url').value.trim();
+    const status = document.getElementById('demo-status').value;
+
+    if (!name || !url) { Toast.show('Name and URL are required'); return; }
+
+    State.demos.unshift({ id: 'de' + Date.now(), name, product, client, url, status });
+    State.activity.unshift({ id: 'a' + Date.now(), user: State.currentUser, type: 'update', text: 'Added a new demo: <strong>' + name + '</strong>', time: 'just now' });
+    State.save();
+
+    ['demo-name','demo-client','demo-url'].forEach(id => document.getElementById(id).value = '');
+    Modal.close('demoModal');
+    Render.demos();
+    Render.dashboard();
+    Toast.show('Demo added');
+  },
+
+  addDoc() {
+    const name = document.getElementById('doc-name').value.trim();
+    const category = document.getElementById('doc-category').value;
+    const owner = document.getElementById('doc-owner').value;
+    const url = document.getElementById('doc-url').value.trim() || '#';
+
+    if (!name) { Toast.show('Document name is required'); return; }
+
+    const today = new Date().toISOString().split('T')[0];
+    State.documents.unshift({ id: 'doc' + Date.now(), name, category, owner, url, date: today });
+    State.activity.unshift({ id: 'a' + Date.now(), user: State.currentUser, type: 'update', text: 'Uploaded a document: <strong>' + name + '</strong>', time: 'just now' });
+    State.save();
+
+    document.getElementById('doc-name').value = '';
+    document.getElementById('doc-url').value = '';
+    Modal.close('docModal');
+    Render.documents();
+    Render.dashboard();
+    Toast.show('Document added');
+  },
+
+  _openDealId: null,
+
+  openDealDetail(id) {
+    const deal = State.deals.find(d => d.id === id);
+    if (!deal) return;
+    App._openDealId = id;
+
+    document.getElementById('dd-company').textContent = deal.company;
+    document.getElementById('dd-contact').textContent = deal.contact || 'No contact listed';
+    document.getElementById('dd-value').textContent = '$' + deal.value.toLocaleString();
+    document.getElementById('dd-owner').textContent = TEAM[deal.owner].name;
+    document.getElementById('dd-notes').textContent = deal.notes || 'No notes yet.';
+
+    const select = document.getElementById('dd-stage-select');
+    select.innerHTML = STAGES.map(s => '<option value="' + s.id + '"' + (s.id === deal.stage ? ' selected' : '') + '>' + s.label + '</option>').join('');
+
+    Modal.open('dealDetailModal');
+  },
+
+  updateDealStage() {
+    const deal = State.deals.find(d => d.id === App._openDealId);
+    if (!deal) return;
+    const newStage = document.getElementById('dd-stage-select').value;
+    if (newStage !== deal.stage) {
+      deal.stage = newStage;
+      State.activity.unshift({ id: 'a' + Date.now(), user: State.currentUser, type: 'update', text: 'Moved <strong>' + deal.company + '</strong> to ' + STAGES.find(s => s.id === newStage).label, time: 'just now' });
+    }
+    State.save();
+    Modal.close('dealDetailModal');
+    Render.pipeline();
+    Render.dashboard();
+    Toast.show('Deal updated');
+  },
+
+  deleteDeal() {
+    State.deals = State.deals.filter(d => d.id !== App._openDealId);
+    State.save();
+    Modal.close('dealDetailModal');
+    Render.pipeline();
+    Render.dashboard();
+    Toast.show('Deal removed');
+  },
+
+  moveDealToStage(dealId, stageId) {
+    const deal = State.deals.find(d => d.id === dealId);
+    if (!deal || deal.stage === stageId) return;
+    deal.stage = stageId;
+    State.activity.unshift({ id: 'a' + Date.now(), user: State.currentUser, type: 'update', text: 'Moved <strong>' + deal.company + '</strong> to ' + STAGES.find(s => s.id === stageId).label, time: 'just now' });
+    State.save();
+    Render.pipeline();
+    Render.dashboard();
+  }
+};
+
+const Render = {
+
+  userSwitcher() {
+    const u = TEAM[State.currentUser];
+    document.getElementById('current-user-avatar').textContent = u.initials;
+    document.getElementById('current-user-avatar').style.background = u.color;
+    document.getElementById('current-user-name').textContent = u.name;
+    document.getElementById('current-user-role').textContent = u.role.split(' · ')[0];
+  },
+
+  typeMeta(type) {
+    const map = {
+      win:     { icon: '🏆', label: 'Win',     cls: 'badge-green' },
+      update:  { icon: '📋', label: 'Update',  cls: 'badge-blue' },
+      blocker: { icon: '⚠',  label: 'Blocker', cls: 'badge-red' },
+      note:    { icon: '💬', label: 'Note',    cls: 'badge-gray' }
+    };
+    return map[type] || map.note;
+  },
+
+  activityRow(item) {
+    const user = TEAM[item.user];
+    const meta = Render.typeMeta(item.type);
+    return '<div class="activity-item">' +
+      '<div class="activity-avatar" style="background:' + user.color + '">' + user.initials + '</div>' +
+      '<div class="activity-body">' +
+        '<div class="activity-text"><strong>' + user.name.split(' ')[0] + '</strong> ' + item.text +
+          '<span class="activity-type-tag ' + meta.cls + '">' + meta.icon + ' ' + meta.label + '</span></div>' +
+        '<div class="activity-time">' + item.time + '</div>' +
+      '</div>' +
+    '</div>';
+  },
+
+  dashboard() {
+    const u = TEAM[State.currentUser];
+    document.getElementById('dashboard-greeting').textContent = 'Good to see you, ' + u.name.split(' ')[0] + '.';
+    Render.userSwitcher();
+
+    const openDeals = State.deals.filter(d => d.stage !== 'closed');
+    const closedDeals = State.deals.filter(d => d.stage === 'closed');
+    const pipelineValue = openDeals.reduce((sum, d) => sum + d.value, 0);
+    const closedValue = closedDeals.reduce((sum, d) => sum + d.value, 0);
+
+    document.getElementById('kpi-grid').innerHTML =
+      '<div class="kpi-card k1"><div class="kpi-label">Pipeline Value</div><div class="kpi-value">$' + pipelineValue.toLocaleString() + '</div><div class="kpi-delta">' + openDeals.length + ' open deals</div></div>' +
+      '<div class="kpi-card k2"><div class="kpi-label">Closed Revenue</div><div class="kpi-value">$' + closedValue.toLocaleString() + '</div><div class="kpi-delta">' + closedDeals.length + ' won</div></div>' +
+      '<div class="kpi-card k3"><div class="kpi-label">Live Demos</div><div class="kpi-value">' + State.demos.filter(d => d.status === 'live').length + '</div><div class="kpi-delta">' + State.demos.length + ' total built</div></div>' +
+      '<div class="kpi-card k4"><div class="kpi-label">Documents</div><div class="kpi-value">' + State.documents.length + '</div><div class="kpi-delta">shared library</div></div>';
+
+    document.getElementById('dashboard-activity-list').innerHTML =
+      State.activity.slice(0, 5).map(Render.activityRow).join('') ||
+      '<div class="empty-state"><div class="empty-icon">◈</div><div class="empty-text">No updates yet</div></div>';
+
+    document.getElementById('nav-badge-activity').textContent = State.activity.length;
+
+    document.getElementById('dashboard-pipeline-summary').innerHTML = STAGES.map(stage => {
+      const count = State.deals.filter(d => d.stage === stage.id).length;
+      const val = State.deals.filter(d => d.stage === stage.id).reduce((s,d) => s + d.value, 0);
+      const pct = State.deals.length ? Math.round((count / State.deals.length) * 100) : 0;
+      return '<div style="margin-bottom:14px;">' +
+        '<div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px;">' +
+          '<span style="font-weight:600;color:var(--navy);">' + stage.label + '</span>' +
+          '<span style="color:var(--sub);font-family:\'IBM Plex Mono\',monospace;font-size:11px;">' + count + ' · $' + val.toLocaleString() + '</span>' +
+        '</div>' +
+        '<div class="progress-wrap"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>';
+    }).join('');
+
+    document.getElementById('dashboard-demos-list').innerHTML = State.demos.slice(0, 3).map(d =>
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);">' +
+        '<div><div style="font-size:13px;font-weight:600;color:var(--navy);">' + d.name + '</div>' +
+        '<div style="font-size:11px;color:var(--sub);">' + d.product + '</div></div>' +
+        '<span class="badge ' + (d.status === 'live' ? 'badge-green' : d.status === 'sent' ? 'badge-blue' : 'badge-amber') + '">' + d.status + '</span>' +
+      '</div>'
+    ).join('') || '<div class="empty-state"><div class="empty-text">No demos yet</div></div>';
+
+    document.getElementById('dashboard-docs-list').innerHTML = State.documents.slice(0, 3).map(d =>
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);">' +
+        '<div><div style="font-size:13px;font-weight:600;color:var(--navy);">' + d.name + '</div>' +
+        '<div style="font-size:11px;color:var(--sub);">' + d.category + ' · ' + TEAM[d.owner].name.split(' ')[0] + '</div></div>' +
+      '</div>'
+    ).join('') || '<div class="empty-state"><div class="empty-text">No documents yet</div></div>';
+  },
+
+  fullActivity() {
+    document.getElementById('full-activity-list').innerHTML =
+      State.activity.map(Render.activityRow).join('') ||
+      '<div class="empty-state"><div class="empty-icon">◈</div><div class="empty-text">No updates yet — be the first to post one</div></div>';
+  },
+
+  pipeline() {
+    const board = document.getElementById('pipeline-board');
+    board.innerHTML = STAGES.map(stage => {
+      const dealsInStage = State.deals.filter(d => d.stage === stage.id);
+      const cards = dealsInStage.map(deal => {
+        const owner = TEAM[deal.owner];
+        return '<div class="deal-card" draggable="true" data-deal-id="' + deal.id + '" onclick="App.openDealDetail(\'' + deal.id + '\')">' +
+          '<div class="deal-name">' + deal.company + '</div>' +
+          '<div class="deal-company">' + (deal.contact || 'No contact') + '</div>' +
+          '<div class="deal-meta">' +
+            '<span class="deal-value">$' + deal.value.toLocaleString() + '</span>' +
+            '<span class="deal-owner-chip" style="background:' + owner.color + '">' + owner.initials + '</span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      return '<div class="pipe-col">' +
+        '<div class="pipe-col-head">' +
+          '<span class="pipe-col-title">' + stage.label + '</span>' +
+          '<span class="pipe-col-count">' + dealsInStage.length + '</span>' +
+        '</div>' +
+        '<div class="pipe-col-body deal-drop-zone" data-stage="' + stage.id + '">' +
+          (cards || '<div style="text-align:center;padding:20px 10px;color:var(--sub);font-size:12px;">No deals here</div>') +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    DragDrop.attach();
+  },
+
+  demos() {
+    document.getElementById('demos-table-body').innerHTML = State.demos.map(d => {
+      const statusCls = d.status === 'live' ? 'badge-green' : d.status === 'sent' ? 'badge-blue' : 'badge-amber';
+      return '<tr>' +
+        '<td><div class="doc-icon-cell"><div class="doc-icon" style="background:#f7f0e2;">▣</div>' +
+          '<div><div class="doc-name-text">' + d.name + '</div><div class="doc-meta-text">' + d.product + '</div></div></div></td>' +
+        '<td>' + d.product + '</td>' +
+        '<td>' + (d.client || '—') + '</td>' +
+        '<td><span class="badge ' + statusCls + '">' + d.status + '</span></td>' +
+        '<td><a href="' + d.url + '" target="_blank" class="link-chip">↗ Open</a></td>' +
+        '<td><button class="btn btn-sm btn-danger-ghost" onclick="Actions.deleteDemo(\'' + d.id + '\')">Remove</button></td>' +
+      '</tr>';
+    }).join('') || '<tr><td colspan="6"><div class="empty-state"><div class="empty-text">No demos logged yet</div></div></td></tr>';
+  },
+
+  documents() {
+    document.getElementById('docs-table-body').innerHTML = State.documents.map(d => {
+      const owner = TEAM[d.owner];
+      return '<tr>' +
+        '<td><div class="doc-icon-cell"><div class="doc-icon" style="background:var(--blue-bg);">▤</div>' +
+          '<div><div class="doc-name-text">' + d.name + '</div></div></div></td>' +
+        '<td><span class="badge badge-purple">' + d.category + '</span></td>' +
+        '<td>' + owner.name + '</td>' +
+        '<td style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--sub);">' + d.date + '</td>' +
+        '<td><a href="' + d.url + '" target="_blank" class="link-chip">↗ Open</a></td>' +
+      '</tr>';
+    }).join('') || '<tr><td colspan="5"><div class="empty-state"><div class="empty-text">No documents yet</div></div></td></tr>';
+  },
+
+  team() {
+    document.getElementById('team-grid').innerHTML = Object.keys(TEAM).map(key => {
+      const u = TEAM[key];
+      const dealsOwned = State.deals.filter(d => d.owner === key);
+      const closedByUser = dealsOwned.filter(d => d.stage === 'closed');
+      const closedVal = closedByUser.reduce((s,d) => s + d.value, 0);
+      const updatesByUser = State.activity.filter(a => a.user === key).length;
+
+      return '<div class="team-card">' +
+        '<div class="team-avatar-lg" style="background:' + u.color + '">' + u.initials + '</div>' +
+        '<div class="team-name">' + u.name + '</div>' +
+        '<div class="team-role">' + u.role + '</div>' +
+        '<div class="team-contact">' + u.email + '<br>' + u.phone + '</div>' +
+        '<div class="team-stats">' +
+          '<div><div class="team-stat-val">' + dealsOwned.length + '</div><div class="team-stat-label">Deals</div></div>' +
+          '<div><div class="team-stat-val">$' + closedVal.toLocaleString() + '</div><div class="team-stat-label">Closed</div></div>' +
+          '<div><div class="team-stat-val">' + updatesByUser + '</div><div class="team-stat-label">Updates</div></div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+};
+
+const Actions = {
+  deleteDemo(id) {
+    State.demos = State.demos.filter(d => d.id !== id);
+    State.save();
+    Render.demos();
+    Render.dashboard();
+    Toast.show('Demo removed');
+  }
+};
+
+const DragDrop = {
+  draggedId: null,
+
+  attach() {
+    document.querySelectorAll('.deal-card').forEach(card => {
+      card.addEventListener('dragstart', (e) => {
+        DragDrop.draggedId = card.dataset.dealId;
+        e.dataTransfer.effectAllowed = 'move';
+      });
+    });
+
+    document.querySelectorAll('.deal-drop-zone').forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('drag-over');
+      });
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        if (DragDrop.draggedId) {
+          App.moveDealToStage(DragDrop.draggedId, zone.dataset.stage);
+          DragDrop.draggedId = null;
+        }
+      });
+    });
+  }
+};
+
+State.load();
+Render.dashboard();
+</script>
+</body>
+</html>

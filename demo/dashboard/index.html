@@ -645,8 +645,11 @@
         <span class="nav-icon">◆</span> Dashboard
       </div>
       <div class="nav-item" data-page="activity" onclick="Nav.go('activity')">
-        <span class="nav-icon">◈</span> Updates
-        <span class="nav-badge" id="nav-badge-activity">0</span>
+        <span class="nav-icon">◈</span> Company Updates
+      </div>
+      <div class="nav-item" data-page="notes" onclick="Nav.go('notes')">
+        <span class="nav-icon">✎</span> General Notes
+        <span class="nav-badge" id="nav-badge-notes">0</span>
       </div>
     </div>
 
@@ -749,14 +752,33 @@
       </div>
     </div>
 
+    <div class="page" id="page-notes">
+      <div class="page-header">
+        <div>
+          <div class="page-eyebrow">Team Space</div>
+          <div class="page-title">General Notes</div>
+          <div class="page-sub">Not tied to a specific job — reminders, ideas, and anything the team shouldn't forget.</div>
+        </div>
+        <button class="btn btn-gold" onclick="Modal.open('noteModal')">＋ Add Note</button>
+      </div>
+      <div class="card">
+        <div class="activity-list" id="notes-list"></div>
+      </div>
+    </div>
+
     <div class="page" id="page-pipeline">
       <div class="page-header">
         <div>
           <div class="page-eyebrow">Business Development</div>
           <div class="page-title">Sales Pipeline</div>
-          <div class="page-sub">Drag cards between stages as leads move. Track every deal from first contact to close.</div>
+          <div class="page-sub">Drag cards between stages as leads move. Click a card to open its job notes, demo link, and details.</div>
         </div>
-        <button class="btn btn-gold" onclick="Modal.open('dealModal')">＋ New Lead</button>
+        <div class="fab-row">
+          <select id="pipeline-filter" onchange="Render.pipeline()" style="background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:9px 14px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--navy);cursor:pointer;">
+            <option value="">All Jobs</option>
+          </select>
+          <button class="btn btn-gold" onclick="Modal.open('dealModal')">＋ New Lead</button>
+        </div>
       </div>
       <div class="pipeline-cols" id="pipeline-board"></div>
     </div>
@@ -987,10 +1009,10 @@
 </div>
 
 <div class="modal-overlay" id="dealDetailModal">
-  <div class="modal">
+  <div class="modal" style="max-width:600px;">
     <div class="modal-title" id="dd-company">Company</div>
     <div class="modal-sub" id="dd-contact">Contact</div>
-    <div class="field-row" style="margin-bottom:18px;">
+    <div class="field-row" style="margin-bottom:16px;">
       <div>
         <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Value</div>
         <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--green);" id="dd-value">$0</div>
@@ -1000,17 +1022,57 @@
         <div style="font-size:14px;font-weight:600;color:var(--navy);" id="dd-owner">Bobby</div>
       </div>
     </div>
+
     <div class="field">
-      <label>Notes</label>
+      <label>Background</label>
       <div style="font-size:13px;color:var(--text);background:var(--cream);padding:10px 12px;border-radius:7px;" id="dd-notes">—</div>
     </div>
-    <div class="field">
-      <label>Move to Stage</label>
-      <select id="dd-stage-select"></select>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Move to Stage</label>
+        <select id="dd-stage-select"></select>
+      </div>
+      <div class="field">
+        <label>Linked Demo</label>
+        <select id="dd-demo-select"><option value="">— No demo linked —</option></select>
+      </div>
     </div>
+
+    <div class="field" id="dd-demo-link-row" style="display:none;">
+      <a href="#" target="_blank" id="dd-demo-link" class="link-chip">↗ Open linked demo</a>
+    </div>
+
+    <div style="border-top:1px solid var(--border);margin:18px 0 14px;padding-top:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="section-title" style="font-size:16px;">Job Notes</div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--sub);">Questions, feedback, updates — specific to this job</span>
+      </div>
+      <div id="dd-job-notes-list" style="max-height:220px;overflow-y:auto;margin-bottom:10px;"></div>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="dd-job-note-input" placeholder="Add a note or question about this job..." style="flex:1;background:var(--cream);border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);outline:none;">
+        <button class="btn btn-sm btn-primary" onclick="App.addJobNote()">Post</button>
+      </div>
+    </div>
+
     <div class="modal-actions">
       <button class="btn btn-danger-ghost" onclick="App.deleteDeal()">Delete</button>
       <button class="btn btn-gold" onclick="App.updateDealStage()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="noteModal">
+  <div class="modal">
+    <div class="modal-title">Add General Note</div>
+    <div class="modal-sub">Not tied to any job</div>
+    <div class="field">
+      <label>Note</label>
+      <textarea id="general-note-text" rows="4" placeholder="e.g. Don't forget to renew the domain in October"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="Modal.close('noteModal')">Cancel</button>
+      <button class="btn btn-gold" onclick="App.addGeneralNote()">Add Note</button>
     </div>
   </div>
 </div>
@@ -1029,7 +1091,7 @@
 const TEAM = {
   bobby: { name: 'Bobby Julian', role: 'Founder · Development', initials: 'B', color: '#c9a84c', email: 'bobby@seegsonsolutions.com', phone: '832-806-5186' },
   chase: { name: 'Chase Hanson',  role: 'Sales & Partnerships',  initials: 'C', color: '#7fb8e0', email: 'chase@seegsonsolutions.com', phone: '—' },
-  will:  { name: 'Will Jimenez',  role: 'Founder · Development',     initials: 'W', color: '#8fd0a8', email: 'will@seegsonsolutions.com', phone: '—' }
+  will:  { name: 'Will Jimenez',  role: 'Technical Support',     initials: 'W', color: '#8fd0a8', email: 'will@seegsonsolutions.com', phone: '—' }
 };
 
 const STAGES = [
@@ -1043,11 +1105,20 @@ const State = {
   currentUser: 'bobby',
 
   deals: [
-    { id: 'd1', company: 'B&E Resources', contact: 'Jesse Farmer', value: 3000, stage: 'demo', owner: 'bobby', notes: 'PSMS Scorecard demo built and deployed. Warm intro via Will Jimenez.' },
-    { id: 'd2', company: 'Gulfspan Industrial', contact: 'Blake Smalley', value: 4500, stage: 'demo', owner: 'bobby', notes: 'FieldTrack + DocVault demos delivered in Husky toolbox package.' },
-    { id: 'd3', company: 'Fusion Sign and Design', contact: 'Loren Hanson', value: 500, stage: 'closed', owner: 'chase', notes: 'First paying client — custom PowerPoint. Wants pricing before next step.' },
-    { id: 'd4', company: 'Schoolhouse Daycare', contact: 'Loren Hanson (intro)', value: 2500, stage: 'lead', owner: 'chase', notes: 'Practice/test client via Hanson Capital. Waiting on finalized pricing model.' },
-    { id: 'd5', company: 'SoCal Construction Co.', contact: 'TBD', value: 8000, stage: 'lead', owner: 'chase', notes: "Chase's target for the real first official sale." }
+    { id: 'd1', company: 'B&E Resources', contact: 'Jesse Farmer', value: 3000, stage: 'demo', owner: 'bobby', notes: 'PSMS Scorecard demo built and deployed. Warm intro via Will Jimenez.', demoId: 'de2',
+      jobNotes: [ { id: 'jn1', user: 'bobby', text: 'Demo is live — sending to Jesse this week.', time: '1 day ago', resolved: true } ] },
+    { id: 'd2', company: 'Gulfspan Industrial', contact: 'Blake Smalley', value: 4500, stage: 'demo', owner: 'bobby', notes: 'FieldTrack + DocVault demos delivered in Husky toolbox package.', demoId: 'de1',
+      jobNotes: [] },
+    { id: 'd3', company: 'Fusion Sign and Design', contact: 'Loren Hanson', value: 500, stage: 'closed', owner: 'chase', notes: 'First paying client — custom PowerPoint. Wants pricing before next step.', demoId: 'de4',
+      jobNotes: [ { id: 'jn2', user: 'chase', text: 'He wants the On-Call Support pricing before we move to the daycare intro.', time: '2 days ago', resolved: false } ] },
+    { id: 'd4', company: 'Schoolhouse Daycare', contact: 'Loren Hanson (intro)', value: 2500, stage: 'lead', owner: 'chase', notes: 'Practice/test client via Hanson Capital. Waiting on finalized pricing model.', demoId: '',
+      jobNotes: [] },
+    { id: 'd5', company: 'SoCal Construction Co.', contact: 'TBD', value: 8000, stage: 'lead', owner: 'chase', notes: "Chase's target for the real first official sale.", demoId: '',
+      jobNotes: [] }
+  ],
+  generalNotes: [
+    { id: 'gn1', user: 'bobby', text: 'Need the LLC filed before we can open a business bank account.', time: '6 hours ago' },
+    { id: 'gn2', user: 'chase', text: 'Domain renewal is in October — set a reminder.', time: '2 hours ago' }
   ],
 
   demos: [
@@ -1080,7 +1151,8 @@ const State = {
         deals: this.deals,
         demos: this.demos,
         documents: this.documents,
-        activity: this.activity
+        activity: this.activity,
+        generalNotes: this.generalNotes
       }));
     } catch(e) {}
   },
@@ -1102,6 +1174,7 @@ const Nav = {
 
     if (pageId === 'dashboard') Render.dashboard();
     if (pageId === 'activity') Render.fullActivity();
+    if (pageId === 'notes') Render.generalNotes();
     if (pageId === 'pipeline') Render.pipeline();
     if (pageId === 'demos') Render.demos();
     if (pageId === 'documents') Render.documents();
@@ -1222,6 +1295,7 @@ const App = {
   openDealDetail(id) {
     const deal = State.deals.find(d => d.id === id);
     if (!deal) return;
+    if (!deal.jobNotes) deal.jobNotes = [];
     App._openDealId = id;
 
     document.getElementById('dd-company').textContent = deal.company;
@@ -1233,6 +1307,13 @@ const App = {
     const select = document.getElementById('dd-stage-select');
     select.innerHTML = STAGES.map(s => '<option value="' + s.id + '"' + (s.id === deal.stage ? ' selected' : '') + '>' + s.label + '</option>').join('');
 
+    const demoSelect = document.getElementById('dd-demo-select');
+    demoSelect.innerHTML = '<option value="">— No demo linked —</option>' +
+      State.demos.map(d => '<option value="' + d.id + '"' + (d.id === deal.demoId ? ' selected' : '') + '>' + d.name + '</option>').join('');
+
+    Render.updateDemoLinkRow(deal);
+    Render.jobNotesList(deal);
+
     Modal.open('dealDetailModal');
   },
 
@@ -1240,15 +1321,66 @@ const App = {
     const deal = State.deals.find(d => d.id === App._openDealId);
     if (!deal) return;
     const newStage = document.getElementById('dd-stage-select').value;
+    const newDemoId = document.getElementById('dd-demo-select').value;
+
     if (newStage !== deal.stage) {
       deal.stage = newStage;
       State.activity.unshift({ id: 'a' + Date.now(), user: State.currentUser, type: 'update', text: 'Moved <strong>' + deal.company + '</strong> to ' + STAGES.find(s => s.id === newStage).label, time: 'just now' });
+    }
+    if (newDemoId !== (deal.demoId || '')) {
+      deal.demoId = newDemoId;
+      const demoName = newDemoId ? State.demos.find(d => d.id === newDemoId).name : 'none';
+      State.activity.unshift({ id: 'a' + Date.now(), user: State.currentUser, type: 'update', text: 'Linked demo (' + demoName + ') to <strong>' + deal.company + '</strong>', time: 'just now' });
     }
     State.save();
     Modal.close('dealDetailModal');
     Render.pipeline();
     Render.dashboard();
     Toast.show('Deal updated');
+  },
+
+  addJobNote() {
+    const deal = State.deals.find(d => d.id === App._openDealId);
+    if (!deal) return;
+    const input = document.getElementById('dd-job-note-input');
+    const text = input.value.trim();
+    if (!text) { Toast.show('Write a note first'); return; }
+
+    if (!deal.jobNotes) deal.jobNotes = [];
+    deal.jobNotes.unshift({ id: 'jn' + Date.now(), user: State.currentUser, text: text, time: 'just now', resolved: false });
+    input.value = '';
+    State.save();
+    Render.jobNotesList(deal);
+    Toast.show('Note added to ' + deal.company);
+  },
+
+  toggleJobNoteResolved(noteId) {
+    const deal = State.deals.find(d => d.id === App._openDealId);
+    if (!deal) return;
+    const note = (deal.jobNotes || []).find(n => n.id === noteId);
+    if (!note) return;
+    note.resolved = !note.resolved;
+    State.save();
+    Render.jobNotesList(deal);
+    Render.pipeline();
+  },
+
+  addGeneralNote() {
+    const text = document.getElementById('general-note-text').value.trim();
+    if (!text) { Toast.show('Write something first'); return; }
+    State.generalNotes.unshift({ id: 'gn' + Date.now(), user: State.currentUser, text: text, time: 'just now' });
+    State.save();
+    document.getElementById('general-note-text').value = '';
+    Modal.close('noteModal');
+    Render.generalNotes();
+    Toast.show('Note added');
+  },
+
+  deleteGeneralNote(id) {
+    State.generalNotes = State.generalNotes.filter(n => n.id !== id);
+    State.save();
+    Render.generalNotes();
+    Toast.show('Note removed');
   },
 
   deleteDeal() {
@@ -1324,8 +1456,6 @@ const Render = {
       State.activity.slice(0, 5).map(Render.activityRow).join('') ||
       '<div class="empty-state"><div class="empty-icon">◈</div><div class="empty-text">No updates yet</div></div>';
 
-    document.getElementById('nav-badge-activity').textContent = State.activity.length;
-
     document.getElementById('dashboard-pipeline-summary').innerHTML = STAGES.map(stage => {
       const count = State.deals.filter(d => d.stage === stage.id).length;
       const val = State.deals.filter(d => d.stage === stage.id).reduce((s,d) => s + d.value, 0);
@@ -1362,14 +1492,32 @@ const Render = {
   },
 
   pipeline() {
+    // Keep job filter dropdown populated
+    const filterSelect = document.getElementById('pipeline-filter');
+    if (filterSelect && filterSelect.options.length <= 1) {
+      filterSelect.innerHTML = '<option value="">All Jobs</option>' +
+        State.deals.map(d => '<option value="' + d.id + '">' + d.company + '</option>').join('');
+    }
+    const filterVal = filterSelect ? filterSelect.value : '';
+
     const board = document.getElementById('pipeline-board');
     board.innerHTML = STAGES.map(stage => {
-      const dealsInStage = State.deals.filter(d => d.stage === stage.id);
+      let dealsInStage = State.deals.filter(d => d.stage === stage.id);
+      if (filterVal) dealsInStage = dealsInStage.filter(d => d.id === filterVal);
+
       const cards = dealsInStage.map(deal => {
         const owner = TEAM[deal.owner];
+        const jobNotes = deal.jobNotes || [];
+        const unresolvedCount = jobNotes.filter(n => !n.resolved).length;
+        const linkedDemo = deal.demoId ? State.demos.find(d => d.id === deal.demoId) : null;
+
         return '<div class="deal-card" draggable="true" data-deal-id="' + deal.id + '" onclick="App.openDealDetail(\'' + deal.id + '\')">' +
-          '<div class="deal-name">' + deal.company + '</div>' +
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
+            '<div class="deal-name">' + deal.company + '</div>' +
+            (unresolvedCount > 0 ? '<span style="background:var(--red);color:var(--white);font-family:\'IBM Plex Mono\',monospace;font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;flex-shrink:0;">' + unresolvedCount + '</span>' : '') +
+          '</div>' +
           '<div class="deal-company">' + (deal.contact || 'No contact') + '</div>' +
+          (linkedDemo ? '<div style="font-size:10px;color:var(--blue);margin-bottom:6px;">▣ ' + linkedDemo.name + '</div>' : '') +
           '<div class="deal-meta">' +
             '<span class="deal-value">$' + deal.value.toLocaleString() + '</span>' +
             '<span class="deal-owner-chip" style="background:' + owner.color + '">' + owner.initials + '</span>' +
@@ -1389,6 +1537,61 @@ const Render = {
     }).join('');
 
     DragDrop.attach();
+  },
+
+  updateDemoLinkRow(deal) {
+    const row = document.getElementById('dd-demo-link-row');
+    const link = document.getElementById('dd-demo-link');
+    if (deal.demoId) {
+      const demo = State.demos.find(d => d.id === deal.demoId);
+      if (demo) {
+        row.style.display = 'block';
+        link.href = demo.url;
+        link.textContent = '↗ Open ' + demo.name;
+        return;
+      }
+    }
+    row.style.display = 'none';
+  },
+
+  jobNotesList(deal) {
+    const list = document.getElementById('dd-job-notes-list');
+    const notes = deal.jobNotes || [];
+    if (!notes.length) {
+      list.innerHTML = '<div class="empty-state" style="padding:20px;"><div class="empty-text">No notes on this job yet — ask a question or leave an update below</div></div>';
+      return;
+    }
+    list.innerHTML = notes.map(n => {
+      const user = TEAM[n.user];
+      return '<div style="display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);">' +
+        '<div class="activity-avatar" style="width:26px;height:26px;font-size:11px;background:' + user.color + '">' + user.initials + '</div>' +
+        '<div style="flex:1;">' +
+          '<div style="font-size:12.5px;' + (n.resolved ? 'color:var(--sub);text-decoration:line-through;' : 'color:var(--text);') + '"><strong>' + user.name.split(' ')[0] + ':</strong> ' + n.text + '</div>' +
+          '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;color:var(--sub);margin-top:2px;">' + n.time + '</div>' +
+        '</div>' +
+        '<button class="btn btn-sm ' + (n.resolved ? 'btn-ghost' : 'btn-gold') + '" style="padding:3px 9px;font-size:10px;flex-shrink:0;height:fit-content;" onclick="App.toggleJobNoteResolved(\'' + n.id + '\')">' + (n.resolved ? 'Reopen' : 'Resolve') + '</button>' +
+      '</div>';
+    }).join('');
+  },
+
+  generalNotes() {
+    const list = document.getElementById('notes-list');
+    document.getElementById('nav-badge-notes').textContent = State.generalNotes.length;
+    if (!State.generalNotes.length) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">✎</div><div class="empty-text">No general notes yet</div></div>';
+      return;
+    }
+    list.innerHTML = State.generalNotes.map(n => {
+      const user = TEAM[n.user];
+      return '<div class="activity-item">' +
+        '<div class="activity-avatar" style="background:' + user.color + '">' + user.initials + '</div>' +
+        '<div class="activity-body">' +
+          '<div class="activity-text"><strong>' + user.name.split(' ')[0] + '</strong> ' + n.text + '</div>' +
+          '<div class="activity-time">' + n.time + '</div>' +
+        '</div>' +
+        '<button class="btn btn-sm btn-danger-ghost" onclick="App.deleteGeneralNote(\'' + n.id + '\')">Remove</button>' +
+      '</div>';
+    }).join('');
   },
 
   demos() {
@@ -1486,6 +1689,7 @@ const DragDrop = {
 
 State.load();
 Render.dashboard();
+Render.generalNotes();
 </script>
 </body>
 </html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlanGen — AI Work Plan & Lift Plan Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --steel: #1a1d21; --steel2: #24282e; --steel3: #2e333b;
+    --amber: #e8a33d; --amber2: #f5bc63;
+    --violet: #8b7fc9; --violet-bg: rgba(139,127,201,0.12); --violet-glow: rgba(139,127,201,0.35);
+    --ivory: #f0ece3; --white: #ffffff;
+    --sub: #9098a3; --border: rgba(240,236,227,0.08);
+    --red: #d9694f; --red-bg: rgba(217,105,79,0.12);
+    --green: #6fae7f; --green-bg: rgba(111,174,127,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--steel); color: var(--ivory); font-family: 'Outfit', sans-serif; min-height: 100vh; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 0 70px; }
+
+  .header {
+    background: var(--steel2); border-bottom: 3px solid var(--violet);
+    padding: 22px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .header-badge {
+    width: 44px; height: 44px; border-radius: 6px; background: var(--violet); color: var(--steel);
+    display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 18px; flex-shrink: 0;
+  }
+  .header-titles { line-height: 1.1; }
+  .header-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--sub); }
+  .header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 0.5px; color: var(--white); }
+  .header-right { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--sub); text-align: right; }
+  .header-right strong { display: block; color: var(--ivory); font-size: 13px; }
+
+  /* TIME-SAVED TICKER */
+  .ticker {
+    background: linear-gradient(90deg, #14161a, #1a1d21 40%, #14161a);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 28px;
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  .ticker-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sub); white-space: nowrap; }
+  .ticker-readout {
+    font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 34px; letter-spacing: 1px;
+    color: var(--violet); text-shadow: 0 0 18px var(--violet-glow);
+  }
+  .ticker-sub { font-size: 12px; color: var(--sub); max-width: 360px; line-height: 1.5; }
+  .ticker-divider { width: 1px; height: 34px; background: var(--border); }
+  .ticker-stat { text-align: center; }
+  .ticker-stat-num { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 22px; color: var(--ivory); }
+  .ticker-stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); margin-top: 2px; }
+
+  .nav { display: flex; background: var(--steel2); border-bottom: 1px solid var(--border); padding: 0 28px; overflow-x: auto; }
+  .nav-tab {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.5px;
+    padding: 13px 18px; color: var(--sub); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap;
+  }
+  .nav-tab.active { color: var(--violet); border-bottom-color: var(--violet); }
+
+  .content { padding: 26px 28px 0; }
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--violet); margin-bottom: 14px; }
+  .section-sub { font-size: 12.5px; color: var(--sub); margin-bottom: 20px; margin-top: -8px; max-width: 560px; line-height: 1.5; }
+
+  /* INPUT PANEL */
+  .input-panel {
+    background: var(--steel2); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; margin-bottom: 20px;
+  }
+  .input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px; }
+  @media (max-width: 800px) { .input-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .input-grid { grid-template-columns: 1fr; } }
+  .input-field label {
+    display: block; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--sub); margin-bottom: 6px;
+  }
+  .input-field select, .input-field input {
+    width: 100%; background: var(--steel3); border: 1.5px solid var(--border); border-radius: 6px; padding: 9px 11px;
+    font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--ivory); outline: none;
+  }
+  .input-field select:focus, .input-field input:focus { border-color: var(--violet); }
+
+  .generate-btn {
+    background: var(--violet); color: var(--steel); border: none; border-radius: 7px; padding: 11px 24px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.15s;
+  }
+  .generate-btn:hover { opacity: 0.9; }
+  .generate-btn .spark { font-size: 15px; }
+
+  /* SPLIT DEMO — signature element */
+  .split-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
+  @media (max-width: 800px) { .split-demo { grid-template-columns: 1fr; } }
+
+  .split-col { background: var(--steel2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .split-head {
+    padding: 12px 18px; border-bottom: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; gap: 8px;
+  }
+  .split-head.old { color: var(--sub); background: rgba(255,255,255,0.02); }
+  .split-head.new { color: var(--violet); background: var(--violet-bg); }
+  .split-body { padding: 18px 20px; }
+
+  .doc-field { margin-bottom: 14px; }
+  .doc-field-label { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); margin-bottom: 5px; }
+  .doc-field-blank {
+    height: 18px; border-bottom: 1.5px dashed rgba(240,236,227,0.15); width: 100%;
+  }
+  .doc-field-filled {
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--ivory);
+    border-bottom: 1.5px solid var(--violet); padding-bottom: 4px; min-height: 18px;
+  }
+  .doc-field-filled.typing::after { content: '|'; animation: blink 0.8s infinite; color: var(--violet); }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* GENERATED PLAN VIEW */
+  .plan-doc { background: var(--steel2); border: 1px solid var(--border); border-radius: 10px; padding: 24px 26px; margin-bottom: 30px; }
+  .plan-doc-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+  .plan-doc-title { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; color: var(--white); }
+  .plan-doc-meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--sub); text-align: right; }
+  .ai-badge {
+    display: inline-flex; align-items: center; gap: 5px; background: var(--violet-bg); color: var(--violet);
+    font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 5px; margin-left: 8px;
+  }
+
+  .plan-section { margin-bottom: 20px; }
+  .plan-section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; color: var(--amber2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .plan-row-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 700px) { .plan-row-grid { grid-template-columns: 1fr 1fr; } }
+  .plan-item-label { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); margin-bottom: 3px; }
+  .plan-item-val { font-size: 13.5px; color: var(--ivory); font-weight: 500; }
+  .plan-text-block { font-size: 13.5px; color: var(--ivory); line-height: 1.6; background: var(--steel3); border-radius: 6px; padding: 12px 14px; border-left: 3px solid var(--violet); }
+
+  .crew-table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  .crew-table th { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  .crew-table td { padding: 8px 10px; font-size: 12.5px; border-bottom: 1px solid var(--border); color: var(--ivory); }
+
+  .closing { text-align: center; padding: 34px 20px 0; }
+  .closing-text { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 500; color: var(--sub); max-width: 500px; margin: 0 auto; line-height: 1.5; }
+  .closing-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--violet); margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="header-badge">PG</div>
+      <div class="header-titles">
+        <div class="header-kicker">Concept Demo</div>
+        <div class="header-title">PlanGen — Work Plans &amp; Lift Plans, Generated</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <strong>Thursday, August 27</strong>
+      Data Center Site — Sector 4
+    </div>
+  </div>
+
+  <div class="ticker">
+    <div>
+      <div class="ticker-label">Time Saved — This Lift Plan</div>
+      <div class="ticker-readout" id="time-readout">0 min</div>
+    </div>
+    <div class="ticker-sub">Same lift plan that normally takes 35–45 minutes of manual entry, generated from six dropdown selections.</div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-stat"><div class="ticker-stat-num">6</div><div class="ticker-stat-label">Fields You Fill</div></div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-stat"><div class="ticker-stat-num">22</div><div class="ticker-stat-label">Fields Auto-Filled</div></div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-tab active" data-page="build" onclick="switchTab('build')">Build a Plan</div>
+    <div class="nav-tab" data-page="compare" onclick="switchTab('compare')">Old Way vs. PlanGen</div>
+    <div class="nav-tab" data-page="result" onclick="switchTab('result')">Generated Lift Plan</div>
+  </div>
+
+  <div class="content">
+
+    <!-- BUILD -->
+    <div class="page active" id="page-build">
+      <div class="section-label">// Start a Lift Plan</div>
+      <div class="section-sub">Pick the basics. PlanGen fills in the rest — load calculations, hazard language, sign-off fields, and communication protocol — based on your job type and equipment, then you review and adjust before it goes out.</div>
+
+      <div class="input-panel">
+        <div class="input-grid">
+          <div class="input-field">
+            <label>Site / Project</label>
+            <select><option>Data Center — Sector 4</option></select>
+          </div>
+          <div class="input-field">
+            <label>Lift Type</label>
+            <select><option>Critical Lift — Multi-Crane</option></select>
+          </div>
+          <div class="input-field">
+            <label>Load</label>
+            <select><option>CRAC Unit — 8,200 lbs</option></select>
+          </div>
+          <div class="input-field">
+            <label>Crane</label>
+            <select><option>150-Ton Hydraulic Crane</option></select>
+          </div>
+          <div class="input-field">
+            <label>Lift Supervisor</label>
+            <input type="text" value="J. Alvarez" readonly>
+          </div>
+          <div class="input-field">
+            <label>Ground Conditions</label>
+            <select><option>Compacted Gravel — Verified</option></select>
+          </div>
+        </div>
+        <button class="generate-btn" onclick="runGenerate()"><span class="spark">✦</span> Generate Lift Plan</button>
+      </div>
+    </div>
+
+    <!-- COMPARE -->
+    <div class="page" id="page-compare">
+      <div class="section-label">// Old Way vs. PlanGen</div>
+      <div class="section-sub">Same field, side by side. On the left, a blank line waiting on manual entry. On the right, PlanGen fills it based on what you already selected.</div>
+
+      <div class="split-demo">
+        <div class="split-col">
+          <div class="split-head old">📄 Manual Entry — DoForms Style</div>
+          <div class="split-body">
+            <div class="doc-field"><div class="doc-field-label">Rigging Arrangement</div><div class="doc-field-blank"></div></div>
+            <div class="doc-field"><div class="doc-field-label">Working Load Limit Calculation</div><div class="doc-field-blank"></div></div>
+            <div class="doc-field"><div class="doc-field-label">Exclusion Zone Radius</div><div class="doc-field-blank"></div></div>
+            <div class="doc-field"><div class="doc-field-label">Stop-Lift Conditions</div><div class="doc-field-blank"></div></div>
+            <div class="doc-field"><div class="doc-field-label">Communication Method</div><div class="doc-field-blank"></div></div>
+          </div>
+        </div>
+        <div class="split-col">
+          <div class="split-head new">✦ Generated by PlanGen</div>
+          <div class="split-body">
+            <div class="doc-field"><div class="doc-field-label">Rigging Arrangement</div><div class="doc-field-filled">4-point spreader bar, (4) 3/4" alloy slings</div></div>
+            <div class="doc-field"><div class="doc-field-label">Working Load Limit Calculation</div><div class="doc-field-filled">8,200 lbs load ÷ 150-ton capacity = 5.5% utilized</div></div>
+            <div class="doc-field"><div class="doc-field-label">Exclusion Zone Radius</div><div class="doc-field-filled">125% of max boom radius — 62 ft</div></div>
+            <div class="doc-field"><div class="doc-field-label">Stop-Lift Conditions</div><div class="doc-field-filled">Wind &gt;20mph, visibility &lt;500ft, signal loss</div></div>
+            <div class="doc-field"><div class="doc-field-label">Communication Method</div><div class="doc-field-filled typing">Radio primary, hand signals backup</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="page" id="page-result">
+      <div class="plan-doc">
+        <div class="plan-doc-header">
+          <div>
+            <div class="plan-doc-title">Critical Lift Plan <span class="ai-badge">✦ AI-Generated</span></div>
+          </div>
+          <div class="plan-doc-meta">Plan #LP-2026-0847<br>Data Center — Sector 4</div>
+        </div>
+
+        <div class="plan-section">
+          <div class="plan-section-title">Load &amp; Equipment</div>
+          <div class="plan-row-grid">
+            <div><div class="plan-item-label">Load Description</div><div class="plan-item-val">CRAC Unit, packaged</div></div>
+            <div><div class="plan-item-label">Gross Weight</div><div class="plan-item-val">8,200 lbs</div></div>
+            <div><div class="plan-item-label">Crane</div><div class="plan-item-val">150-Ton Hydraulic</div></div>
+            <div><div class="plan-item-label">Boom Length / Radius</div><div class="plan-item-val">80 ft / 35 ft</div></div>
+            <div><div class="plan-item-label">Rated Capacity at Radius</div><div class="plan-item-val">42,000 lbs</div></div>
+            <div><div class="plan-item-label">Utilization</div><div class="plan-item-val">19.5%</div></div>
+          </div>
+        </div>
+
+        <div class="plan-section">
+          <div class="plan-section-title">Site Conditions</div>
+          <div class="plan-text-block">Ground verified as compacted gravel, load-bearing tested to 4,000 psf. Crane matting required under all outriggers. No overhead power lines within exclusion zone. Nearest underground utility marked 40 ft east of setup position.</div>
+        </div>
+
+        <div class="plan-section">
+          <div class="plan-section-title">Rigging &amp; Method</div>
+          <div class="plan-text-block">4-point spreader bar configuration using (4) 3/4" alloy wire rope slings, rated 6,600 lbs each (WLL). Tag lines required on all four corners. Load to be lifted vertically, rotated 45° over exclusion zone, and set on prepared curb at Sector 4 mechanical yard.</div>
+        </div>
+
+        <div class="plan-section">
+          <div class="plan-section-title">Stop-Lift Conditions</div>
+          <div class="plan-text-block">Lift will not proceed or will be halted if: sustained winds exceed 20 mph, visibility drops below 500 ft, radio communication is lost, or ground conditions visibly change (standing water, softening).</div>
+        </div>
+
+        <div class="plan-section">
+          <div class="plan-section-title">Lift Team &amp; Sign-Off</div>
+          <table class="crew-table">
+            <thead><tr><th>Name</th><th>Role</th><th>Competency Confirmed</th></tr></thead>
+            <tbody>
+              <tr><td>J. Alvarez</td><td>Lift Supervisor</td><td>✓ Verified</td></tr>
+              <tr><td>R. Castillo</td><td>Crane Operator — NCCCO</td><td>✓ Verified</td></tr>
+              <tr><td>T. Reyes</td><td>Signal Person</td><td>✓ Verified</td></tr>
+              <tr><td>M. Boudreaux</td><td>Rigger</td><td>✓ Verified</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="closing">
+    <div class="closing-text">This is a concept — the real version pulls from your equipment library and job history so every plan is built from what actually exists on your site, not typed from scratch every time.</div>
+    <div class="closing-tag">Seegson Solutions — Built for you, not for everyone.</div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(id) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.nav-tab[data-page="' + id + '"]').classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+  }
+
+  function runGenerate() {
+    switchTab('result');
+    document.querySelector('.nav-tab[data-page="result"]').classList.add('active');
+  }
+
+  // Time-saved ticker animation
+  const target = 38;
+  let current = 0;
+  const el = document.getElementById('time-readout');
+  const interval = setInterval(() => {
+    current += 1;
+    if (current >= target) { current = target; clearInterval(interval); }
+    el.textContent = current + ' min';
+  }, 35);
+</script>
+</body>
+</html>

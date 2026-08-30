@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FieldTrack — RMS Maintenance Crew</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --steel: #1a1d21; --steel2: #24282e; --steel3: #2e333b;
+    --amber: #e8a33d; --amber2: #f5bc63;
+    --blue: #4a7a94; --blue-bg: rgba(74,122,148,0.12);
+    --ivory: #f0ece3; --white: #ffffff;
+    --sub: #9098a3; --border: rgba(240,236,227,0.08);
+    --red: #d9694f; --red-bg: rgba(217,105,79,0.12);
+    --green: #6fae7f; --green-bg: rgba(111,174,127,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--steel); color: var(--ivory); font-family: 'Outfit', sans-serif; min-height: 100vh; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 0 70px; }
+
+  .header {
+    background: var(--steel2); border-bottom: 3px solid var(--amber);
+    padding: 22px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .header-badge {
+    width: 44px; height: 44px; border-radius: 6px; background: var(--amber); color: var(--steel);
+    display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 20px; flex-shrink: 0;
+  }
+  .header-titles { line-height: 1.1; }
+  .header-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--sub); }
+  .header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 0.5px; color: var(--white); }
+  .header-right { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--sub); text-align: right; }
+  .header-right strong { display: block; color: var(--ivory); font-size: 13px; }
+
+  .ticker {
+    background: linear-gradient(90deg, #14161a, #1a1d21 40%, #14161a);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 28px;
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  .ticker-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--sub); white-space: nowrap;
+  }
+  .ticker-readout {
+    font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 34px; letter-spacing: 1px;
+    color: var(--amber2); text-shadow: 0 0 18px rgba(232,163,61,0.35);
+  }
+  .ticker-sub { font-size: 12px; color: var(--sub); max-width: 340px; line-height: 1.5; }
+  .ticker-divider { width: 1px; height: 34px; background: var(--border); }
+  .ticker-stat { text-align: center; }
+  .ticker-stat-num { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 22px; color: var(--ivory); }
+  .ticker-stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); margin-top: 2px; }
+
+  .nav { display: flex; background: var(--steel2); border-bottom: 1px solid var(--border); padding: 0 28px; overflow-x: auto; }
+  .nav-tab {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.5px;
+    padding: 13px 18px; color: var(--sub); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap;
+  }
+  .nav-tab.active { color: var(--amber2); border-bottom-color: var(--amber); }
+
+  .content { padding: 26px 28px 0; }
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--amber); margin-bottom: 14px; }
+
+  .asset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 30px; }
+  @media (max-width: 900px) { .asset-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .asset-grid { grid-template-columns: 1fr; } }
+
+  .asset-card {
+    background: var(--steel2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px;
+    position: relative; overflow: hidden;
+  }
+  .asset-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--status-color); }
+  .asset-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .asset-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--sub); letter-spacing: 1px; }
+  .asset-name { font-family: 'Barlow Condensed', sans-serif; font-size: 19px; font-weight: 700; color: var(--white); margin-top: 2px; }
+  .status-chip {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 9px; border-radius: 5px; color: var(--status-color); background: var(--status-bg); flex-shrink: 0;
+  }
+  .asset-detail-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .asset-detail-row:last-of-type { border-bottom: none; }
+  .asset-detail-label { color: var(--sub); }
+  .asset-detail-val { font-family: 'IBM Plex Mono', monospace; color: var(--ivory); font-weight: 500; }
+  .asset-detail-val.warn { color: var(--amber2); }
+  .asset-detail-val.bad { color: var(--red); }
+
+  .wo-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+  .wo-row {
+    background: var(--steel2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .wo-id { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--sub); min-width: 70px; }
+  .wo-body { flex: 1; min-width: 200px; }
+  .wo-title { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 600; color: var(--white); }
+  .wo-meta { font-size: 11.5px; color: var(--sub); margin-top: 2px; }
+  .wo-status {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 5px 11px; border-radius: 5px; flex-shrink: 0;
+  }
+  .wo-status.open { color: var(--red); background: var(--red-bg); }
+  .wo-status.progress { color: var(--amber2); background: rgba(232,163,61,0.12); }
+  .wo-status.done { color: var(--green); background: var(--green-bg); }
+
+  .cal-table { width: 100%; border-collapse: collapse; background: var(--steel2); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 30px; }
+  .cal-table th {
+    text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--sub); padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--steel3);
+  }
+  .cal-table td { padding: 13px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .cal-table tr:last-child td { border-bottom: none; }
+  .cal-tool { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; color: var(--white); font-size: 15px; }
+  .cal-date { font-family: 'IBM Plex Mono', monospace; color: var(--sub); }
+
+  .crew-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 10px; }
+  @media (max-width: 700px) { .crew-grid { grid-template-columns: 1fr; } }
+  .crew-card { background: var(--steel2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; }
+  .crew-name { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; color: var(--white); }
+  .crew-role { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--amber2); letter-spacing: 0.5px; margin-top: 2px; margin-bottom: 10px; }
+  .crew-stat-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--sub); padding: 4px 0; }
+  .crew-stat-row span:last-child { color: var(--ivory); font-family: 'IBM Plex Mono', monospace; }
+
+  .closing { text-align: center; padding: 34px 20px 0; }
+  .closing-text { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 500; color: var(--sub); max-width: 480px; margin: 0 auto; line-height: 1.5; }
+  .closing-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="header-badge">FT</div>
+      <div class="header-titles">
+        <div class="header-kicker">Concept Demo</div>
+        <div class="header-title">FieldTrack — Maintenance Crew Tracker</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <strong>Thursday, August 27</strong>
+      Shift snapshot — 6:15 AM
+    </div>
+  </div>
+
+  <div class="ticker">
+    <div>
+      <div class="ticker-label">Estimated Exposure — Right Now</div>
+      <div class="ticker-readout" id="cost-readout">$0</div>
+    </div>
+    <div class="ticker-sub">Based on 2 overdue tool calibrations and 1 unaccounted piece of equipment, valued at average replacement + downtime cost.</div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-stat"><div class="ticker-stat-num">34</div><div class="ticker-stat-label">Tools Tracked</div></div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-stat"><div class="ticker-stat-num">3</div><div class="ticker-stat-label">Open Work Orders</div></div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-stat"><div class="ticker-stat-num">2</div><div class="ticker-stat-label">Calibrations Overdue</div></div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-tab active" data-page="assets" onclick="switchTab('assets')">Equipment</div>
+    <div class="nav-tab" data-page="orders" onclick="switchTab('orders')">Work Orders</div>
+    <div class="nav-tab" data-page="cal" onclick="switchTab('cal')">Calibration</div>
+    <div class="nav-tab" data-page="crew" onclick="switchTab('crew')">Crew</div>
+  </div>
+
+  <div class="content">
+
+    <div class="page active" id="page-assets">
+      <div class="section-label">// Equipment &amp; Tool Status</div>
+      <div class="asset-grid">
+
+        <div class="asset-card" style="--status-color: var(--green); --status-bg: var(--green-bg);">
+          <div class="asset-top">
+            <div><div class="asset-tag">RMS-TL-0142</div><div class="asset-name">Laser Alignment Kit</div></div>
+            <div class="status-chip">Checked In</div>
+          </div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Assigned To</span><span class="asset-detail-val">Shop — Rack 3</span></div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Last Calibrated</span><span class="asset-detail-val">Jul 14, 2026</span></div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Next Due</span><span class="asset-detail-val">Jan 14, 2027</span></div>
+        </div>
+
+        <div class="asset-card" style="--status-color: var(--amber2); --status-bg: rgba(232,163,61,0.12);">
+          <div class="asset-top">
+            <div><div class="asset-tag">RMS-TL-0098</div><div class="asset-name">Torque Wrench — 250 ft-lb</div></div>
+            <div class="status-chip">Checked Out</div>
+          </div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Assigned To</span><span class="asset-detail-val">Tim R. — Job #4471</span></div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Last Calibrated</span><span class="asset-detail-val warn">Feb 2, 2026</span></div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Next Due</span><span class="asset-detail-val warn">9 days</span></div>
+        </div>
+
+        <div class="asset-card" style="--status-color: var(--red); --status-bg: var(--red-bg);">
+          <div class="asset-top">
+            <div><div class="asset-tag">RMS-TL-0071</div><div class="asset-name">Dial Indicator Set</div></div>
+            <div class="status-chip">Unaccounted</div>
+          </div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Last Seen</span><span class="asset-detail-val bad">14 days ago</span></div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Last Checked Out By</span><span class="asset-detail-val">Contractor Crew — Site B</span></div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Replacement Cost</span><span class="asset-detail-val bad">$1,850</span></div>
+        </div>
+
+        <div class="asset-card" style="--status-color: var(--green); --status-bg: var(--green-bg);">
+          <div class="asset-top">
+            <div><div class="asset-tag">RMS-EQ-2201</div><div class="asset-name">Hydraulic Puller — 20 Ton</div></div>
+            <div class="status-chip">Checked In</div>
+          </div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Assigned To</span><span class="asset-detail-val">Shop — Bay 1</span></div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Last Serviced</span><span class="asset-detail-val">Jun 30, 2026</span></div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Condition</span><span class="asset-detail-val">Good</span></div>
+        </div>
+
+        <div class="asset-card" style="--status-color: var(--blue); --status-bg: var(--blue-bg);">
+          <div class="asset-top">
+            <div><div class="asset-tag">RMS-TL-0155</div><div class="asset-name">Vibration Analyzer</div></div>
+            <div class="status-chip" style="color:var(--blue);background:var(--blue-bg);">In Service</div>
+          </div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Location</span><span class="asset-detail-val">Vendor — Annual Cal</span></div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Expected Return</span><span class="asset-detail-val">Sep 3, 2026</span></div>
+        </div>
+
+        <div class="asset-card" style="--status-color: var(--amber2); --status-bg: rgba(232,163,61,0.12);">
+          <div class="asset-top">
+            <div><div class="asset-tag">RMS-TL-0203</div><div class="asset-name">Bore Gauge Set</div></div>
+            <div class="status-chip">Checked Out</div>
+          </div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Assigned To</span><span class="asset-detail-val">Marcus D. — Job #4468</span></div>
+          <div class="asset-detail-row"><span class="asset-detail-label">Next Due</span><span class="asset-detail-val warn">21 days</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="page" id="page-orders">
+      <div class="section-label">// Active Work Orders</div>
+      <div class="wo-list">
+        <div class="wo-row">
+          <div class="wo-id">WO-4471</div>
+          <div class="wo-body">
+            <div class="wo-title">Pump Alignment — Unit 4</div>
+            <div class="wo-meta">Assigned: Tim R. · Started Aug 26 · Client: Site B Turnaround</div>
+          </div>
+          <div class="wo-status progress">In Progress</div>
+        </div>
+        <div class="wo-row">
+          <div class="wo-id">WO-4468</div>
+          <div class="wo-body">
+            <div class="wo-title">Gearbox Inspection — Conveyor 2</div>
+            <div class="wo-meta">Assigned: Marcus D. · Started Aug 25 · Client: RMS Shop</div>
+          </div>
+          <div class="wo-status progress">In Progress</div>
+        </div>
+        <div class="wo-row">
+          <div class="wo-id">WO-4465</div>
+          <div class="wo-body">
+            <div class="wo-title">Coupling Replacement — Compressor Skid</div>
+            <div class="wo-meta">Unassigned · Requested Aug 24 · Client: Site A</div>
+          </div>
+          <div class="wo-status open">Awaiting Assignment</div>
+        </div>
+        <div class="wo-row">
+          <div class="wo-id">WO-4460</div>
+          <div class="wo-body">
+            <div class="wo-title">Bearing Replacement — Pump 12</div>
+            <div class="wo-meta">Completed by Tim R. · Aug 21 · Client: Site B</div>
+          </div>
+          <div class="wo-status done">Complete</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-cal">
+      <div class="section-label">// Calibration Schedule</div>
+      <table class="cal-table">
+        <thead><tr><th>Tool</th><th>Tag</th><th>Last Cal</th><th>Next Due</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="cal-tool">Torque Wrench — 250 ft-lb</td><td class="cal-date">RMS-TL-0098</td><td class="cal-date">Feb 2, 2026</td><td class="cal-date" style="color:var(--amber2)">Sep 5, 2026</td><td><span class="status-chip" style="color:var(--amber2);background:rgba(232,163,61,0.12);">9 Days</span></td></tr>
+          <tr><td class="cal-tool">Dial Indicator Set</td><td class="cal-date">RMS-TL-0071</td><td class="cal-date">Mar 10, 2026</td><td class="cal-date" style="color:var(--red)">Aug 13, 2026</td><td><span class="status-chip" style="color:var(--red);background:var(--red-bg);">Overdue</span></td></tr>
+          <tr><td class="cal-tool">Bore Gauge Set</td><td class="cal-date">RMS-TL-0203</td><td class="cal-date">Apr 18, 2026</td><td class="cal-date">Sep 17, 2026</td><td><span class="status-chip" style="color:var(--amber2);background:rgba(232,163,61,0.12);">21 Days</span></td></tr>
+          <tr><td class="cal-tool">Laser Alignment Kit</td><td class="cal-date">RMS-TL-0142</td><td class="cal-date">Jul 14, 2026</td><td class="cal-date">Jan 14, 2027</td><td><span class="status-chip" style="color:var(--green);background:var(--green-bg);">Current</span></td></tr>
+          <tr><td class="cal-tool">Vibration Analyzer</td><td class="cal-date">RMS-TL-0155</td><td class="cal-date">Sep 3, 2025</td><td class="cal-date">Sep 3, 2026</td><td><span class="status-chip" style="color:var(--blue);background:var(--blue-bg);">In Service</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="page" id="page-crew">
+      <div class="section-label">// Crew — Today</div>
+      <div class="crew-grid">
+        <div class="crew-card">
+          <div class="crew-name">Tim R.</div>
+          <div class="crew-role">Millwright</div>
+          <div class="crew-stat-row"><span>Active Job</span><span>WO-4471</span></div>
+          <div class="crew-stat-row"><span>Tools Checked Out</span><span>1</span></div>
+          <div class="crew-stat-row"><span>Jobs This Month</span><span>7</span></div>
+        </div>
+        <div class="crew-card">
+          <div class="crew-name">Marcus D.</div>
+          <div class="crew-role">Millwright</div>
+          <div class="crew-stat-row"><span>Active Job</span><span>WO-4468</span></div>
+          <div class="crew-stat-row"><span>Tools Checked Out</span><span>1</span></div>
+          <div class="crew-stat-row"><span>Jobs This Month</span><span>5</span></div>
+        </div>
+        <div class="crew-card">
+          <div class="crew-name">Open Slot</div>
+          <div class="crew-role">Unassigned Today</div>
+          <div class="crew-stat-row"><span>Available For</span><span>WO-4465</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="closing">
+    <div class="closing-text">This is a concept — the real version connects to your actual tool inventory and work order process. One place to see every tool, every job, and every calibration date, instead of a clipboard and a filing cabinet.</div>
+    <div class="closing-tag">Seegson Solutions — Built for you, not for everyone.</div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(id) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.nav-tab[data-page="' + id + '"]').classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+  }
+
+  const target = 3450;
+  let current = 0;
+  const el = document.getElementById('cost-readout');
+  const step = Math.ceil(target / 40);
+  const interval = setInterval(() => {
+    current += step;
+    if (current >= target) { current = target; clearInterval(interval); }
+    el.textContent = '$' + current.toLocaleString();
+  }, 25);
+</script>
+</body>
+</html>

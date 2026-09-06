@@ -92,15 +92,34 @@ nav.tabs:after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;
 .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.4}
 select.filter{padding:9px 11px;border:1px solid var(--rule);border-radius:11px;background:var(--surface);font-weight:600}
 
-/* ---------- week strip ---------- */
-.week{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
-.wd{background:var(--surface);border:1px solid var(--rule);border-radius:13px;padding:10px 12px;box-shadow:var(--shadow)}
-.wd.today{border-color:var(--sky);box-shadow:0 0 0 2px var(--sky-soft),var(--shadow)}
-.wd h4{font-size:14px;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:baseline}
-.wd h4 em{font-style:normal;font-family:var(--mono);font-size:19px;color:var(--ink);font-weight:600}
-.wd .split{font-size:11.5px;color:var(--muted);margin-top:2px}
-.wd .staff{font-size:11.5px;margin-top:5px;padding-top:5px;border-top:1px dashed var(--rule);color:var(--ink-soft)}
-.wd .staff b{font-family:var(--mono)}
+/* ---------- classroom view ---------- */
+.week{margin-bottom:18px}
+.daystrip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}
+.daypick{background:var(--surface);border:1px solid var(--rule);border-radius:13px;padding:9px 10px;box-shadow:var(--shadow);
+  font-family:var(--display);font-weight:600;font-size:14px;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:baseline}
+.daypick em{font-style:normal;font-family:var(--mono);font-size:17px;color:var(--ink);font-weight:600}
+.daypick.istoday{border-color:var(--sky);box-shadow:0 0 0 2px var(--sky-soft),var(--shadow)}
+.daypick.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.daypick.on em{color:#fff}
+.roomsum{font-size:13px;color:var(--ink-soft);margin-bottom:10px}
+.roomsum b{font-family:var(--mono);color:var(--ink)}
+.rooms{display:flex;flex-direction:column;gap:8px}
+.room{background:var(--surface);border:1px solid var(--rule);border-radius:13px;box-shadow:var(--shadow);overflow:hidden}
+.room.open{border-color:var(--sky)}
+.room-hd{width:100%;display:flex;align-items:center;gap:10px;padding:11px 14px;background:transparent;border:0;text-align:left}
+.room-name{font-family:var(--display);font-weight:600;font-size:16px;color:var(--ink);flex-shrink:0;min-width:150px}
+.room-stats{flex:1;font-size:12.5px;color:var(--ink-soft)}
+.room-stats b{font-family:var(--mono);color:var(--ink)}
+.room-chev{font-family:var(--mono);font-size:18px;color:var(--muted);width:20px;text-align:center;flex-shrink:0}
+.room-body{padding:4px 14px 12px;display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--rule)}
+.room-kid{display:flex;align-items:center;gap:9px;padding:6px 4px;border-radius:9px;cursor:pointer}
+.room-kid:hover{background:var(--rule-soft)}
+.rk-name{font-weight:700;font-size:13.5px;flex:1}
+.rk-age{font-size:11.5px;color:var(--muted)}
+.rk-eat{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--grass-soft);color:var(--grass-deep)}
+.rk-eat.no{background:var(--rule-soft);color:var(--muted)}
+.rk-pt{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--sun-soft);color:var(--sun-deep)}
+.room-empty{font-size:12.5px;color:var(--muted);padding:8px 4px}
 
 /* ---------- roster ---------- */
 .roster{display:flex;flex-direction:column;gap:8px}
@@ -234,8 +253,9 @@ footer.lic{max-width:1280px;margin:0 auto;padding:4px 20px 44px;color:var(--mute
 footer.lic em{font-family:var(--display);font-size:15px;font-style:normal;color:var(--ink-soft)}
 
 @media(max-width:820px){
-  .week{grid-template-columns:repeat(2,1fr)}
-  .week .wd:last-child{grid-column:1/-1}
+  .daystrip{grid-template-columns:repeat(3,1fr)}
+  .room-name{min-width:0}
+  .room-hd{flex-wrap:wrap}
 }
 @media(max-width:760px){
   .card{grid-template-columns:auto 1fr}
@@ -281,6 +301,7 @@ footer.lic em{font-family:var(--display);font-size:15px;font-style:normal;color:
         <p class="mast-sub"><b>Master List</b>Sample data · a Seegson Solutions demo</p>
       </div>
       <div class="mast-acts">
+        <button class="btn btn-ghost btn-sm" id="btnTextSettings">Morning text</button>
         <button class="btn btn-ghost btn-sm" id="btnCsv">Export CSV</button>
         <button class="btn btn-ghost btn-sm" id="btnSheet">Pickup sheet</button>
         <button class="btn btn-ghost btn-sm" id="btnBackup">Save backup</button>
@@ -343,6 +364,33 @@ footer.lic em{font-family:var(--display);font-size:15px;font-style:normal;color:
   </div>
 </aside>
 
+<div class="scrim" id="textScrim"></div>
+<aside class="drawer" id="textDrawer" role="dialog" aria-modal="true" aria-labelledby="textTitle" style="width:min(440px,100%)">
+  <div class="dr-head">
+    <div class="dr-title">
+      <h2 id="textTitle">Morning text</h2>
+      <button class="x" id="textClose" aria-label="Close">&times;</button>
+    </div>
+    <p class="dr-sub" style="padding-bottom:12px">Who gets today's headcount each morning, and when</p>
+  </div>
+  <div class="dr-body">
+    <div class="field"><label for="textTime">Send time</label><input id="textTime" type="time" value="06:45"></div>
+    <div class="field"><label>Recipients</label>
+      <div id="recipList" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div>
+      <div class="row2">
+        <input id="recipName" placeholder="Name" style="border:1px solid var(--rule);border-radius:11px;padding:9px 11px;background:var(--surface)">
+        <input id="recipPhone" placeholder="Phone" type="tel" style="border:1px solid var(--rule);border-radius:11px;padding:9px 11px;background:var(--surface)">
+      </div>
+      <button class="btn btn-sm" id="recipAdd" style="width:100%;margin-top:8px">Add recipient</button>
+    </div>
+    <p class="hint">This saves who should receive the morning headcount and when. Actually sending the text each morning needs to be connected to a messaging service — this list is what that service would use.</p>
+  </div>
+  <div class="dr-foot">
+    <span></span>
+    <button class="btn btn-primary btn-sm" id="textDone">Done</button>
+  </div>
+</aside>
+
 <div class="toast" id="toast"></div>
 <input type="file" id="fileIn" accept="application/json" hidden>
 
@@ -356,6 +404,16 @@ const CARD = {
   preschool: { label:'Preschool & TK',   short:'Preschool', weekly:375, daily:95, minDays:2, maxAge:5, ratio:12 },
   halfday:   { label:'Half day, 8–12',   short:'Half day',  weekly:275, daily:null, minDays:0, maxAge:5, ratio:12 }
 };
+
+/* ---------- classrooms — 5 rooms; Nursery does not serve meals ---------- */
+const CLASSROOMS = [
+  { id:'nursery',   name:'Nursery',         program:'infant',    ratio:4,  eats:false },
+  { id:'toddler',   name:'Toddler Room',    program:'infant',    ratio:4,  eats:true  },
+  { id:'twos',      name:'Twos Room',       program:'preschool', ratio:12, eats:true  },
+  { id:'preschool', name:'Preschool Room',  program:'preschool', ratio:12, eats:true  },
+  { id:'pre-k',     name:'Pre-K / TK Room', program:'preschool', ratio:12, eats:true  }
+];
+const classroomOf = c => currentTerm(c).classroom || (programOf(c) === 'infant' ? 'toddler' : 'preschool');
 const NOTE_CATS = [['billing','Billing'],['behavior','Behavior'],['family','Family & parents'],['care','Daily care'],['general','General']];
 const DAYS = [['mon','Monday','M'],['tue','Tuesday','T'],['wed','Wednesday','W'],['thu','Thursday','T'],['fri','Friday','F']];
 const YEAR = 2026;
@@ -365,18 +423,20 @@ const GROUPS = [
 ];
 const AVATAR = ['var(--sky)','var(--grass)','var(--sun)','var(--coral)','var(--grape)'];
 const KEY = 'schoolhouse-demo-v2';
+const RECIP_KEY = 'schoolhouse-morning-text-recipients-v1';
+let textSettings = { time: '06:45', recipients: [] };
 
 /* ---------- storage ---------- */
 const store = {
-  async load(){
-    try{ if(window.storage){ const r = await window.storage.get(KEY); if(r&&r.value) return JSON.parse(r.value); } }catch(e){}
-    try{ const v = window.localStorage && localStorage.getItem(KEY); if(v) return JSON.parse(v); }catch(e){}
+  async load(key){
+    try{ if(window.storage){ const r = await window.storage.get(key); if(r&&r.value) return JSON.parse(r.value); } }catch(e){}
+    try{ const v = window.localStorage && localStorage.getItem(key); if(v) return JSON.parse(v); }catch(e){}
     return null;
   },
-  async save(data){
+  async save(key, data){
     const s = JSON.stringify(data);
-    try{ if(window.storage) await window.storage.set(KEY, s); }catch(e){}
-    try{ if(window.localStorage) localStorage.setItem(KEY, s); }catch(e){}
+    try{ if(window.storage) await window.storage.set(key, s); }catch(e){}
+    try{ if(window.localStorage) localStorage.setItem(key, s); }catch(e){}
   }
 };
 
@@ -483,20 +543,61 @@ function renderLedger(){
   $('cnt').textContent = `${students.length} children on the list`;
 }
 
+/* which day the Classroom View is showing — defaults to today (or Monday on a weekend) */
+let roomDay = (() => { const i = new Date().getDay() - 1; return DAYS[i] ? DAYS[i][0] : 'mon'; })();
+let openRoom = null; /* classroom id currently expanded to show its kids, or null */
+
+function kidsInRoom(roomId, dayKey){
+  return enrolledList().filter(s => {
+    const t = currentTerm(s);
+    return classroomOf(s) === roomId && t.days && t.days[dayKey];
+  });
+}
 function renderWeek(){
-  const en = enrolledList();
   const todayIdx = new Date().getDay() - 1;
-  $('week').innerHTML = DAYS.map(([k,full],i) => {
-    const on = en.filter(s => currentTerm(s).days && currentTerm(s).days[k]);
-    const inf = on.filter(s => programOf(s) === 'infant').length;
-    const pre = on.length - inf;
-    const staff = Math.ceil(inf / CARD.infant.ratio) + Math.ceil(pre / CARD.preschool.ratio);
-    return `<div class="wd${i === todayIdx ? ' today' : ''}">
-      <h4>${full.slice(0,3)}<em>${on.length}</em></h4>
-      <div class="split">${inf} infant · ${pre} preschool</div>
-      <div class="staff">Staff needed: <b>${staff}</b></div>
+  const todayKey = DAYS[todayIdx] ? DAYS[todayIdx][0] : null;
+
+  /* day strip — click a day to see that day's classroom breakdown */
+  const dayStrip = DAYS.map(([k,full]) => {
+    const en = enrolledList().filter(s => currentTerm(s).days && currentTerm(s).days[k]);
+    const cls = k === roomDay ? ' on' : '';
+    const isToday = k === todayKey ? ' istoday' : '';
+    return `<button type="button" class="daypick${cls}${isToday}" data-roomday="${k}">${full.slice(0,3)}<em>${en.length}</em></button>`;
+  }).join('');
+
+  /* classroom cards for the selected day */
+  const rooms = CLASSROOMS.map(room => {
+    const kids = kidsInRoom(room.id, roomDay);
+    const staff = Math.ceil(kids.length / room.ratio) || (kids.length ? 1 : 0);
+    const open = openRoom === room.id;
+    const eatCount = room.eats ? kids.filter(s => s.eats !== false).length : 0;
+    const halfCount = room.eats ? kids.filter(s => s.eats !== false && s.portion === 'half').length : 0;
+    return `<div class="room${open ? ' open' : ''}">
+      <button type="button" class="room-hd" data-room="${room.id}">
+        <span class="room-name">${esc(room.name)}</span>
+        <span class="room-stats"><b>${kids.length}</b> kids · <b>${staff}</b> staff${room.eats ? ` · ${eatCount} eating${halfCount ? ` (${halfCount} half)` : ''}` : ' · no meals'}</span>
+        <span class="room-chev">${open ? '−' : '+'}</span>
+      </button>
+      ${open ? `<div class="room-body">${kids.length ? kids.map(s => {
+        const age = ageOf(s);
+        return `<div class="room-kid" data-id="${s.id}">
+          <span class="avatar" style="background:${avatarFor(s)};width:26px;height:26px;font-size:11px">${esc(initials(s.name))}</span>
+          <span class="rk-name">${esc(s.name)}</span>
+          ${age ? `<span class="rk-age">${age.label}</span>` : ''}
+          ${room.eats ? `<span class="rk-eat ${s.eats === false ? 'no' : ''}">${s.eats === false ? 'Not eating' : (s.portion === 'half' ? 'Half portion' : 'Full portion')}</span>` : ''}
+          ${s.pottyTrained ? '' : '<span class="rk-pt">Diapering</span>'}
+        </div>`;
+      }).join('') : '<div class="room-empty">Nobody in this room on this day.</div>'}</div>` : ''}
     </div>`;
   }).join('');
+
+  const totalKids = enrolledList().filter(s => currentTerm(s).days && currentTerm(s).days[roomDay]).length;
+  const totalStaff = CLASSROOMS.reduce((a,room) => a + (Math.ceil(kidsInRoom(room.id, roomDay).length / room.ratio) || (kidsInRoom(room.id, roomDay).length ? 1 : 0)), 0);
+
+  $('week').innerHTML = `
+    <div class="daystrip">${dayStrip}</div>
+    <div class="roomsum">${(DAYS.find(d => d[0] === roomDay)||[,'Day'])[1]}: <b>${totalKids}</b> kids across 5 rooms · <b>${totalStaff}</b> staff needed</div>
+    <div class="rooms">${rooms}</div>`;
 }
 
 /* ---------- roster ---------- */
@@ -593,14 +694,26 @@ function fmtDate(d){
 }
 function render(){ renderLedger(); renderWeek(); renderTabs(); renderRoster(); }
 
+/* ---------- morning text settings ---------- */
+function renderRecipients(){
+  $('textTime').value = textSettings.time || '06:45';
+  const list = textSettings.recipients || [];
+  $('recipList').innerHTML = list.length ? list.map(r => `
+    <div style="display:flex;align-items:center;gap:8px;background:var(--rule-soft);border-radius:9px;padding:7px 10px" data-rid="${r.id}">
+      <span style="flex:1;font-size:13.5px"><b>${esc(r.name)}</b>${r.phone ? ' · ' + esc(r.phone) : ''}</span>
+      <button class="btn btn-xs btn-danger" data-rdel="1">Remove</button>
+    </div>`).join('') : '<p class="hint" style="margin:0">Nobody added yet.</p>';
+}
+
 /* ================= DRAWER ================= */
 function blankTerm(){
   return { id: uid('t'), start: today(), end:'', section:'active', program:'preschool', schedule:'PT',
+           classroom:'preschool',
            days:{mon:false,tue:false,wed:false,thu:false,fri:false},
            rateBasis:'daily', rate:CARD.preschool.daily, discountType:'none', discountValue:0, rcoe:0, dateNote:'' };
 }
 function blank(){
-  return { id: uid('c'), name:'', dob:'', allergies:'', care:'',
+  return { id: uid('c'), name:'', dob:'', allergies:'', care:'', eats:true, portion:'full', pottyTrained:false,
            guardians:[], emergency:[], pickup:[], noteList:[], terms:[blankTerm()] };
 }
 /* the term the Details tab is editing */
@@ -638,7 +751,7 @@ function paintDrawer(){
   body.innerHTML = drTab === 'details' ? detailsHtml()
                  : drTab === 'people'  ? peopleHtml()
                  : drTab === 'notes'   ? notesHtml() : statementHtml();
-  if(drTab === 'details'){ const t = editTerm(); seg('segSched', t.schedule); seg('segBasis', t.rateBasis); drawCalc(); }
+  if(drTab === 'details'){ const t = editTerm(); seg('segSched', t.schedule); seg('segBasis', t.rateBasis); seg('segEats', draft.eats === false ? 'no' : 'yes'); drawCalc(); }
   body.scrollTop = 0;
 }
 function seg(id, val){ const e = $(id); if(e) [...e.children].forEach(b => b.classList.toggle('on', b.dataset.v === val)); }
@@ -658,11 +771,26 @@ function detailsHtml(){
         ${Object.entries(CARD).map(([k,v]) => `<option value="${k}" ${t.program===k?'selected':''}>${v.label}</option>`).join('')}
       </select></div>
   </div>
+  <div class="field"><label for="f_classroom">Classroom</label>
+    <select id="f_classroom" data-f="classroom">
+      ${CLASSROOMS.filter(r => r.program === t.program).map(r => `<option value="${r.id}" ${t.classroom===r.id?'selected':''}>${esc(r.name)}</option>`).join('')}
+    </select></div>
   <div class="field"><label>Schedule</label>
     <div class="seg" id="segSched"><button type="button" data-v="PT">Part time</button><button type="button" data-v="FT">Full time</button></div></div>
   <div class="field"><label>Days enrolled</label>
     <div class="punch" id="segDays">${DAYS.map(([k,full,ltr]) => `<button type="button" data-fday="${k}" class="${t.days[k]?'on':''}" aria-pressed="${!!t.days[k]}" aria-label="${full}">${ltr}</button>`).join('')}</div>
     <p class="hint" id="daysHint"></p></div>
+  <div class="row2">
+    <div class="field"><label>Eating at daycare</label>
+      <div class="seg" id="segEats"><button type="button" data-v="yes">Eats meals</button><button type="button" data-v="no">Doesn't eat</button></div></div>
+    <div class="field"><label for="f_portion">Portion size</label>
+      <select id="f_portion" data-f="portion" ${draft.eats===false?'disabled':''}>
+        <option value="full" ${draft.portion==='full'?'selected':''}>Full portion</option>
+        <option value="half" ${draft.portion==='half'?'selected':''}>Half portion</option>
+      </select></div>
+  </div>
+  <div class="field"><label style="display:flex;align-items:center;gap:8px;text-transform:none;font-weight:600;font-size:14px;letter-spacing:0">
+    <input type="checkbox" id="f_pottyTrained" data-f="pottyTrained" ${draft.pottyTrained?'checked':''} style="width:auto"> Potty trained</label></div>
   <div class="field"><label>How the rate is charged</label>
     <div class="seg" id="segBasis"><button type="button" data-v="daily">Per day</button><button type="button" data-v="weekly">Flat per week</button></div></div>
   <div class="row2">
@@ -851,7 +979,7 @@ function statementHtml(){
 }
 
 /* ---------- persistence + toast ---------- */
-function persist(){ clearTimeout(saveTimer); saveTimer = setTimeout(() => store.save(students), 250); }
+function persist(){ clearTimeout(saveTimer); saveTimer = setTimeout(() => store.save(KEY, students), 250); }
 function toast(msg, undo){
   const t = $('toast');
   t.innerHTML = `<span>${esc(msg)}</span>` + (undo ? `<button id="undoBtn">Undo</button>` : '');
@@ -865,6 +993,14 @@ function toast(msg, undo){
 }
 
 /* ================= EVENTS ================= */
+$('week').addEventListener('click', e => {
+  const dp = e.target.closest('button[data-roomday]');
+  if(dp){ roomDay = dp.dataset.roomday; openRoom = null; renderWeek(); return; }
+  const rh = e.target.closest('button[data-room]');
+  if(rh){ openRoom = openRoom === rh.dataset.room ? null : rh.dataset.room; renderWeek(); return; }
+  const kid = e.target.closest('.room-kid');
+  if(kid){ openDrawer(kid.dataset.id); return; }
+});
 $('roster').addEventListener('click', e => {
   const b = e.target.closest('button[data-day]'); if(!b) return;
   const t = currentTerm(students.find(x => x.id === b.dataset.id));
@@ -887,13 +1023,17 @@ $('drBody').addEventListener('input', e => {
   const t = e.target;
   if(t.dataset.f){
     const f = t.dataset.f;
-    const TERM_F = ['program','rate','rcoe','discountType','discountValue','start','end','section'];
+    const TERM_F = ['program','rate','rcoe','discountType','discountValue','start','end','section','classroom'];
     const target = TERM_F.includes(f) ? editTerm() : draft;
-    target[f] = (f === 'rate' || f === 'rcoe' || f === 'discountValue') ? (+t.value || 0) : t.value;
+    if(f === 'pottyTrained') target[f] = t.checked;
+    else target[f] = (f === 'rate' || f === 'rcoe' || f === 'discountValue') ? (+t.value || 0) : t.value;
     if(f === 'program'){
       const tm = editTerm();
       if(tm.program === 'halfday'){ tm.rateBasis = 'weekly'; seg('segBasis','weekly'); }
       const cr = cardRateFor(tm); if(cr != null){ tm.rate = cr; $('f_rate').value = cr; }
+      const rooms = CLASSROOMS.filter(r => r.program === tm.program);
+      if(!rooms.some(r => r.id === tm.classroom)) tm.classroom = (rooms[0]||CLASSROOMS[0]).id;
+      paintDrawer(); return;
     }
     if(f === 'discountType') $('f_discountValue').disabled = t.value === 'none';
     if(f === 'name' || f === 'dob' || f === 'program'){
@@ -929,7 +1069,7 @@ $('drBody').addEventListener('click', e => {
     termId = currentTerm(draft).id; paintDrawer(); return;
   }
   /* segmented controls */
-  const sg = t.closest('#segSched button, #segBasis button');
+  const sg = t.closest('#segSched button, #segBasis button, #segEats button');
   if(sg){
     const which = sg.closest('.seg').id;
     const tm = editTerm();
@@ -939,7 +1079,8 @@ $('drBody').addEventListener('click', e => {
       const cr = cardRateFor(tm); if(cr != null) tm.rate = cr;
       if(sg.dataset.v === 'FT') DAYS.forEach(([k]) => tm.days[k] = true);
       paintDrawer();
-    } else { tm.rateBasis = sg.dataset.v; seg('segBasis', sg.dataset.v); drawCalc(); }
+    } else if(which === 'segBasis'){ tm.rateBasis = sg.dataset.v; seg('segBasis', sg.dataset.v); drawCalc(); }
+    else { draft.eats = sg.dataset.v === 'yes'; seg('segEats', sg.dataset.v); $('f_portion').disabled = !draft.eats; }
     return;
   }
   /* people */
@@ -1001,6 +1142,37 @@ $('drCancel').onclick = closeDrawer;
 $('drClose').onclick = closeDrawer;
 $('scrim').onclick = closeDrawer;
 document.addEventListener('keydown', e => { if(e.key === 'Escape' && $('drawer').classList.contains('open')) closeDrawer(); });
+
+/* morning text settings modal */
+function openTextSettings(){
+  renderRecipients();
+  $('textDrawer').classList.add('open'); $('textScrim').classList.add('open');
+}
+function closeTextSettings(){
+  textSettings.time = $('textTime').value || '06:45';
+  store.save(RECIP_KEY, textSettings);
+  $('textDrawer').classList.remove('open'); $('textScrim').classList.remove('open');
+}
+$('btnTextSettings').onclick = openTextSettings;
+$('textClose').onclick = closeTextSettings;
+$('textDone').onclick = closeTextSettings;
+$('textScrim').onclick = closeTextSettings;
+$('recipAdd').onclick = () => {
+  const name = $('recipName').value.trim(), phone = $('recipPhone').value.trim();
+  if(!name){ $('recipName').focus(); return; }
+  textSettings.recipients = textSettings.recipients || [];
+  textSettings.recipients.push({ id: uid('r'), name, phone });
+  $('recipName').value = ''; $('recipPhone').value = '';
+  renderRecipients();
+  store.save(RECIP_KEY, textSettings);
+  toast(name + ' added to the morning text');
+};
+$('recipList').addEventListener('click', e => {
+  const row = e.target.closest('[data-rid]'); if(!row || !e.target.closest('[data-rdel]')) return;
+  textSettings.recipients = (textSettings.recipients||[]).filter(r => r.id !== row.dataset.rid);
+  renderRecipients();
+  store.save(RECIP_KEY, textSettings);
+});
 
 $('drSave').onclick = () => {
   if(!draft.name.trim()){ drTab = 'details'; paintDrawer(); $('f_name').focus(); toast('Add a name before saving'); return; }
@@ -1093,7 +1265,7 @@ $('fileIn').onchange = e => {
 };
 
 /* ---------- migrate older records ---------- */
-const TERM_KEYS = ['id','start','end','section','program','schedule','days','rateBasis','rate','discountType','discountValue','rcoe','dateNote'];
+const TERM_KEYS = ['id','start','end','section','program','schedule','classroom','days','rateBasis','rate','discountType','discountValue','rcoe','dateNote'];
 function migrate(s){
   if(typeof s.notes === 'string'){
     s.noteList = s.notes.trim() ? [{id:uid('n'),date:today(),cat:'general',text:s.notes,pin:false}] : [];
@@ -1101,6 +1273,9 @@ function migrate(s){
   }
   ['guardians','emergency','pickup','noteList'].forEach(k => { if(!Array.isArray(s[k])) s[k] = []; });
   ['dob','allergies','care'].forEach(k => { if(s[k] == null) s[k] = ''; });
+  if(s.eats == null) s.eats = true;
+  if(s.portion == null) s.portion = 'full';
+  if(s.pottyTrained == null) s.pottyTrained = false;
   if(s.review){ s.noteList.unshift({id:uid('n'),date:today(),cat:'billing',text:s.review,pin:true}); delete s.review; }
   /* flat record from an older backup -> single term */
   if(!Array.isArray(s.terms) || !s.terms.length){
@@ -1110,20 +1285,28 @@ function migrate(s){
     s.terms = [t];
     TERM_KEYS.filter(k => k !== 'id').forEach(k => delete s[k]);
   }
+  /* spread children across the 5 real classrooms so the room view is populated */
+  const nameSpread = [...(s.name||'?')].reduce((a,c) => a + c.charCodeAt(0), 0);
   s.terms.forEach(t => {
     if(!t.id) t.id = uid('t');
     if(!t.program) t.program = 'preschool';
     if(!t.days) t.days = {mon:false,tue:false,wed:false,thu:false,fri:false};
     if(!t.section) t.section = 'active';
+    if(!t.classroom){
+      const rooms = CLASSROOMS.filter(r => r.program === t.program);
+      t.classroom = (rooms[nameSpread % rooms.length] || rooms[0] || CLASSROOMS[2]).id;
+    }
   });
   return s;
 }
 
 /* ---------- go ---------- */
 (async function init(){
-  const saved = await store.load();
+  const saved = await store.load(KEY);
   students = ((saved && saved.length) ? saved : SEED).map(migrate);
-  if(!saved) store.save(students);
+  if(!saved) store.save(KEY, students);
+  const savedText = await store.load(RECIP_KEY);
+  if(savedText && typeof savedText === 'object') textSettings = Object.assign({time:'06:45',recipients:[]}, savedText);
   render();
 })();
 </script>

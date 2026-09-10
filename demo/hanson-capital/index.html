@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanson Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Newsreader:ital,opsz,wght@1,6..72,400&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #12181a; --green2: #1b2225; --green3: #242c2f;
+    --brass: #a67c3d; --brass-lt: #c49a5c; --brass-bg: rgba(166,124,61,0.08);
+    --stone: #ede9e0; --white: #ffffff;
+    --slate: #6b7280; --slate-lt: #9298a0; --border: #dcd6c8;
+    --text: #1a1a18;
+    --green-good: #4a7a5e; --green-good-bg: #eaf2ec;
+    --amber-warn: #b08228; --amber-warn-bg: #f7f0dd;
+    --red-flag: #a3503f; --red-flag-bg: #f6ebe8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--stone); color: var(--text); }
+  a { color: inherit; text-decoration: none; }
+
+  /* ══════════ APP SHELL ══════════ */
+  .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+  /* ── SIDEBAR ── */
+  .sidebar { background: var(--green); color: var(--white); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+  .sb-brand { padding: 26px 22px 22px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .sb-mark { width: 32px; height: 32px; border: 1px solid var(--brass); display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', serif; font-size: 13px; color: var(--brass-lt); flex-shrink: 0; }
+  .sb-word { font-family: 'Newsreader', serif; font-size: 15.5px; letter-spacing: 0.2px; }
+
+  .sb-nav { padding: 18px 14px; flex: 1; }
+  .sb-nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 5px; font-size: 13px;
+    color: rgba(255,255,255,0.6); cursor: pointer; margin-bottom: 2px; transition: all 0.15s;
+  }
+  .sb-nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+  .sb-nav-item.active { background: var(--brass-bg); color: var(--brass-lt); }
+  .sb-nav-icon { width: 16px; text-align: center; font-size: 13px; flex-shrink: 0; }
+
+  .sb-tools { padding: 14px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .sb-tools-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 1.5px; color: rgba(255,255,255,0.35); padding: 0 12px 8px; }
+  .sb-tool-link {
+    display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border-radius: 5px;
+    font-size: 12.5px; color: rgba(255,255,255,0.7); margin-bottom: 2px;
+  }
+  .sb-tool-link:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+  .sb-tool-arrow { color: var(--brass-lt); font-size: 11px; }
+
+  .sb-foot { padding: 16px 22px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11px; color: rgba(255,255,255,0.4); }
+
+  /* ── MAIN ── */
+  .main { padding: 34px 44px 70px; max-width: 1240px; }
+
+  .page-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; gap: 20px; flex-wrap: wrap; }
+  .page-title { font-family: 'Newsreader', serif; font-size: 36px; font-weight: 500; letter-spacing: -0.5px; }
+  .page-sub { font-size: 13.5px; color: var(--slate); margin-top: 6px; max-width: 480px; line-height: 1.6; }
+  .page-date { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--slate); text-align: right; }
+
+  /* ══════════ PORTFOLIO PULSE — signature element ══════════ */
+  .pulse-strip {
+    background: var(--green); color: var(--white); border-radius: 6px; padding: 24px 28px; margin-bottom: 26px;
+    display: flex; align-items: center; gap: 34px; flex-wrap: wrap;
+  }
+  .pulse-item { display: flex; flex-direction: column; gap: 4px; }
+  .pulse-num { font-family: 'Newsreader', serif; font-size: 30px; font-weight: 500; color: var(--brass-lt); line-height: 1; }
+  .pulse-label { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+  .pulse-div { width: 1px; height: 36px; background: rgba(255,255,255,0.12); }
+  .pulse-note { font-size: 12px; color: rgba(255,255,255,0.55); max-width: 260px; line-height: 1.5; margin-left: auto; }
+
+  /* ══════════ SECTIONS ══════════ */
+  .section-title { font-family: 'Newsreader', serif; font-size: 19px; font-weight: 500; margin-bottom: 14px; }
+  .section { margin-bottom: 34px; }
+
+  /* Company cards */
+  .company-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .company-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .company-top { padding: 16px 18px 12px; }
+  .company-status { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .status-chip { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 3px; }
+  .status-chip.active { background: var(--green-good-bg); color: var(--green-good); }
+  .status-chip.holding { background: var(--amber-warn-bg); color: var(--amber-warn); }
+  .status-chip.exiting { background: var(--red-flag-bg); color: var(--red-flag); }
+  .company-name { font-family: 'Newsreader', serif; font-size: 18px; font-weight: 500; }
+  .company-type { font-size: 11.5px; color: var(--slate); margin-top: 3px; }
+  .company-metrics { padding: 12px 18px 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
+  .cm-item { font-size: 11px; }
+  .cm-val { font-family: 'IBM Plex Mono', monospace; font-weight: 600; color: var(--text); display: block; font-size: 13px; }
+  .cm-label { color: var(--slate); margin-top: 2px; }
+
+  /* Activity feed */
+  .feed { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 4px 20px; }
+  .feed-row { display: flex; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--border); }
+  .feed-row:last-child { border-bottom: none; }
+  .feed-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brass); flex-shrink: 0; }
+  .feed-text { flex: 1; font-size: 13px; }
+  .feed-text strong { font-weight: 600; }
+  .feed-time { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--slate); white-space: nowrap; }
+
+  /* Documents */
+  .doc-table { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .doc-table th { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1px; color: var(--slate); padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--stone); }
+  .doc-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+  .doc-table tr:last-child td { border-bottom: none; }
+  .doc-name { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .doc-icon { color: var(--brass); }
+
+  /* Two column */
+  .two-col { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }
+
+  /* Directory (advisors/legal) */
+  .directory-list { display: flex; flex-direction: column; gap: 0; background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .directory-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 18px; border-bottom: 1px solid var(--border); }
+  .directory-row:last-child { border-bottom: none; }
+  .dr-role { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: var(--brass); letter-spacing: 0.5px; }
+  .dr-name { font-size: 13px; font-weight: 600; margin-top: 2px; }
+  .dr-contact { font-size: 11px; color: var(--slate); text-align: right; }
+
+  /* Placeholder note */
+  .placeholder-note {
+    background: var(--brass-bg); border: 1px dashed var(--brass); border-radius: 6px; padding: 12px 16px;
+    font-size: 12px; color: #6b4f1f; line-height: 1.6; margin-bottom: 18px;
+  }
+
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { position: relative; height: auto; }
+    .company-grid { grid-template-columns: 1fr 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .main { padding: 24px 20px 60px; }
+    .company-grid { grid-template-columns: 1fr; }
+    .pulse-strip { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .pulse-div { display: none; }
+    .pulse-note { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <nav class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-mark">HC</div>
+      <div class="sb-word">Hanson Capital</div>
+    </div>
+
+    <div class="sb-nav">
+      <div class="sb-nav-item active"><span class="sb-nav-icon">◆</span> Overview</div>
+      <div class="sb-nav-item"><span class="sb-nav-icon">◇</span> Portfolio Companies</div>
+      <div class="sb-nav-item"><span class="sb-nav-icon">▤</span> Documents</div>
+      <div class="sb-nav-item"><span class="sb-nav-icon">◈</span> Activity</div>
+      <div class="sb-nav-item"><span class="sb-nav-icon">●</span> Directory</div>
+    </div>
+
+    <div class="sb-tools">
+      <div class="sb-tools-label">CONNECTED TOOLS</div>
+      <div class="sb-tool-link">Org Chart Builder <span class="sb-tool-arrow">↗</span></div>
+      <div class="sb-tool-link">Schoolhouse Master List <span class="sb-tool-arrow">↗</span></div>
+    </div>
+
+    <div class="sb-foot">Built by Seegson Solutions</div>
+  </nav>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="main">
+
+    <div class="page-head">
+      <div>
+        <div class="page-title">Portfolio Overview</div>
+        <div class="page-sub">Everything under Hanson Capital, in one place — a working hub, not a brochure.</div>
+      </div>
+      <div class="page-date">Thursday, September 10</div>
+    </div>
+
+    <div class="placeholder-note">This is a working demo — every number below is placeholder data for layout purposes. Once connected to real records, this becomes a live operating view.</div>
+
+    <!-- SIGNATURE: PORTFOLIO PULSE -->
+    <div class="pulse-strip">
+      <div class="pulse-item"><div class="pulse-num">5</div><div class="pulse-label">ENTITIES</div></div>
+      <div class="pulse-div"></div>
+      <div class="pulse-item"><div class="pulse-num">4</div><div class="pulse-label">ACTIVE</div></div>
+      <div class="pulse-div"></div>
+      <div class="pulse-item"><div class="pulse-num">31</div><div class="pulse-label">EMPLOYEES</div></div>
+      <div class="pulse-div"></div>
+      <div class="pulse-item"><div class="pulse-num">2019</div><div class="pulse-label">FOUNDED</div></div>
+      <div class="pulse-note">One glance at the whole portfolio — where before this meant calling around to five different people.</div>
+    </div>
+
+    <!-- PORTFOLIO COMPANIES -->
+    <div class="section">
+      <div class="section-title">Portfolio Companies</div>
+      <div class="company-grid">
+        <div class="company-card">
+          <div class="company-top">
+            <div class="company-status"><span class="status-chip active">Active</span></div>
+            <div class="company-name">Schoolhouse Daycare</div>
+            <div class="company-type">Childcare · Operating Company</div>
+          </div>
+          <div class="company-metrics">
+            <div class="cm-item"><span class="cm-val">12</span><span class="cm-label">Staff</span></div>
+            <div class="cm-item"><span class="cm-val">2</span><span class="cm-label">Open Items</span></div>
+          </div>
+        </div>
+        <div class="company-card">
+          <div class="company-top">
+            <div class="company-status"><span class="status-chip active">Active</span></div>
+            <div class="company-name">Fusion Graphics</div>
+            <div class="company-type">Design & Print · Operating Company</div>
+          </div>
+          <div class="company-metrics">
+            <div class="cm-item"><span class="cm-val">—</span><span class="cm-label">Staff</span></div>
+            <div class="cm-item"><span class="cm-val">0</span><span class="cm-label">Open Items</span></div>
+          </div>
+        </div>
+        <div class="company-card">
+          <div class="company-top">
+            <div class="company-status"><span class="status-chip holding">Holding Only</span></div>
+            <div class="company-name">Real Estate Holding Co.</div>
+            <div class="company-type">Real Estate · Holding Company</div>
+          </div>
+          <div class="company-metrics">
+            <div class="cm-item"><span class="cm-val">—</span><span class="cm-label">Staff</span></div>
+            <div class="cm-item"><span class="cm-val">1</span><span class="cm-label">Open Items</span></div>
+          </div>
+        </div>
+        <div class="company-card">
+          <div class="company-top">
+            <div class="company-status"><span class="status-chip active">Active</span></div>
+            <div class="company-name">Development Company</div>
+            <div class="company-type">Development · Operating Company</div>
+          </div>
+          <div class="company-metrics">
+            <div class="cm-item"><span class="cm-val">—</span><span class="cm-label">Staff</span></div>
+            <div class="cm-item"><span class="cm-val">0</span><span class="cm-label">Open Items</span></div>
+          </div>
+        </div>
+        <div class="company-card">
+          <div class="company-top">
+            <div class="company-status"><span class="status-chip exiting">Exiting</span></div>
+            <div class="company-name">Fusion Sign and Design</div>
+            <div class="company-type">Signage · Operating Company</div>
+          </div>
+          <div class="company-metrics">
+            <div class="cm-item"><span class="cm-val">—</span><span class="cm-label">Staff</span></div>
+            <div class="cm-item"><span class="cm-val">1</span><span class="cm-label">Open Items</span></div>
+          </div>
+        </div>
+        <div class="company-card" style="display:flex;align-items:center;justify-content:center;border-style:dashed;color:var(--slate);font-size:13px;">
+          + Add Company
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+
+      <!-- ACTIVITY -->
+      <div class="section">
+        <div class="section-title">Recent Activity</div>
+        <div class="feed">
+          <div class="feed-row"><div class="feed-dot"></div><div class="feed-text"><strong>Schoolhouse Daycare</strong> — Master List app update: Classroom View shipped</div><div class="feed-time">2 days ago</div></div>
+          <div class="feed-row"><div class="feed-dot"></div><div class="feed-text"><strong>Real Estate Holding Co.</strong> — Lease renewal window opens in 47 days</div><div class="feed-time">3 days ago</div></div>
+          <div class="feed-row"><div class="feed-dot"></div><div class="feed-text"><strong>Development Company</strong> — Permit approved for Project 2</div><div class="feed-time">1 week ago</div></div>
+          <div class="feed-row"><div class="feed-dot"></div><div class="feed-text"><strong>Fusion Sign and Design</strong> — Exit process ongoing</div><div class="feed-time">2 weeks ago</div></div>
+        </div>
+      </div>
+
+      <!-- DIRECTORY -->
+      <div class="section">
+        <div class="section-title">Directory</div>
+        <div class="directory-list">
+          <div class="directory-row"><div><div class="dr-role">LEGAL COUNSEL</div><div class="dr-name">[Placeholder]</div></div><div class="dr-contact">Add contact</div></div>
+          <div class="directory-row"><div><div class="dr-role">ACCOUNTING</div><div class="dr-name">[Placeholder]</div></div><div class="dr-contact">Add contact</div></div>
+          <div class="directory-row"><div><div class="dr-role">SOFTWARE PARTNER</div><div class="dr-name">Seegson Solutions</div></div><div class="dr-contact">bobby@seegsonsolutions.com</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="section" style="margin-top:20px;">
+      <div class="section-title">Documents</div>
+      <table class="doc-table">
+        <tr><th>Document</th><th>Company</th><th>Added</th></tr>
+        <tr><td class="doc-name"><span class="doc-icon">▤</span> Portfolio Structure — August 2026</td><td>Hanson Capital</td><td>Aug 24, 2026</td></tr>
+        <tr><td class="doc-name"><span class="doc-icon">▤</span> Master List — Weekly Update</td><td>Schoolhouse Daycare</td><td>Sep 3, 2026</td></tr>
+        <tr><td class="doc-name"><span class="doc-icon">▤</span> [Placeholder] Lease Agreement</td><td>Real Estate Holding Co.</td><td>—</td></tr>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

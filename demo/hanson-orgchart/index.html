@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanson Capital — Portfolio Structure</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal: #1c1e22; --charcoal2: #262930; --charcoal3: #30343d;
+    --brass: #b8945f; --brass-lt: #d4b483; --brass-bg: rgba(184,148,95,0.1);
+    --ivory: #f7f5f0; --white: #ffffff;
+    --slate: #5b6470; --slate-lt: #8890999a; --border: #e6e1d8;
+    --green: #4a7a5e; --green-bg: #eaf2ec;
+    --red: #b85c4f; --red-bg: #f7ece9;
+    --blue: #4a6a8a; --blue-bg: #e9eef4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--ivory); color: var(--charcoal); min-height: 100vh; }
+
+  /* ══════════ HEADER / BRAND ══════════ */
+  .brandbar {
+    background: var(--charcoal); color: var(--ivory);
+    padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;
+  }
+  .brand-id { display: flex; align-items: center; gap: 16px; }
+  .brand-mark {
+    width: 46px; height: 46px; border: 1.5px solid var(--brass); border-radius: 3px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 20px; color: var(--brass-lt);
+  }
+  .brand-word { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; letter-spacing: 0.2px; line-height: 1; }
+  .brand-word em { font-style: italic; color: var(--brass-lt); font-weight: 400; }
+  .brand-sub { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--slate-lt); margin-top: 4px; }
+
+  .brandbar-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; border: none; border-radius: 5px;
+    padding: 10px 18px; cursor: pointer; transition: opacity 0.15s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-brass { background: var(--brass); color: var(--charcoal); }
+  .btn-brass:hover { opacity: 0.88; }
+  .btn-ghost-dark { background: rgba(255,255,255,0.06); color: var(--ivory); border: 1px solid rgba(255,255,255,0.15); }
+  .btn-ghost-dark:hover { background: rgba(255,255,255,0.1); }
+  .btn-ghost { background: var(--white); color: var(--charcoal); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--brass); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .btn-danger { background: var(--red-bg); color: var(--red); }
+
+  /* ══════════ TOOLBAR ══════════ */
+  .toolbar {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .toolbar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .view-toggle { display: flex; background: var(--ivory); border-radius: 6px; padding: 3px; gap: 2px; }
+  .view-toggle button {
+    background: transparent; border: none; padding: 7px 14px; border-radius: 4px; font-size: 12.5px; font-weight: 600;
+    color: var(--slate); cursor: pointer; font-family: 'Inter', sans-serif;
+  }
+  .view-toggle button.active { background: var(--charcoal); color: var(--ivory); }
+  .search-box {
+    border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; font-size: 13px; font-family: 'Inter', sans-serif;
+    width: 220px; background: var(--white);
+  }
+  .toolbar-stats { display: flex; gap: 22px; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--slate); }
+  .toolbar-stats b { color: var(--charcoal); font-weight: 700; }
+
+  /* ══════════ CANVAS ══════════ */
+  .canvas-wrap { padding: 36px 40px 80px; max-width: 1400px; margin: 0 auto; }
+
+  .tier { margin-bottom: 46px; position: relative; }
+  .tier-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 2px; color: var(--slate);
+    text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .tier-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .node-row { display: flex; gap: 18px; flex-wrap: wrap; }
+
+  /* connector lines from parent tier */
+  .connector { display: flex; justify-content: center; margin-bottom: -1px; height: 20px; }
+  .connector svg { overflow: visible; }
+
+  /* ══════════ ENTITY CARDS ══════════ */
+  .entity-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+    width: 240px; overflow: hidden; box-shadow: 0 1px 2px rgba(28,30,34,0.04);
+    transition: box-shadow 0.15s, border-color 0.15s; position: relative;
+  }
+  .entity-card:hover { box-shadow: 0 4px 16px rgba(28,30,34,0.09); border-color: var(--brass-lt); }
+  .entity-card.root { width: 280px; border-color: var(--brass); border-width: 1.5px; }
+
+  .entity-top { padding: 16px 16px 12px; border-bottom: 1px solid var(--border); }
+  .entity-type {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--brass); margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .status-dot.active { background: var(--green); }
+  .status-dot.exiting { background: var(--red); }
+  .status-dot.holding { background: var(--blue); }
+
+  .entity-name {
+    font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: var(--charcoal);
+    line-height: 1.2; cursor: text; outline: none; border-radius: 3px; padding: 1px 3px; margin: -1px -3px;
+  }
+  .entity-name:focus { background: var(--brass-bg); box-shadow: 0 0 0 1px var(--brass); }
+  .entity-card.root .entity-name { font-size: 20px; }
+
+  .entity-owner {
+    font-size: 11.5px; color: var(--slate); margin-top: 5px; cursor: text; outline: none; border-radius: 3px; padding: 1px 3px; margin-left: -3px;
+  }
+  .entity-owner:focus { background: var(--brass-bg); box-shadow: 0 0 0 1px var(--brass); }
+
+  .entity-body { padding: 12px 16px 14px; }
+  .entity-stat-row { display: flex; justify-content: space-between; font-size: 11.5px; padding: 3px 0; }
+  .entity-stat-row .label { color: var(--slate); }
+  .entity-stat-row .val { font-family: 'IBM Plex Mono', monospace; font-weight: 600; color: var(--charcoal); }
+
+  .entity-actions {
+    display: flex; gap: 6px; padding: 10px 16px; border-top: 1px solid var(--border); background: var(--ivory);
+  }
+  .icon-btn {
+    background: transparent; border: none; font-size: 12px; color: var(--slate); cursor: pointer;
+    padding: 4px 7px; border-radius: 4px; display: flex; align-items: center; gap: 4px; font-family: 'Inter'; font-weight: 600;
+  }
+  .icon-btn:hover { background: var(--white); color: var(--charcoal); }
+  .icon-btn.danger:hover { color: var(--red); }
+
+  .add-child-card {
+    width: 240px; border: 1.5px dashed var(--border); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px;
+    min-height: 118px; cursor: pointer; color: var(--slate); font-size: 12.5px; font-weight: 600;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .add-child-card:hover { border-color: var(--brass); color: var(--brass); }
+  .add-child-card .plus { font-size: 20px; font-weight: 400; }
+
+  /* ══════════ SIDEBAR (Entity Detail) ══════════ */
+  .scrim { display:none; position: fixed; inset: 0; background: rgba(28,30,34,0.45); z-index: 200; }
+  .scrim.open { display: block; }
+  .sidebar {
+    position: fixed; top: 0; right: -420px; width: 420px; max-width: 92vw; height: 100vh; background: var(--white);
+    z-index: 201; transition: right 0.25s ease; box-shadow: -8px 0 32px rgba(0,0,0,0.12); overflow-y: auto;
+  }
+  .sidebar.open { right: 0; }
+  .sidebar-head { padding: 24px 26px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
+  .sidebar-head h2 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; }
+  .sidebar-close { background: none; border: none; font-size: 20px; color: var(--slate); cursor: pointer; line-height: 1; }
+  .sidebar-body { padding: 22px 26px; }
+
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--slate); margin-bottom: 6px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 9px 12px; font-size: 13.5px;
+    font-family: 'Inter', sans-serif; color: var(--charcoal); background: var(--ivory); outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--brass); background: var(--white); }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .sidebar-section-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; margin: 22px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); }
+
+  .note-item { background: var(--ivory); border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; font-size: 12.5px; }
+  .note-item .note-date { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: var(--slate); margin-bottom: 3px; }
+
+  .doc-item { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+  .doc-item:last-child { border-bottom: none; }
+  .doc-icon { color: var(--brass); }
+
+  .sidebar-foot { padding: 18px 26px; border-top: 1px solid var(--border); display: flex; gap: 10px; position: sticky; bottom: 0; background: var(--white); }
+  .sidebar-foot .btn { flex: 1; justify-content: center; }
+
+  /* ══════════ MODALS ══════════ */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(28,30,34,0.5); z-index: 300; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--white); border-radius: 10px; width: 100%; max-width: 440px; padding: 26px; }
+  .modal h3 { font-family: 'Fraunces', serif; font-size: 19px; margin-bottom: 4px; }
+  .modal-sub { font-size: 12.5px; color: var(--slate); margin-bottom: 18px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-actions .btn { flex: 1; justify-content: center; }
+
+  /* ══════════ TOAST ══════════ */
+  .toast {
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--charcoal); color: var(--ivory); font-size: 13px; font-weight: 500; padding: 11px 20px;
+    border-radius: 8px; z-index: 400; transition: transform 0.3s ease, opacity 0.3s; opacity: 0;
+    border-left: 3px solid var(--brass); white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* ══════════ EMPTY STATE ══════════ */
+  .empty-hint {
+    font-size: 12px; color: var(--slate); margin-top: 6px; max-width: 400px;
+  }
+
+  @media (max-width: 800px) {
+    .brandbar, .toolbar, .canvas-wrap { padding-left: 20px; padding-right: 20px; }
+    .toolbar { flex-direction: column; align-items: flex-start; }
+    .search-box { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ══════════ BRAND HEADER ══════════ -->
+  <div class="brandbar">
+    <div class="brand-id">
+      <div class="brand-mark">H</div>
+      <div>
+        <div class="brand-word">HANSON <em>Capital</em></div>
+        <div class="brand-sub">PORTFOLIO STRUCTURE</div>
+      </div>
+    </div>
+    <div class="brandbar-actions">
+      <button class="btn btn-ghost-dark" id="btnExport">↓ Export</button>
+      <button class="btn btn-brass" id="btnAddCompany">+ Add Company</button>
+    </div>
+  </div>
+
+  <!-- ══════════ TOOLBAR ══════════ -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="view-toggle">
+        <button class="active" data-view="chart">Chart View</button>
+        <button data-view="list">List View</button>
+      </div>
+      <input type="text" class="search-box" id="searchBox" placeholder="Search companies...">
+    </div>
+    <div class="toolbar-stats">
+      <span><b id="statTotal">0</b> Entities</span>
+      <span><b id="statActive">0</b> Active</span>
+      <span><b id="statEmployees">0</b> Employees</span>
+    </div>
+  </div>
+
+  <!-- ══════════ CANVAS ══════════ -->
+  <div class="canvas-wrap" id="canvasWrap"></div>
+
+  <!-- ══════════ ENTITY DETAIL SIDEBAR ══════════ -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <h2 id="sbTitle">Entity</h2>
+      <button class="sidebar-close" id="sbClose">&times;</button>
+    </div>
+    <div class="sidebar-body" id="sbBody"></div>
+    <div class="sidebar-foot">
+      <button class="btn btn-danger" id="sbDelete">Remove Entity</button>
+      <button class="btn btn-brass" id="sbSave">Save Changes</button>
+    </div>
+  </aside>
+
+  <!-- ══════════ ADD COMPANY MODAL ══════════ -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal">
+      <h3>Add a Company</h3>
+      <div class="modal-sub">Add a new entity to the portfolio structure</div>
+      <div class="field">
+        <label>Company Name</label>
+        <input type="text" id="newName" placeholder="e.g. Hanson Logistics LLC">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Type</label>
+          <select id="newType">
+            <option value="operating">Operating Company</option>
+            <option value="holding">Holding Company</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select id="newStatus">
+            <option value="active">Active</option>
+            <option value="holding">Holding Only</option>
+            <option value="exiting">Exiting</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Reports To</label>
+        <select id="newParent"></select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="addCancel">Cancel</button>
+        <button class="btn btn-brass" id="addConfirm">Add Company</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ CONFIRM DELETE MODAL ══════════ -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+      <h3>Remove this entity?</h3>
+      <div class="modal-sub" id="deleteWarning">This will also remove any companies under it.</div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="deleteCancel">Cancel</button>
+        <button class="btn btn-danger" id="deleteConfirm">Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   HANSON CAPITAL — PORTFOLIO STRUCTURE TOOL
+   All event listeners are attached in the EVENTS section.
+   Data modeled as objects, persisted to localStorage.
+   ══════════════════════════════════════════════════════════ */
+
+const STORAGE_KEY = 'hanson-capital-portfolio-v1';
+
+/* ---------- seed data ----------
+   Built from what's known about Hanson Capital's real structure.
+   Placeholder entries are clearly marked — Loren should correct/expand these. */
+let entities = [
+  {
+    id: 'root', parentId: null, name: 'Hanson Capital', owner: 'Loren Hanson — Founder',
+    type: 'holding', status: 'active', employees: '', notes: [], docs: [], founded: ''
+  },
+  {
+    id: 'schoolhouse', parentId: 'root', name: 'Schoolhouse Daycare', owner: 'Loren Hanson',
+    type: 'operating', status: 'active', employees: '12', notes: [
+      { date: '2026-08-20', text: 'Master List app in active development with Seegson Solutions.' }
+    ], docs: [], founded: ''
+  },
+  {
+    id: 'fusiongraphics', parentId: 'root', name: 'Fusion Graphics', owner: 'Loren Hanson',
+    type: 'operating', status: 'active', employees: '', notes: [], docs: [], founded: ''
+  },
+  {
+    id: 'realestate', parentId: 'root', name: 'Real Estate Holding Co.', owner: 'Loren Hanson',
+    type: 'holding', status: 'holding', employees: '', notes: [
+      { date: '', text: 'Owns property for Hanson-affiliated locations; leases back to operating entities.' }
+    ], docs: [], founded: ''
+  },
+  {
+    id: 'development', parentId: 'realestate', name: 'Development Company', owner: 'Loren Hanson',
+    type: 'operating', status: 'active', employees: '', notes: [
+      { date: '', text: 'Develops land; works in tandem with the real estate holding entity.' }
+    ], docs: [], founded: ''
+  },
+  {
+    id: 'fusionsign', parentId: 'root', name: 'Fusion Sign and Design', owner: 'Loren Hanson (exiting)',
+    type: 'operating', status: 'exiting', employees: '', notes: [
+      { date: '', text: 'Loren is actively exiting this business.' }
+    ], docs: [], founded: '' }
+];
+
+let selectedId = null;
+let currentView = 'chart';
+let searchTerm = '';
+
+/* ---------- helpers ---------- */
+function $(id){ return document.getElementById(id); }
+function uid(prefix){ return prefix + '-' + Math.random().toString(36).slice(2,9); }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function findEntity(id){ return entities.find(e => e.id === id); }
+function childrenOf(id){ return entities.filter(e => e.parentId === id); }
+function descendantsOf(id){
+  const kids = childrenOf(id);
+  return kids.concat(...kids.map(k => descendantsOf(k.id)));
+}
+function toast(msg){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function persist(){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(entities)); } catch(e){}
+}
+function load(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) { const parsed = JSON.parse(raw); if (Array.isArray(parsed) && parsed.length) entities = parsed; }
+  } catch(e){}
+}
+
+/* ---------- rendering ---------- */
+function statusLabel(s){ return { active: 'Active', holding: 'Holding Only', exiting: 'Exiting' }[s] || s; }
+function typeLabel(t){ return t === 'holding' ? 'Holding Company' : 'Operating Company'; }
+
+function entityMatchesSearch(e){
+  if (!searchTerm) return true;
+  const q = searchTerm.toLowerCase();
+  return e.name.toLowerCase().includes(q) || (e.owner||'').toLowerCase().includes(q);
+}
+
+function renderStats(){
+  $('statTotal').textContent = entities.length;
+  $('statActive').textContent = entities.filter(e => e.status === 'active').length;
+  const totalEmp = entities.reduce((sum,e) => sum + (parseInt(e.employees)||0), 0);
+  $('statEmployees').textContent = totalEmp;
+}
+
+function entityCardHtml(e, isRoot){
+  const matched = entityMatchesSearch(e);
+  const dim = searchTerm && !matched ? 'opacity:0.3;' : '';
+  return `<div class="entity-card${isRoot?' root':''}" data-id="${e.id}" style="${dim}">
+    <div class="entity-top">
+      <div class="entity-type">
+        <span>${typeLabel(e.type)}</span>
+        <span class="status-dot ${e.status}" title="${statusLabel(e.status)}"></span>
+      </div>
+      <div class="entity-name" data-field="name" data-id="${e.id}" contenteditable="true">${esc(e.name)}</div>
+      <div class="entity-owner" data-field="owner" data-id="${e.id}" contenteditable="true">${esc(e.owner || 'Add owner...')}</div>
+    </div>
+    <div class="entity-body">
+      <div class="entity-stat-row"><span class="label">Status</span><span class="val">${statusLabel(e.status)}</span></div>
+      ${e.employees ? `<div class="entity-stat-row"><span class="label">Employees</span><span class="val">${esc(e.employees)}</span></div>` : ''}
+      ${e.notes.length ? `<div class="entity-stat-row"><span class="label">Notes</span><span class="val">${e.notes.length}</span></div>` : ''}
+    </div>
+    <div class="entity-actions">
+      <button class="icon-btn" data-action="detail" data-id="${e.id}">Details</button>
+      <button class="icon-btn" data-action="addchild" data-id="${e.id}">+ Sub-entity</button>
+    </div>
+  </div>`;
+}
+
+function renderChart(){
+  const wrap = $('canvasWrap');
+  const root = findEntity('root');
+  let html = `<div class="tier"><div class="tier-label">Parent Entity</div><div class="node-row">${entityCardHtml(root, true)}</div></div>`;
+
+  const tier1 = childrenOf('root');
+  if (tier1.length) {
+    html += `<div class="tier"><div class="tier-label">Portfolio Companies</div><div class="node-row">`;
+    tier1.forEach(e => { html += entityCardHtml(e, false); });
+    html += `<div class="add-child-card" data-action="addchild" data-id="root"><span class="plus">+</span>Add Company</div>`;
+    html += `</div></div>`;
+  }
+
+  tier1.forEach(parent => {
+    const kids = childrenOf(parent.id);
+    if (kids.length) {
+      html += `<div class="tier"><div class="tier-label">Under ${esc(parent.name)}</div><div class="node-row">`;
+      kids.forEach(e => { html += entityCardHtml(e, false); });
+      html += `<div class="add-child-card" data-action="addchild" data-id="${parent.id}"><span class="plus">+</span>Add Sub-entity</div>`;
+      html += `</div></div>`;
+    }
+  });
+
+  wrap.innerHTML = html;
+}
+
+function renderList(){
+  const wrap = $('canvasWrap');
+  const rows = entities.filter(e => e.id !== 'root').map(e => {
+    const parent = findEntity(e.parentId);
+    return `<div class="entity-card" data-id="${e.id}" style="width:100%;margin-bottom:10px;display:flex;flex-direction:row;align-items:center;">
+      <div style="flex:1;padding:14px 16px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-dot ${e.status}"></span>
+          <span style="font-family:'Fraunces',serif;font-weight:600;font-size:15px;">${esc(e.name)}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--slate);">${typeLabel(e.type)}</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--slate);margin-top:3px;">Reports to ${esc(parent ? parent.name : '—')} · ${esc(e.owner||'No owner set')}</div>
+      </div>
+      <button class="icon-btn" data-action="detail" data-id="${e.id}" style="margin-right:14px;">Details</button>
+    </div>`;
+  }).join('');
+  wrap.innerHTML = `<div style="max-width:800px;">${rows || '<p class="empty-hint">No companies yet.</p>'}</div>`;
+}
+
+function render(){
+  if (currentView === 'chart') renderChart(); else renderList();
+  renderStats();
+}
+
+/* ---------- sidebar (entity detail) ---------- */
+function openSidebar(id){
+  selectedId = id;
+  const e = findEntity(id);
+  if (!e) return;
+  $('sbTitle').textContent = e.name;
+  $('sbBody').innerHTML = `
+    <div class="field"><label>Company Name</label><input type="text" id="sb_name" value="${esc(e.name)}"></div>
+    <div class="field"><label>Owner / Lead</label><input type="text" id="sb_owner" value="${esc(e.owner)}"></div>
+    <div class="field-row">
+      <div class="field"><label>Type</label>
+        <select id="sb_type">
+          <option value="operating" ${e.type==='operating'?'selected':''}>Operating Company</option>
+          <option value="holding" ${e.type==='holding'?'selected':''}>Holding Company</option>
+        </select></div>
+      <div class="field"><label>Status</label>
+        <select id="sb_status">
+          <option value="active" ${e.status==='active'?'selected':''}>Active</option>
+          <option value="holding" ${e.status==='holding'?'selected':''}>Holding Only</option>
+          <option value="exiting" ${e.status==='exiting'?'selected':''}>Exiting</option>
+        </select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Employees</label><input type="text" id="sb_employees" value="${esc(e.employees)}" placeholder="e.g. 12"></div>
+      <div class="field"><label>Founded</label><input type="text" id="sb_founded" value="${esc(e.founded)}" placeholder="e.g. 2019"></div>
+    </div>
+    <div class="sidebar-section-title">Notes</div>
+    <div id="sb_notes">${e.notes.length ? e.notes.map(n => `<div class="note-item"><div class="note-date">${esc(n.date||'No date')}</div>${esc(n.text)}</div>`).join('') : '<p class="empty-hint">No notes yet.</p>'}</div>
+    <div class="field" style="margin-top:10px;"><textarea id="sb_newnote" placeholder="Add a note about this entity..." rows="2"></textarea></div>
+    <button class="btn btn-ghost btn-sm" id="sb_addnote">+ Add Note</button>
+
+    <div class="sidebar-section-title">Documents</div>
+    <div id="sb_docs">${e.docs.length ? e.docs.map(d => `<div class="doc-item"><span class="doc-icon">▤</span>${esc(d)}</div>`).join('') : '<p class="empty-hint">No documents linked yet.</p>'}</div>
+    <div class="field" style="margin-top:10px;"><input type="text" id="sb_newdoc" placeholder="Paste a document link or filename..."></div>
+    <button class="btn btn-ghost btn-sm" id="sb_adddoc">+ Add Document</button>
+  `;
+  $('sidebar').classList.add('open');
+  $('scrim').classList.add('open');
+  $('sbDelete').style.display = id === 'root' ? 'none' : 'flex';
+}
+function closeSidebar(){
+  $('sidebar').classList.remove('open');
+  $('scrim').classList.remove('open');
+  selectedId = null;
+}
+
+/* ---------- add / delete flow ---------- */
+let pendingParentId = 'root';
+function openAddModal(parentId){
+  pendingParentId = parentId;
+  $('newName').value = '';
+  const sel = $('newParent');
+  sel.innerHTML = entities.map(e => `<option value="${e.id}" ${e.id===parentId?'selected':''}>${esc(e.name)}</option>`).join('');
+  $('addModal').classList.add('open');
+  $('newName').focus();
+}
+function closeAddModal(){ $('addModal').classList.remove('open'); }
+
+let pendingDeleteId = null;
+function openDeleteModal(id){
+  pendingDeleteId = id;
+  const kids = descendantsOf(id);
+  $('deleteWarning').textContent = kids.length
+    ? `This will also remove ${kids.length} compan${kids.length===1?'y':'ies'} nested under it.`
+    : 'This entity has no sub-companies.';
+  $('deleteModal').classList.add('open');
+}
+function closeDeleteModal(){ $('deleteModal').classList.remove('open'); pendingDeleteId = null; }
+
+/* ══════════════════════════════════════════════════════════
+   EVENTS
+   ══════════════════════════════════════════════════════════ */
+
+$('canvasWrap').addEventListener('click', e => {
+  const detailBtn = e.target.closest('[data-action="detail"]');
+  if (detailBtn) { openSidebar(detailBtn.dataset.id); return; }
+  const addBtn = e.target.closest('[data-action="addchild"]');
+  if (addBtn) { openAddModal(addBtn.dataset.id); return; }
+});
+
+$('canvasWrap').addEventListener('blur', e => {
+  const el = e.target.closest('[contenteditable][data-field]');
+  if (!el) return;
+  const ent = findEntity(el.dataset.id);
+  if (!ent) return;
+  const val = el.textContent.trim();
+  if (el.dataset.field === 'name' && val) ent.name = val;
+  if (el.dataset.field === 'owner') ent.owner = val === 'Add owner...' ? '' : val;
+  persist();
+}, true);
+
+$('canvasWrap').addEventListener('keydown', e => {
+  const el = e.target.closest('[contenteditable]');
+  if (!el) return;
+  if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+});
+
+$('searchBox').addEventListener('input', e => { searchTerm = e.target.value; render(); });
+
+document.querySelectorAll('.view-toggle button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentView = btn.dataset.view;
+    render();
+  });
+});
+
+$('btnAddCompany').onclick = () => openAddModal('root');
+$('addCancel').onclick = closeAddModal;
+$('addConfirm').onclick = () => {
+  const name = $('newName').value.trim();
+  if (!name) { $('newName').focus(); return; }
+  const newEnt = {
+    id: uid('e'), parentId: $('newParent').value, name,
+    owner: '', type: $('newType').value, status: $('newStatus').value,
+    employees: '', notes: [], docs: [], founded: ''
+  };
+  entities.push(newEnt);
+  persist();
+  closeAddModal();
+  render();
+  toast(name + ' added to the portfolio');
+};
+
+$('sbClose').onclick = closeSidebar;
+$('scrim').onclick = () => { closeSidebar(); closeAddModal(); closeDeleteModal(); };
+
+$('sbSave').onclick = () => {
+  const ent = findEntity(selectedId);
+  if (!ent) return;
+  ent.name = $('sb_name').value.trim() || ent.name;
+  ent.owner = $('sb_owner').value.trim();
+  ent.type = $('sb_type').value;
+  ent.status = $('sb_status').value;
+  ent.employees = $('sb_employees').value.trim();
+  ent.founded = $('sb_founded').value.trim();
+  persist();
+  render();
+  closeSidebar();
+  toast('Changes saved');
+};
+
+$('sbDelete').onclick = () => { openDeleteModal(selectedId); };
+$('deleteCancel').onclick = closeDeleteModal;
+$('deleteConfirm').onclick = () => {
+  const toRemove = [pendingDeleteId, ...descendantsOf(pendingDeleteId).map(e => e.id)];
+  entities = entities.filter(e => !toRemove.includes(e.id));
+  persist();
+  closeDeleteModal();
+  closeSidebar();
+  render();
+  toast('Entity removed');
+};
+
+document.addEventListener('click', e => {
+  if (e.target.id === 'sb_addnote') {
+    const ta = $('sb_newnote');
+    const text = ta.value.trim();
+    if (!text) return;
+    const ent = findEntity(selectedId);
+    ent.notes.unshift({ date: new Date().toISOString().split('T')[0], text });
+    persist();
+    openSidebar(selectedId);
+  }
+  if (e.target.id === 'sb_adddoc') {
+    const inp = $('sb_newdoc');
+    const val = inp.value.trim();
+    if (!val) return;
+    const ent = findEntity(selectedId);
+    ent.docs.unshift(val);
+    persist();
+    openSidebar(selectedId);
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeSidebar(); closeAddModal(); closeDeleteModal(); }
+});
+
+$('btnExport').onclick = () => {
+  const blob = new Blob([JSON.stringify(entities, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'hanson-capital-portfolio.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Portfolio exported');
+};
+
+/* ══════════════════════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════════════════════ */
+load();
+render();
+</script>
+</body>
+</html>

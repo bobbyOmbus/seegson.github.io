@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SiteCommand — Data Center Construction PM</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal: #1a1d21; --charcoal2: #24282e; --charcoal3: #2e333b;
+    --amber: #e8a33d; --amber2: #f5bc63;
+    --blue: #4a90a4; --blue-bg: rgba(74,144,164,0.12);
+    --ivory: #f0ece3; --white: #ffffff;
+    --sub: #a8afb8; --border: rgba(240,236,227,0.12);
+    --red: #e2795f; --red-bg: rgba(217,105,79,0.16);
+    --green: #7fc191; --green-bg: rgba(111,174,127,0.16);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--charcoal); color: var(--ivory); font-family: 'Outfit', sans-serif; min-height: 100vh; }
+
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 0 0 70px; }
+
+  /* HEADER */
+  .header { background: var(--charcoal2); border-bottom: 3px solid var(--blue); padding: 22px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .header-badge { width: 44px; height: 44px; border-radius: 6px; background: var(--blue); color: var(--charcoal); display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 16px; flex-shrink: 0; }
+  .header-titles { line-height: 1.1; }
+  .header-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--sub); }
+  .header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 0.5px; color: var(--white); }
+  .header-right { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--sub); text-align: right; }
+  .header-right strong { display: block; color: var(--ivory); font-size: 13px; }
+
+  /* ENERGIZATION COUNTDOWN — signature element */
+  .countdown-band { background: linear-gradient(90deg, #14161a, #1a1d21 40%, #14161a); border-bottom: 1px solid var(--border); padding: 22px 28px; display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+  .cd-main { display: flex; align-items: baseline; gap: 12px; }
+  .cd-num { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 44px; letter-spacing: 1px; color: var(--amber2); text-shadow: 0 0 18px rgba(232,163,61,0.3); line-height: 1; }
+  .cd-label { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 600; color: var(--sub); }
+  .cd-sub { font-size: 12px; color: var(--sub); max-width: 280px; line-height: 1.5; }
+  .cd-div { width: 1px; height: 40px; background: var(--border); }
+  .cd-stat { text-align: center; }
+  .cd-stat-num { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 22px; color: var(--ivory); }
+  .cd-stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); margin-top: 2px; }
+
+  /* NAV */
+  .nav { display: flex; background: var(--charcoal2); border-bottom: 1px solid var(--border); padding: 0 28px; overflow-x: auto; }
+  .nav-tab { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.5px; padding: 13px 18px; color: var(--sub); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
+  .nav-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  .content { padding: 26px 28px 0; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--blue); margin-bottom: 14px; }
+
+  /* MILESTONE TIMELINE */
+  .milestone-track { display: flex; flex-direction: column; gap: 0; margin-bottom: 30px; }
+  .milestone {
+    display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; border-left: 2px solid var(--border); margin-left: 11px; padding-left: 24px; position: relative;
+  }
+  .milestone::before { content: ''; position: absolute; left: -7px; top: 20px; width: 12px; height: 12px; border-radius: 50%; background: var(--charcoal2); border: 2px solid var(--sub); }
+  .milestone.done::before { background: var(--green); border-color: var(--green); }
+  .milestone.active::before { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 4px rgba(232,163,61,0.2); }
+  .milestone:last-child { border-left: 2px solid transparent; }
+  .ms-body { flex: 1; }
+  .ms-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; color: var(--white); }
+  .ms-meta { font-size: 12.5px; color: var(--sub); margin-top: 3px; }
+  .ms-date { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ivory); white-space: nowrap; padding-top: 3px; font-weight: 500; }
+  .ms-status { font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 11px; border-radius: 5px; flex-shrink: 0; }
+  .ms-status.done { color: var(--green); background: var(--green-bg); }
+  .ms-status.active { color: var(--amber2); background: rgba(232,163,61,0.18); }
+  .ms-status.upcoming { color: var(--ivory); background: var(--charcoal3); border: 1px solid var(--border); }
+
+  /* TRADE COORDINATION GRID */
+  .trade-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 30px; }
+  @media (max-width: 900px) { .trade-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .trade-grid { grid-template-columns: 1fr; } }
+  .trade-card { background: var(--charcoal2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; position: relative; overflow: hidden; }
+  .trade-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--status-color); }
+  .trade-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .trade-name { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; color: var(--white); }
+  .trade-sub { font-size: 11px; color: var(--sub); margin-top: 2px; }
+  .trade-status-chip { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 9px; border-radius: 5px; color: var(--status-color); background: var(--status-bg); flex-shrink: 0; }
+  .trade-detail-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .trade-detail-row:last-of-type { border-bottom: none; }
+  .trade-detail-label { color: var(--sub); }
+  .trade-detail-val { font-family: 'IBM Plex Mono', monospace; color: var(--ivory); font-weight: 500; }
+  .trade-detail-val.warn { color: var(--amber2); }
+  .trade-detail-val.bad { color: var(--red); }
+
+  /* INSPECTIONS TABLE */
+  .insp-table { width: 100%; border-collapse: collapse; background: var(--charcoal2); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 30px; }
+  .insp-table th { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--charcoal3); }
+  .insp-table td { padding: 13px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .insp-table tr:last-child td { border-bottom: none; }
+  .insp-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; color: var(--white); font-size: 15px; }
+  .insp-date { font-family: 'IBM Plex Mono', monospace; color: var(--sub); }
+
+  /* CHANGE ORDERS */
+  .co-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+  .co-row { background: var(--charcoal2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .co-id { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--sub); min-width: 70px; }
+  .co-body { flex: 1; min-width: 200px; }
+  .co-title { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 600; color: var(--white); }
+  .co-meta { font-size: 11.5px; color: var(--sub); margin-top: 2px; }
+  .co-amount { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; color: var(--amber2); }
+  .co-status { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 11px; border-radius: 5px; flex-shrink: 0; }
+  .co-status.pending { color: var(--amber2); background: rgba(232,163,61,0.12); }
+  .co-status.approved { color: var(--green); background: var(--green-bg); }
+
+  /* PUNCH LIST */
+  .punch-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+  .punch-row { background: var(--charcoal2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .punch-check { width: 20px; height: 20px; border-radius: 5px; border: 2px solid var(--sub); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .punch-check.resolved { background: var(--green); border-color: var(--green); color: var(--charcoal); font-weight: 700; font-size: 12px; }
+  .punch-body { flex: 1; min-width: 200px; }
+  .punch-title { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 600; color: var(--white); }
+  .punch-title.resolved-text { text-decoration: line-through; color: var(--sub); }
+  .punch-meta { font-size: 11.5px; color: var(--sub); margin-top: 2px; }
+  .punch-severity { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 11px; border-radius: 5px; flex-shrink: 0; }
+  .punch-severity.critical { color: var(--red); background: var(--red-bg); }
+  .punch-severity.minor { color: var(--amber2); background: rgba(232,163,61,0.18); }
+  .punch-severity.resolved { color: var(--green); background: var(--green-bg); }
+
+  /* DAILY LOG */
+  .log-entry { background: var(--charcoal2); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; margin-bottom: 12px; }
+  .log-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+  .log-date { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; color: var(--white); }
+  .log-weather { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--sub); }
+  .log-stats-row { display: flex; gap: 24px; margin-bottom: 10px; flex-wrap: wrap; }
+  .log-stat { font-size: 12px; }
+  .log-stat b { font-family: 'IBM Plex Mono', monospace; color: var(--ivory); display: block; font-size: 16px; }
+  .log-stat span { color: var(--sub); }
+  .log-note { font-size: 13px; color: var(--ivory); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 10px; }
+
+  /* DOCUMENTS */
+  .doc-table { width: 100%; border-collapse: collapse; background: var(--charcoal2); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 30px; }
+  .doc-table th { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--charcoal3); }
+  .doc-table td { padding: 13px 16px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--ivory); }
+  .doc-table tr:last-child td { border-bottom: none; }
+  .doc-name-cell { display: flex; align-items: center; gap: 10px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; color: var(--white); }
+  .doc-type-icon { width: 26px; height: 26px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; background: var(--blue-bg); color: var(--blue); }
+  .doc-badge { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+  .doc-badge.rfi { color: var(--amber2); background: rgba(232,163,61,0.18); }
+  .doc-badge.submittal { color: var(--blue); background: var(--blue-bg); }
+  .doc-badge.asbuilt { color: var(--green); background: var(--green-bg); }
+
+  /* SAFETY */
+  .safety-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  @media (max-width: 900px) { .safety-grid { grid-template-columns: repeat(2, 1fr); } }
+  .safety-stat-card { background: var(--charcoal2); border: 1px solid var(--border); border-radius: 8px; padding: 18px; text-align: center; }
+  .safety-stat-num { font-family: 'IBM Plex Mono', monospace; font-size: 32px; font-weight: 700; color: var(--green); }
+  .safety-stat-num.warn { color: var(--amber2); }
+  .safety-stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); margin-top: 6px; }
+  .safety-log { display: flex; flex-direction: column; gap: 8px; }
+  .safety-row { background: var(--charcoal2); border: 1px solid var(--border); border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; gap: 14px; }
+  .safety-icon { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+  .safety-icon.good { background: var(--green-bg); color: var(--green); }
+  .safety-icon.note { background: rgba(232,163,61,0.18); color: var(--amber2); }
+  .safety-text { flex: 1; font-size: 13px; color: var(--ivory); }
+  .safety-text strong { color: var(--white); }
+  .safety-time { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--sub); white-space: nowrap; }
+
+  .closing { text-align: center; padding: 34px 20px 0; }
+  .closing-text { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 500; color: var(--sub); max-width: 520px; margin: 0 auto; line-height: 1.5; }
+  .closing-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="header-badge">SC</div>
+      <div class="header-titles">
+        <div class="header-kicker">Concept Demo</div>
+        <div class="header-title">SiteCommand — Data Center Build Tracker</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <strong>Project: Sabine Corridor DC-3</strong>
+      Sector 4 · 40MW Facility
+    </div>
+  </div>
+
+  <div class="countdown-band">
+    <div>
+      <div class="cd-main"><div class="cd-num">62</div><div class="cd-label">DAYS TO ENERGIZATION</div></div>
+    </div>
+    <div class="cd-sub">The one number that matters most on a hyperscaler build — tracked live against every trade, inspection, and change order below.</div>
+    <div class="cd-div"></div>
+    <div class="cd-stat"><div class="cd-stat-num">7</div><div class="cd-stat-label">Active Trades</div></div>
+    <div class="cd-div"></div>
+    <div class="cd-stat"><div class="cd-stat-num">3</div><div class="cd-stat-label">Open Inspections</div></div>
+    <div class="cd-div"></div>
+    <div class="cd-stat"><div class="cd-stat-num">2</div><div class="cd-stat-label">Pending Change Orders</div></div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-tab active" data-page="timeline" onclick="switchTab('timeline')">Milestones</div>
+    <div class="nav-tab" data-page="trades" onclick="switchTab('trades')">Trade Coordination</div>
+    <div class="nav-tab" data-page="inspections" onclick="switchTab('inspections')">Inspections</div>
+    <div class="nav-tab" data-page="changes" onclick="switchTab('changes')">Change Orders</div>
+    <div class="nav-tab" data-page="punchlist" onclick="switchTab('punchlist')">Punch List</div>
+    <div class="nav-tab" data-page="dailylog" onclick="switchTab('dailylog')">Daily Log</div>
+    <div class="nav-tab" data-page="documents" onclick="switchTab('documents')">Documents</div>
+    <div class="nav-tab" data-page="safety" onclick="switchTab('safety')">Safety</div>
+  </div>
+
+  <div class="content">
+
+    <!-- MILESTONES -->
+    <div class="page active" id="page-timeline">
+      <div class="section-label">// Commissioning Path to Energization</div>
+      <div class="milestone-track">
+        <div class="milestone done"><div class="ms-body"><div class="ms-title">Shell & Core Complete</div><div class="ms-meta">Structural close-out, envelope sealed</div></div><div class="ms-date">Jun 14, 2026</div><div class="ms-status done">Complete</div></div>
+        <div class="milestone done"><div class="ms-body"><div class="ms-title">Electrical Rough-In Complete</div><div class="ms-meta">Switchgear, generator yard, UPS room</div></div><div class="ms-date">Jul 29, 2026</div><div class="ms-status done">Complete</div></div>
+        <div class="milestone active"><div class="ms-body"><div class="ms-title">Mechanical & Cooling Install</div><div class="ms-meta">CRAH units, chilled water loop, containment</div></div><div class="ms-date">In Progress</div><div class="ms-status active">Active</div></div>
+        <div class="milestone"><div class="ms-body"><div class="ms-title">Fire Suppression Commissioning</div><div class="ms-meta">Clean agent system test, alarm integration</div></div><div class="ms-date">Sep 28, 2026</div><div class="ms-status upcoming">Upcoming</div></div>
+        <div class="milestone"><div class="ms-body"><div class="ms-title">Integrated Systems Test</div><div class="ms-meta">Full load bank test, failover validation</div></div><div class="ms-date">Oct 19, 2026</div><div class="ms-status upcoming">Upcoming</div></div>
+        <div class="milestone"><div class="ms-body"><div class="ms-title">Energization</div><div class="ms-meta">Utility power live, facility handoff</div></div><div class="ms-date">Nov 12, 2026</div><div class="ms-status upcoming">Upcoming</div></div>
+      </div>
+    </div>
+
+    <!-- TRADE COORDINATION -->
+    <div class="page" id="page-trades">
+      <div class="section-label">// Subcontractors On Site</div>
+      <div class="trade-grid">
+        <div class="trade-card" style="--status-color: var(--green); --status-bg: var(--green-bg);">
+          <div class="trade-top"><div><div class="trade-name">Mechanical</div><div class="trade-sub">CoolFlow Systems</div></div><div class="trade-status-chip">On Schedule</div></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">Crew On Site</span><span class="trade-detail-val">14</span></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">% Complete</span><span class="trade-detail-val">68%</span></div>
+        </div>
+        <div class="trade-card" style="--status-color: var(--amber2); --status-bg: rgba(232,163,61,0.12);">
+          <div class="trade-top"><div><div class="trade-name">Electrical</div><div class="trade-sub">Voltage Partners LLC</div></div><div class="trade-status-chip">Watch</div></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">Crew On Site</span><span class="trade-detail-val">9</span></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">% Complete</span><span class="trade-detail-val warn">81%</span></div>
+        </div>
+        <div class="trade-card" style="--status-color: var(--green); --status-bg: var(--green-bg);">
+          <div class="trade-top"><div><div class="trade-name">Fire & Life Safety</div><div class="trade-sub">Redline Suppression</div></div><div class="trade-status-chip">On Schedule</div></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">Crew On Site</span><span class="trade-detail-val">4</span></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">% Complete</span><span class="trade-detail-val">22%</span></div>
+        </div>
+        <div class="trade-card" style="--status-color: var(--red); --status-bg: var(--red-bg);">
+          <div class="trade-top"><div><div class="trade-name">Networking Infrastructure</div><div class="trade-sub">FiberPath Contractors</div></div><div class="trade-status-chip">Delayed</div></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">Delay Cause</span><span class="trade-detail-val bad">Conduit shortage</span></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">% Complete</span><span class="trade-detail-val bad">31%</span></div>
+        </div>
+        <div class="trade-card" style="--status-color: var(--blue); --status-bg: var(--blue-bg);">
+          <div class="trade-top"><div><div class="trade-name">Security & Access</div><div class="trade-sub">Perimeter Systems Inc</div></div><div class="trade-status-chip" style="color:var(--blue);background:var(--blue-bg);">Not Started</div></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">Scheduled Start</span><span class="trade-detail-val">Sep 22, 2026</span></div>
+        </div>
+        <div class="trade-card" style="--status-color: var(--green); --status-bg: var(--green-bg);">
+          <div class="trade-top"><div><div class="trade-name">Generator Yard</div><div class="trade-sub">Backup Power Solutions</div></div><div class="trade-status-chip">On Schedule</div></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">Crew On Site</span><span class="trade-detail-val">6</span></div>
+          <div class="trade-detail-row"><span class="trade-detail-label">% Complete</span><span class="trade-detail-val">90%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSPECTIONS -->
+    <div class="page" id="page-inspections">
+      <div class="section-label">// Inspection & Compliance Schedule</div>
+      <table class="insp-table">
+        <thead><tr><th>Inspection</th><th>Authority</th><th>Scheduled</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="insp-name">Electrical Rough-In</td><td class="insp-date">County AHJ</td><td class="insp-date">Aug 2, 2026</td><td><span class="ms-status done">Passed</span></td></tr>
+          <tr><td class="insp-name">Chilled Water Pressure Test</td><td class="insp-date">Third-Party Commissioning Agent</td><td class="insp-date">Sep 12, 2026</td><td><span class="ms-status active">Scheduled</span></td></tr>
+          <tr><td class="insp-name">Fire Alarm Pre-Test</td><td class="insp-date">Fire Marshal</td><td class="insp-date">Sep 24, 2026</td><td><span class="ms-status upcoming">Pending</span></td></tr>
+          <tr><td class="insp-name">Uptime Tier III Audit</td><td class="insp-date">Uptime Institute</td><td class="insp-date">Oct 26, 2026</td><td><span class="ms-status upcoming">Pending</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CHANGE ORDERS -->
+    <div class="page" id="page-changes">
+      <div class="section-label">// Change Orders</div>
+      <div class="co-list">
+        <div class="co-row">
+          <div class="co-id">CO-014</div>
+          <div class="co-body"><div class="co-title">Conduit reroute — Networking Infrastructure</div><div class="co-meta">Submitted by FiberPath Contractors · Aug 28</div></div>
+          <div class="co-amount">+$18,400</div>
+          <div class="co-status pending">Pending Approval</div>
+        </div>
+        <div class="co-row">
+          <div class="co-id">CO-013</div>
+          <div class="co-body"><div class="co-title">Additional CRAH unit — Mechanical</div><div class="co-meta">Submitted by CoolFlow Systems · Aug 21</div></div>
+          <div class="co-amount">+$42,000</div>
+          <div class="co-status pending">Pending Approval</div>
+        </div>
+        <div class="co-row">
+          <div class="co-id">CO-012</div>
+          <div class="co-body"><div class="co-title">Generator yard fencing upgrade</div><div class="co-meta">Submitted by Backup Power Solutions · Aug 9</div></div>
+          <div class="co-amount">+$6,750</div>
+          <div class="co-status approved">Approved</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PUNCH LIST -->
+    <div class="page" id="page-punchlist">
+      <div class="section-label">// Open Deficiencies</div>
+      <div class="punch-list">
+        <div class="punch-row">
+          <div class="punch-check"></div>
+          <div class="punch-body"><div class="punch-title">Missing fire caulk at conduit penetrations — UPS Room 2</div><div class="punch-meta">Flagged by Fire Marshal walkthrough · Electrical</div></div>
+          <div class="punch-severity critical">Critical</div>
+        </div>
+        <div class="punch-row">
+          <div class="punch-check"></div>
+          <div class="punch-body"><div class="punch-title">Mislabeled breaker panel — Generator Yard sub-panel B</div><div class="punch-meta">Flagged during QA walk · Electrical</div></div>
+          <div class="punch-severity minor">Minor</div>
+        </div>
+        <div class="punch-row">
+          <div class="punch-check"></div>
+          <div class="punch-body"><div class="punch-title">Condensate line pitch incorrect — CRAH-04</div><div class="punch-meta">Flagged by CoolFlow Systems self-inspection · Mechanical</div></div>
+          <div class="punch-severity critical">Critical</div>
+        </div>
+        <div class="punch-row">
+          <div class="punch-check resolved">✓</div>
+          <div class="punch-body"><div class="punch-title resolved-text">Touch-up paint needed — main corridor, Sector 4</div><div class="punch-meta">Resolved Aug 30 · General</div></div>
+          <div class="punch-severity resolved">Resolved</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAILY LOG -->
+    <div class="page" id="page-dailylog">
+      <div class="section-label">// Daily Site Log</div>
+      <div class="log-entry">
+        <div class="log-head"><div class="log-date">Thursday, September 4, 2026</div><div class="log-weather">78°F · Clear</div></div>
+        <div class="log-stats-row">
+          <div class="log-stat"><b>39</b><span>Total crew on site</span></div>
+          <div class="log-stat"><b>6</b><span>Active trades</span></div>
+          <div class="log-stat"><b>0</b><span>Safety incidents</span></div>
+        </div>
+        <div class="log-note">Electrical continued panel terminations in Switchgear Room B. Mechanical completed CRAH-03 startup checks. Networking crew held pending conduit material delivery — see CO-014. Fire Marshal walked the site for pre-test review, two items added to punch list.</div>
+      </div>
+      <div class="log-entry">
+        <div class="log-head"><div class="log-date">Wednesday, September 3, 2026</div><div class="log-weather">81°F · Partly Cloudy</div></div>
+        <div class="log-stats-row">
+          <div class="log-stat"><b>42</b><span>Total crew on site</span></div>
+          <div class="log-stat"><b>6</b><span>Active trades</span></div>
+          <div class="log-stat"><b>0</b><span>Safety incidents</span></div>
+        </div>
+        <div class="log-note">Mechanical set CRAH-04 and CRAH-05. Generator yard fencing upgrade (CO-012) work began following approval. Security & Access pre-mobilization walkthrough completed ahead of Sep 22 start.</div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="page" id="page-documents">
+      <div class="section-label">// Drawings, RFIs & Submittals</div>
+      <table class="doc-table">
+        <thead><tr><th>Document</th><th>Type</th><th>Trade</th><th>Updated</th></tr></thead>
+        <tbody>
+          <tr><td><div class="doc-name-cell"><span class="doc-type-icon">▤</span>RFI-021 — Conduit routing conflict, Networking corridor</div></td><td><span class="doc-badge rfi">RFI</span></td><td>Networking</td><td>Sep 2, 2026</td></tr>
+          <tr><td><div class="doc-name-cell"><span class="doc-type-icon">▤</span>Submittal — CRAH unit spec sheets, Rev. 3</div></td><td><span class="doc-badge submittal">Submittal</span></td><td>Mechanical</td><td>Aug 27, 2026</td></tr>
+          <tr><td><div class="doc-name-cell"><span class="doc-type-icon">▤</span>As-Built — Electrical rough-in, Switchgear Room A &amp; B</div></td><td><span class="doc-badge asbuilt">As-Built</span></td><td>Electrical</td><td>Aug 3, 2026</td></tr>
+          <tr><td><div class="doc-name-cell"><span class="doc-type-icon">▤</span>RFI-019 — Fire suppression clean agent zone boundary</div></td><td><span class="doc-badge rfi">RFI</span></td><td>Fire &amp; Life Safety</td><td>Jul 30, 2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SAFETY -->
+    <div class="page" id="page-safety">
+      <div class="section-label">// Safety Performance</div>
+      <div class="safety-grid">
+        <div class="safety-stat-card"><div class="safety-stat-num">47</div><div class="safety-stat-label">Days Since Incident</div></div>
+        <div class="safety-stat-card"><div class="safety-stat-num">0</div><div class="safety-stat-label">Recordables — YTD</div></div>
+        <div class="safety-stat-card"><div class="safety-stat-num warn">3</div><div class="safety-stat-label">Near-Miss Reports</div></div>
+        <div class="safety-stat-card"><div class="safety-stat-num">312</div><div class="safety-stat-label">Toolbox Talks — YTD</div></div>
+      </div>
+      <div class="safety-log">
+        <div class="safety-row"><div class="safety-icon good">✓</div><div class="safety-text"><strong>Daily toolbox talk completed</strong> — fall protection at height, all trades</div><div class="safety-time">Today, 6:45 AM</div></div>
+        <div class="safety-row"><div class="safety-icon note">!</div><div class="safety-text"><strong>Near-miss reported</strong> — dropped tool from Level 2 catwalk, no injury, area re-barricaded</div><div class="safety-time">Sep 2, 2026</div></div>
+        <div class="safety-row"><div class="safety-icon good">✓</div><div class="safety-text"><strong>Weekly site safety walk completed</strong> — no violations noted</div><div class="safety-time">Aug 29, 2026</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="closing">
+    <div class="closing-text">This is a concept — the real version connects to your actual subcontractor schedules and inspection calendar. One place to see where the whole build stands, instead of five phone calls and a shared spreadsheet.</div>
+    <div class="closing-tag">Seegson Solutions — Built for you, not for everyone.</div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(id) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.nav-tab[data-page="' + id + '"]').classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+  }
+</script>
+</body>
+</html>

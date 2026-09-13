@@ -57,6 +57,49 @@
   .page-sub { font-size: 13.5px; color: var(--slate); margin-top: 6px; max-width: 480px; line-height: 1.6; }
   .page-date { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--slate); text-align: right; }
 
+  /* ══════════ SEARCH ══════════ */
+  .hub-search-wrap { position: relative; display: flex; align-items: center; }
+  .hub-search {
+    font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 44px 9px 14px; border: 1px solid var(--border);
+    border-radius: 6px; background: var(--white); color: var(--text); width: 260px; outline: none;
+  }
+  .hub-search:focus { border-color: var(--brass); }
+  .hub-search-kbd {
+    position: absolute; right: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--slate);
+    background: var(--stone); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; pointer-events: none;
+  }
+
+  /* ══════════ NEEDS ATTENTION ══════════ */
+  .attn-strip { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+  .attn-strip:empty { display: none; }
+  .attn-item {
+    display: flex; align-items: center; gap: 12px; background: var(--amber-warn-bg); border: 1px solid rgba(176,130,40,0.25);
+    border-radius: 6px; padding: 11px 16px; font-size: 12.5px;
+  }
+  .attn-item.urgent { background: var(--red-flag-bg); border-color: rgba(163,80,63,0.3); }
+  .attn-icon { font-size: 13px; flex-shrink: 0; }
+  .attn-item.urgent .attn-icon { color: var(--red-flag); }
+  .attn-item:not(.urgent) .attn-icon { color: var(--amber-warn); }
+  .attn-text { flex: 1; }
+  .attn-text strong { font-weight: 600; }
+  .attn-when { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--slate); white-space: nowrap; }
+
+  /* ══════════ COMMAND PALETTE ══════════ */
+  .cmdk-scrim { display: none; position: fixed; inset: 0; background: rgba(18,24,26,0.55); z-index: 500; align-items: flex-start; justify-content: center; padding-top: 12vh; }
+  .cmdk-scrim.open { display: flex; }
+  .cmdk-panel { background: var(--white); border-radius: 10px; width: 100%; max-width: 540px; max-height: 60vh; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
+  .cmdk-input-row { display: flex; align-items: center; gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+  .cmdk-input-row .glyph { color: var(--slate); font-size: 14px; }
+  .cmdk-input { flex: 1; border: none; outline: none; font-size: 15px; font-family: 'Inter', sans-serif; background: transparent; }
+  .cmdk-esc { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--slate); background: var(--stone); border-radius: 4px; padding: 3px 7px; }
+  .cmdk-results { overflow-y: auto; padding: 8px; }
+  .cmdk-group-label { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1px; color: var(--slate); padding: 8px 10px 4px; }
+  .cmdk-item { display: flex; align-items: center; gap: 12px; padding: 10px 10px; border-radius: 6px; cursor: pointer; font-size: 13.5px; }
+  .cmdk-item:hover, .cmdk-item.selected { background: var(--brass-bg); }
+  .cmdk-item-icon { width: 22px; height: 22px; border-radius: 4px; background: var(--stone); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--brass); flex-shrink: 0; }
+  .cmdk-item-meta { font-size: 11px; color: var(--slate); margin-left: auto; }
+  .cmdk-empty { padding: 24px 16px; text-align: center; color: var(--slate); font-size: 13px; }
+
   /* ══════════ PORTFOLIO PULSE — signature element ══════════ */
   .pulse-strip {
     background: var(--green); color: var(--white); border-radius: 6px; padding: 24px 28px; margin-bottom: 26px;
@@ -158,8 +201,8 @@
 
     <div class="sb-tools">
       <div class="sb-tools-label">CONNECTED TOOLS</div>
-      <a href="https://seegsonsolutions.com/demo/hanson-orgchart" class="sb-tool-link">Org Chart Builder <span class="sb-tool-arrow">↗</span></a>
-      <a href="https://seegsonsolutions.com/demo/schoolhouse" class="sb-tool-link">Schoolhouse Master List <span class="sb-tool-arrow">↗</span></a>
+      <a href="orgchart.html" class="sb-tool-link">Org Chart Builder <span class="sb-tool-arrow">↗</span></a>
+      <a href="https://seegsonsolutions.com/demo/schoolhouse/" class="sb-tool-link">Schoolhouse Master List <span class="sb-tool-arrow">↗</span></a>
     </div>
 
     <div class="sb-foot">Built by Seegson Solutions</div>
@@ -173,86 +216,26 @@
         <div class="page-title">Portfolio Overview</div>
         <div class="page-sub">Everything under Hanson Capital, in one place — a working hub, not a brochure.</div>
       </div>
-      <div class="page-date">Thursday, September 10</div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div class="hub-search-wrap">
+          <input type="text" id="hubSearch" class="hub-search" placeholder="Search companies, documents, notes...">
+          <kbd class="hub-search-kbd">⌘K</kbd>
+        </div>
+        <div class="page-date">Thursday, September 10</div>
+      </div>
     </div>
 
-    <div class="placeholder-note">This is a working demo — every number below is placeholder data for layout purposes. Once connected to real records, this becomes a live operating view.</div>
+    <div class="attn-strip" id="attnStrip"></div>
+
+    <div class="placeholder-note" id="dataSourceNote">This is a working demo — every number below is placeholder data for layout purposes. Once connected to real records, this becomes a live operating view.</div>
 
     <!-- SIGNATURE: PORTFOLIO PULSE -->
-    <div class="pulse-strip">
-      <div class="pulse-item"><div class="pulse-num">5</div><div class="pulse-label">ENTITIES</div></div>
-      <div class="pulse-div"></div>
-      <div class="pulse-item"><div class="pulse-num">4</div><div class="pulse-label">ACTIVE</div></div>
-      <div class="pulse-div"></div>
-      <div class="pulse-item"><div class="pulse-num">31</div><div class="pulse-label">EMPLOYEES</div></div>
-      <div class="pulse-div"></div>
-      <div class="pulse-item"><div class="pulse-num">2019</div><div class="pulse-label">FOUNDED</div></div>
-      <div class="pulse-note">One glance at the whole portfolio — where before this meant calling around to five different people.</div>
-    </div>
+    <div class="pulse-strip" id="pulseStrip"></div>
 
     <!-- PORTFOLIO COMPANIES -->
     <div class="section">
       <div class="section-title">Portfolio Companies</div>
-      <div class="company-grid">
-        <div class="company-card">
-          <div class="company-top">
-            <div class="company-status"><span class="status-chip active">Active</span></div>
-            <div class="company-name">Schoolhouse Daycare</div>
-            <div class="company-type">Childcare · Operating Company</div>
-          </div>
-          <div class="company-metrics">
-            <div class="cm-item"><span class="cm-val">12</span><span class="cm-label">Staff</span></div>
-            <div class="cm-item"><span class="cm-val">2</span><span class="cm-label">Open Items</span></div>
-          </div>
-        </div>
-        <div class="company-card">
-          <div class="company-top">
-            <div class="company-status"><span class="status-chip active">Active</span></div>
-            <div class="company-name">Fusion Graphics</div>
-            <div class="company-type">Design & Print · Operating Company</div>
-          </div>
-          <div class="company-metrics">
-            <div class="cm-item"><span class="cm-val">—</span><span class="cm-label">Staff</span></div>
-            <div class="cm-item"><span class="cm-val">0</span><span class="cm-label">Open Items</span></div>
-          </div>
-        </div>
-        <div class="company-card">
-          <div class="company-top">
-            <div class="company-status"><span class="status-chip holding">Holding Only</span></div>
-            <div class="company-name">Real Estate Holding Co.</div>
-            <div class="company-type">Real Estate · Holding Company</div>
-          </div>
-          <div class="company-metrics">
-            <div class="cm-item"><span class="cm-val">—</span><span class="cm-label">Staff</span></div>
-            <div class="cm-item"><span class="cm-val">1</span><span class="cm-label">Open Items</span></div>
-          </div>
-        </div>
-        <div class="company-card">
-          <div class="company-top">
-            <div class="company-status"><span class="status-chip active">Active</span></div>
-            <div class="company-name">Development Company</div>
-            <div class="company-type">Development · Operating Company</div>
-          </div>
-          <div class="company-metrics">
-            <div class="cm-item"><span class="cm-val">—</span><span class="cm-label">Staff</span></div>
-            <div class="cm-item"><span class="cm-val">0</span><span class="cm-label">Open Items</span></div>
-          </div>
-        </div>
-        <div class="company-card">
-          <div class="company-top">
-            <div class="company-status"><span class="status-chip exiting">Exiting</span></div>
-            <div class="company-name">Fusion Sign and Design</div>
-            <div class="company-type">Signage · Operating Company</div>
-          </div>
-          <div class="company-metrics">
-            <div class="cm-item"><span class="cm-val">—</span><span class="cm-label">Staff</span></div>
-            <div class="cm-item"><span class="cm-val">1</span><span class="cm-label">Open Items</span></div>
-          </div>
-        </div>
-        <div class="company-card" style="display:flex;align-items:center;justify-content:center;border-style:dashed;color:var(--slate);font-size:13px;">
-          + Add Company
-        </div>
-      </div>
+      <div class="company-grid" id="companyGrid"></div>
     </div>
 
     <div class="two-col">
@@ -294,5 +277,240 @@
   </main>
 </div>
 
+<!-- ══════════ COMMAND PALETTE ══════════ -->
+<div class="cmdk-scrim" id="cmdkScrim">
+  <div class="cmdk-panel">
+    <div class="cmdk-input-row">
+      <span class="glyph">⌘</span>
+      <input type="text" class="cmdk-input" id="cmdkInput" placeholder="Search companies, documents, directory...">
+      <span class="cmdk-esc">ESC</span>
+    </div>
+    <div class="cmdk-results" id="cmdkResults"></div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   LIVE DATA — reads the same entities the Org Chart Builder
+   saves to localStorage (same origin, same key). If the org
+   chart has never been opened on this browser, falls back to
+   representative placeholder data so the page still looks right.
+   ══════════════════════════════════════════════════════════ */
+const STORAGE_KEY = 'hanson-capital-portfolio-v1';
+
+const FALLBACK_ENTITIES = [
+  { id: 'root', parentId: null, name: 'Hanson Capital', type: 'holding', status: 'active', employees: '' },
+  { id: 'schoolhouse', parentId: 'root', name: 'Schoolhouse Daycare', type: 'operating', status: 'active', employees: '12' },
+  { id: 'fusiongraphics', parentId: 'root', name: 'Fusion Graphics', type: 'operating', status: 'active', employees: '' },
+  { id: 'realestate', parentId: 'root', name: 'Real Estate Holding Co.', type: 'holding', status: 'holding', employees: '' },
+  { id: 'development', parentId: 'realestate', name: 'Development Company', type: 'operating', status: 'active', employees: '' },
+  { id: 'fusionsign', parentId: 'root', name: 'Fusion Sign and Design', type: 'operating', status: 'exiting', employees: '' }
+];
+
+function loadEntities() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) return { entities: parsed, live: true };
+    }
+  } catch (e) {}
+  return { entities: FALLBACK_ENTITIES, live: false };
+}
+
+function statusLabel(s) { return { active: 'Active', holding: 'Holding Only', exiting: 'Exiting' }[s] || s; }
+function typeLabel(t) { return t === 'holding' ? 'Holding Company' : 'Operating Company'; }
+function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function renderPulse(entities) {
+  const nonRoot = entities.filter(e => e.parentId !== null);
+  const activeCount = nonRoot.filter(e => e.status === 'active').length;
+  const totalEmployees = entities.reduce((sum, e) => sum + (parseInt(e.employees) || 0), 0);
+
+  document.getElementById('pulseStrip').innerHTML = `
+    <div class="pulse-item"><div class="pulse-num">${nonRoot.length}</div><div class="pulse-label">ENTITIES</div></div>
+    <div class="pulse-div"></div>
+    <div class="pulse-item"><div class="pulse-num">${activeCount}</div><div class="pulse-label">ACTIVE</div></div>
+    <div class="pulse-div"></div>
+    <div class="pulse-item"><div class="pulse-num">${totalEmployees || '—'}</div><div class="pulse-label">EMPLOYEES</div></div>
+    <div class="pulse-div"></div>
+    <div class="pulse-item"><div class="pulse-num">2019</div><div class="pulse-label">FOUNDED</div></div>
+    <div class="pulse-note">One glance at the whole portfolio — where before this meant calling around to five different people.</div>`;
+}
+
+function renderCompanies(entities) {
+  const nonRoot = entities.filter(e => e.parentId !== null);
+  const cards = nonRoot.map(e => `
+    <div class="company-card">
+      <div class="company-top">
+        <div class="company-status"><span class="status-chip ${e.status}">${statusLabel(e.status)}</span></div>
+        <div class="company-name">${esc(e.name)}</div>
+        <div class="company-type">${typeLabel(e.type)}</div>
+      </div>
+      <div class="company-metrics">
+        <div class="cm-item"><span class="cm-val">${e.employees ? esc(e.employees) : '—'}</span><span class="cm-label">Staff</span></div>
+        <div class="cm-item"><span class="cm-val">${(e.notes||[]).length}</span><span class="cm-label">Notes</span></div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('companyGrid').innerHTML = cards + `
+    <a href="orgchart.html" class="company-card" style="display:flex;align-items:center;justify-content:center;border-style:dashed;color:var(--slate);font-size:13px;text-decoration:none;">
+      + Add Company
+    </a>`;
+}
+
+/* ---------- Needs Attention ---------- */
+const KNOWN_ATTENTION_ITEMS = [
+  { entityMatch: 'Real Estate Holding', text: 'Lease renewal window opens in 47 days', when: 'Real Estate Holding Co.', urgent: false },
+];
+
+function renderAttention(entities) {
+  const items = [];
+
+  // Status-driven: exiting entities are always worth surfacing
+  entities.filter(e => e.status === 'exiting').forEach(e => {
+    items.push({ text: `<strong>${esc(e.name)}</strong> is marked as exiting — confirm this still reflects current plans`, when: e.name, urgent: true });
+  });
+
+  // Known time-sensitive items (would come from real records once connected)
+  KNOWN_ATTENTION_ITEMS.forEach(k => {
+    if (entities.some(e => e.name.includes(k.entityMatch))) {
+      items.push({ text: k.text.replace(entities.find(e=>e.name.includes(k.entityMatch)).name, `<strong>${esc(entities.find(e=>e.name.includes(k.entityMatch)).name)}</strong>`), when: k.when, urgent: k.urgent });
+    }
+  });
+
+  const strip = document.getElementById('attnStrip');
+  strip.innerHTML = items.map(i => `
+    <div class="attn-item ${i.urgent ? 'urgent' : ''}">
+      <span class="attn-icon">${i.urgent ? '●' : '◐'}</span>
+      <span class="attn-text">${i.text}</span>
+      <span class="attn-when">${esc(i.when)}</span>
+    </div>`).join('');
+}
+
+/* ---------- Search index (used by both inline search and command palette) ---------- */
+const DIRECTORY_ITEMS = [
+  { name: 'Legal Counsel', meta: 'Add contact', type: 'Directory' },
+  { name: 'Accounting', meta: 'Add contact', type: 'Directory' },
+  { name: 'Seegson Solutions', meta: 'bobby@seegsonsolutions.com', type: 'Software Partner' },
+];
+const DOCUMENT_ITEMS = [
+  { name: 'Portfolio Structure — August 2026', meta: 'Hanson Capital', type: 'Document' },
+  { name: 'Master List — Weekly Update', meta: 'Schoolhouse Daycare', type: 'Document' },
+  { name: '[Placeholder] Lease Agreement', meta: 'Real Estate Holding Co.', type: 'Document' },
+];
+
+let SEARCH_INDEX = [];
+function buildSearchIndex(entities) {
+  SEARCH_INDEX = [
+    ...entities.filter(e => e.parentId !== null).map(e => ({ name: e.name, meta: typeLabel(e.type), type: 'Company', status: e.status })),
+    ...DOCUMENT_ITEMS.map(d => ({ ...d })),
+    ...DIRECTORY_ITEMS.map(d => ({ ...d })),
+  ];
+}
+
+/* ---------- Inline search — filters visible company cards live ---------- */
+function applyInlineSearch(query) {
+  const q = query.trim().toLowerCase();
+  document.querySelectorAll('#companyGrid .company-card').forEach(card => {
+    const nameEl = card.querySelector('.company-name');
+    if (!nameEl) return; // the "+ Add Company" card
+    const match = !q || nameEl.textContent.toLowerCase().includes(q);
+    card.style.display = match ? '' : 'none';
+  });
+}
+
+/* ---------- Command palette ---------- */
+let cmdkSelectedIndex = 0;
+let cmdkCurrentResults = [];
+
+function iconFor(type) {
+  return { Company: '◇', Document: '▤', Directory: '●', 'Software Partner': '●' }[type] || '·';
+}
+
+function renderCmdkResults(query) {
+  const q = query.trim().toLowerCase();
+  const results = q ? SEARCH_INDEX.filter(item => item.name.toLowerCase().includes(q)) : SEARCH_INDEX;
+  cmdkCurrentResults = results;
+  cmdkSelectedIndex = 0;
+
+  const container = document.getElementById('cmdkResults');
+  if (!results.length) {
+    container.innerHTML = `<div class="cmdk-empty">No results for "${esc(query)}"</div>`;
+    return;
+  }
+
+  const groups = {};
+  results.forEach(r => { (groups[r.type] = groups[r.type] || []).push(r); });
+
+  let html = '';
+  let flatIndex = 0;
+  Object.keys(groups).forEach(groupType => {
+    html += `<div class="cmdk-group-label">${esc(groupType).toUpperCase()}</div>`;
+    groups[groupType].forEach(item => {
+      html += `<div class="cmdk-item${flatIndex === 0 ? ' selected' : ''}" data-idx="${flatIndex}">
+        <span class="cmdk-item-icon">${iconFor(item.type)}</span>
+        <span>${esc(item.name)}</span>
+        <span class="cmdk-item-meta">${esc(item.meta || '')}</span>
+      </div>`;
+      flatIndex++;
+    });
+  });
+  container.innerHTML = html;
+}
+
+function openCmdk() {
+  document.getElementById('cmdkScrim').classList.add('open');
+  const input = document.getElementById('cmdkInput');
+  input.value = '';
+  renderCmdkResults('');
+  setTimeout(() => input.focus(), 30);
+}
+function closeCmdk() {
+  document.getElementById('cmdkScrim').classList.remove('open');
+}
+
+(function init() {
+  const { entities, live } = loadEntities();
+  renderPulse(entities);
+  renderCompanies(entities);
+  renderAttention(entities);
+  buildSearchIndex(entities);
+
+  const note = document.getElementById('dataSourceNote');
+  if (live) {
+    note.textContent = 'Live data — pulled directly from the Org Chart Builder. Add or edit a company there and it updates here automatically.';
+    note.style.background = 'var(--green-good-bg)';
+    note.style.borderColor = 'var(--green-good)';
+    note.style.color = '#2c4a3a';
+  } else {
+    note.innerHTML = 'Showing representative data — open the <a href="orgchart.html" style="color:inherit;text-decoration:underline;">Org Chart Builder</a> once to start managing real companies here.';
+  }
+
+  /* ── EVENTS ── */
+  document.getElementById('hubSearch').addEventListener('input', e => applyInlineSearch(e.target.value));
+  document.getElementById('hubSearch').addEventListener('focus', openCmdk);
+
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openCmdk(); }
+    if (e.key === 'Escape') closeCmdk();
+    if (document.getElementById('cmdkScrim').classList.contains('open')) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); cmdkSelectedIndex = Math.min(cmdkSelectedIndex + 1, cmdkCurrentResults.length - 1); updateCmdkSelection(); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); cmdkSelectedIndex = Math.max(cmdkSelectedIndex - 1, 0); updateCmdkSelection(); }
+    }
+  });
+
+  document.getElementById('cmdkInput').addEventListener('input', e => renderCmdkResults(e.target.value));
+  document.getElementById('cmdkScrim').addEventListener('click', e => { if (e.target.id === 'cmdkScrim') closeCmdk(); });
+  document.getElementById('cmdkResults').addEventListener('click', e => {
+    const item = e.target.closest('.cmdk-item');
+    if (item) closeCmdk();
+  });
+
+  function updateCmdkSelection() {
+    document.querySelectorAll('.cmdk-item').forEach((el, i) => el.classList.toggle('selected', i === cmdkSelectedIndex));
+  }
+})();
+</script>
 </body>
 </html>

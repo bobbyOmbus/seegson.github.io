@@ -147,6 +147,59 @@
   .doc-table tr:last-child td { border-bottom: none; }
   .doc-name { font-weight: 600; display: flex; align-items: center; gap: 8px; }
   .doc-icon { color: var(--brass); }
+  .doc-name a { display: flex; align-items: center; gap: 8px; }
+  .doc-name a:hover { color: var(--brass); text-decoration: underline; }
+  .doc-src-badge {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.5px; color: var(--slate);
+    background: var(--stone); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; margin-left: 2px;
+  }
+  .doc-add-row td { padding: 0; border-bottom: none; }
+  .doc-add-btn {
+    width: 100%; text-align: left; padding: 12px 16px; background: var(--brass-bg); border: none;
+    border-top: 1px dashed var(--brass); color: var(--brass); font-size: 12.5px; font-family: inherit;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+  }
+  .doc-add-btn:hover { background: rgba(166,124,61,0.14); }
+  .doc-row-actions { opacity: 0; transition: opacity 0.12s; }
+  .doc-table tr:hover .doc-row-actions { opacity: 1; }
+  .doc-remove-btn {
+    background: none; border: none; color: var(--slate-lt); font-size: 13px; cursor: pointer; padding: 2px 6px;
+  }
+  .doc-remove-btn:hover { color: var(--red-flag); }
+
+  /* ══════════ ADD DOCUMENT LINK MODAL ══════════ */
+  .modal-scrim {
+    display: none; position: fixed; inset: 0; background: rgba(18,24,26,0.55); z-index: 200;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-scrim.open { display: flex; }
+  .modal-panel {
+    background: var(--white); border-radius: 8px; width: 100%; max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25); overflow: hidden;
+  }
+  .modal-head { padding: 18px 20px 14px; border-bottom: 1px solid var(--border); }
+  .modal-title { font-family: 'Newsreader', serif; font-size: 17px; font-weight: 500; }
+  .modal-sub { font-size: 11.5px; color: var(--slate); margin-top: 3px; }
+  .modal-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+  .modal-field label {
+    display: block; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.8px;
+    color: var(--slate); margin-bottom: 5px; text-transform: uppercase;
+  }
+  .modal-field input {
+    width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 5px;
+    font-family: inherit; font-size: 13px; background: var(--stone);
+  }
+  .modal-field input:focus { outline: none; border-color: var(--brass); background: var(--white); }
+  .modal-hint { font-size: 11px; color: var(--slate-lt); margin-top: 4px; }
+  .modal-foot { padding: 14px 20px 18px; display: flex; justify-content: flex-end; gap: 10px; }
+  .modal-btn {
+    padding: 9px 16px; border-radius: 5px; font-size: 12.5px; font-family: inherit; cursor: pointer; border: none;
+  }
+  .modal-btn-cancel { background: var(--stone); color: var(--text); }
+  .modal-btn-save { background: var(--green); color: var(--white); }
+  .modal-btn-save:hover { background: var(--green2); }
+  .modal-error { font-size: 11.5px; color: var(--red-flag); display: none; }
+  .modal-error.show { display: block; }
 
   /* Two column */
   .two-col { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }
@@ -267,14 +320,45 @@
     <div class="section" style="margin-top:20px;">
       <div class="section-title">Documents</div>
       <table class="doc-table">
-        <tr><th>Document</th><th>Company</th><th>Added</th></tr>
-        <tr><td class="doc-name"><span class="doc-icon">▤</span> Portfolio Structure — August 2026</td><td>Hanson Capital</td><td>Aug 24, 2026</td></tr>
-        <tr><td class="doc-name"><span class="doc-icon">▤</span> Master List — Weekly Update</td><td>Schoolhouse Daycare</td><td>Sep 3, 2026</td></tr>
-        <tr><td class="doc-name"><span class="doc-icon">▤</span> [Placeholder] Lease Agreement</td><td>Real Estate Holding Co.</td><td>—</td></tr>
+        <tr><th>Document</th><th>Company</th><th>Added</th><th></th></tr>
+        <tbody id="docTableBody"></tbody>
+        <tr class="doc-add-row"><td colspan="4">
+          <button type="button" class="doc-add-btn" id="btnAddDoc">+ Add a document link (Sync.com, Google Drive, or any share link)</button>
+        </td></tr>
       </table>
     </div>
 
   </main>
+</div>
+
+<!-- ══════════ ADD DOCUMENT LINK MODAL ══════════ -->
+<div class="modal-scrim" id="docModalScrim">
+  <div class="modal-panel">
+    <div class="modal-head">
+      <div class="modal-title">Add a document link</div>
+      <div class="modal-sub">Paste a share link from Sync, Google Drive, or anywhere else — this doesn't upload or store the file itself, just a pointer to where it already lives.</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <label>Document name</label>
+        <input type="text" id="docFormName" placeholder="e.g. Q3 Financials — Fusion Graphics">
+      </div>
+      <div class="modal-field">
+        <label>Link</label>
+        <input type="text" id="docFormUrl" placeholder="https://ln.sync.com/dl/...">
+        <div class="modal-hint">Right-click the file in Sync (or your other tool) and choose "Share" / "Copy link".</div>
+      </div>
+      <div class="modal-field">
+        <label>Company (optional)</label>
+        <input type="text" id="docFormCompany" placeholder="e.g. Hanson Capital">
+      </div>
+      <div class="modal-error" id="docFormError">Add a name and a link before saving.</div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="modal-btn modal-btn-cancel" id="btnCancelDoc">Cancel</button>
+      <button type="button" class="modal-btn modal-btn-save" id="btnSaveDoc">Save link</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════ COMMAND PALETTE ══════════ -->
@@ -394,17 +478,75 @@ const DIRECTORY_ITEMS = [
   { name: 'Accounting', meta: 'Add contact', type: 'Directory' },
   { name: 'Seegson Solutions', meta: 'bobby@seegsonsolutions.com', type: 'Software Partner' },
 ];
-const DOCUMENT_ITEMS = [
-  { name: 'Portfolio Structure — August 2026', meta: 'Hanson Capital', type: 'Document' },
-  { name: 'Master List — Weekly Update', meta: 'Schoolhouse Daycare', type: 'Document' },
-  { name: '[Placeholder] Lease Agreement', meta: 'Real Estate Holding Co.', type: 'Document' },
+/* ---------- Document links (Sync, Drive, or anywhere else) ----------
+   These are pointers, not files — nothing is uploaded or stored here.
+   Loren (or anyone) pastes a share link from wherever the real file
+   already lives, and it shows up for everyone who opens this hub. */
+const DOC_STORAGE_KEY = 'hanson-capital-documents-v1';
+const FALLBACK_DOCUMENTS = [
+  { id: 'd1', name: 'Portfolio Structure — August 2026', company: 'Hanson Capital', url: '', addedDate: 'Aug 24, 2026' },
+  { id: 'd2', name: 'Master List — Weekly Update', company: 'Schoolhouse Daycare', url: 'https://seegsonsolutions.com/demo/schoolhouse/', addedDate: 'Sep 3, 2026' },
+  { id: 'd3', name: '[Placeholder] Lease Agreement', company: 'Real Estate Holding Co.', url: '', addedDate: '—' },
 ];
+
+function loadDocuments() {
+  try {
+    const raw = localStorage.getItem(DOC_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch (e) {}
+  return FALLBACK_DOCUMENTS.slice();
+}
+function saveDocuments(docs) {
+  try { localStorage.setItem(DOC_STORAGE_KEY, JSON.stringify(docs)); } catch (e) {}
+}
+
+let DOCUMENTS = [];
+
+function sourceLabel(url) {
+  if (!url) return '';
+  if (/sync\.com/i.test(url)) return 'SYNC';
+  if (/drive\.google\.com/i.test(url)) return 'DRIVE';
+  if (/dropbox\.com/i.test(url)) return 'DROPBOX';
+  return 'LINK';
+}
+
+function renderDocuments() {
+  const body = document.getElementById('docTableBody');
+  body.innerHTML = DOCUMENTS.map(d => {
+    const label = d.url
+      ? `<a href="${esc(d.url)}" target="_blank" rel="noopener"><span class="doc-icon">▤</span> ${esc(d.name)}${d.url ? `<span class="doc-src-badge">${sourceLabel(d.url)}</span>` : ''}</a>`
+      : `<span class="doc-icon">▤</span> ${esc(d.name)}`;
+    return `<tr data-doc-id="${esc(d.id)}">
+      <td class="doc-name">${label}</td>
+      <td>${esc(d.company || '—')}</td>
+      <td>${esc(d.addedDate || '—')}</td>
+      <td class="doc-row-actions"><button type="button" class="doc-remove-btn" data-remove-doc="${esc(d.id)}" title="Remove">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function addDocument({ name, url, company }) {
+  const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  DOCUMENTS.push({ id: 'd_' + Date.now().toString(36), name, url, company, addedDate: today });
+  saveDocuments(DOCUMENTS);
+  renderDocuments();
+  buildSearchIndex(loadEntities().entities);
+}
+function removeDocument(id) {
+  DOCUMENTS = DOCUMENTS.filter(d => d.id !== id);
+  saveDocuments(DOCUMENTS);
+  renderDocuments();
+  buildSearchIndex(loadEntities().entities);
+}
 
 let SEARCH_INDEX = [];
 function buildSearchIndex(entities) {
   SEARCH_INDEX = [
     ...entities.filter(e => e.parentId !== null).map(e => ({ name: e.name, meta: typeLabel(e.type), type: 'Company', status: e.status })),
-    ...DOCUMENT_ITEMS.map(d => ({ ...d })),
+    ...DOCUMENTS.map(d => ({ name: d.name, meta: d.company || 'Document', type: 'Document', url: d.url })),
     ...DIRECTORY_ITEMS.map(d => ({ ...d })),
   ];
 }
@@ -475,6 +617,8 @@ function closeCmdk() {
   renderPulse(entities);
   renderCompanies(entities);
   renderAttention(entities);
+  DOCUMENTS = loadDocuments();
+  renderDocuments();
   buildSearchIndex(entities);
 
   const note = document.getElementById('dataSourceNote');
@@ -493,7 +637,7 @@ function closeCmdk() {
 
   document.addEventListener('keydown', e => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openCmdk(); }
-    if (e.key === 'Escape') closeCmdk();
+    if (e.key === 'Escape') { closeCmdk(); document.getElementById('docModalScrim').classList.remove('open'); }
     if (document.getElementById('cmdkScrim').classList.contains('open')) {
       if (e.key === 'ArrowDown') { e.preventDefault(); cmdkSelectedIndex = Math.min(cmdkSelectedIndex + 1, cmdkCurrentResults.length - 1); updateCmdkSelection(); }
       if (e.key === 'ArrowUp') { e.preventDefault(); cmdkSelectedIndex = Math.max(cmdkSelectedIndex - 1, 0); updateCmdkSelection(); }
@@ -504,12 +648,49 @@ function closeCmdk() {
   document.getElementById('cmdkScrim').addEventListener('click', e => { if (e.target.id === 'cmdkScrim') closeCmdk(); });
   document.getElementById('cmdkResults').addEventListener('click', e => {
     const item = e.target.closest('.cmdk-item');
-    if (item) closeCmdk();
+    if (!item) return;
+    const result = cmdkCurrentResults[parseInt(item.dataset.idx, 10)];
+    if (result && result.url) window.open(result.url, '_blank', 'noopener');
+    closeCmdk();
   });
 
   function updateCmdkSelection() {
     document.querySelectorAll('.cmdk-item').forEach((el, i) => el.classList.toggle('selected', i === cmdkSelectedIndex));
   }
+
+  /* ── Add document link modal ── */
+  const docScrim = document.getElementById('docModalScrim');
+  const docErr = document.getElementById('docFormError');
+  function openDocModal() {
+    document.getElementById('docFormName').value = '';
+    document.getElementById('docFormUrl').value = '';
+    document.getElementById('docFormCompany').value = '';
+    docErr.classList.remove('show');
+    docScrim.classList.add('open');
+    setTimeout(() => document.getElementById('docFormName').focus(), 30);
+  }
+  function closeDocModal() { docScrim.classList.remove('open'); }
+
+  document.getElementById('btnAddDoc').addEventListener('click', openDocModal);
+  document.getElementById('btnCancelDoc').addEventListener('click', closeDocModal);
+  docScrim.addEventListener('click', e => { if (e.target === docScrim) closeDocModal(); });
+
+  document.getElementById('btnSaveDoc').addEventListener('click', () => {
+    const name = document.getElementById('docFormName').value.trim();
+    const url = document.getElementById('docFormUrl').value.trim();
+    const company = document.getElementById('docFormCompany').value.trim();
+    if (!name || !url) { docErr.classList.add('show'); return; }
+    addDocument({ name, url, company });
+    closeDocModal();
+  });
+
+  document.getElementById('docTableBody').addEventListener('click', e => {
+    const btn = e.target.closest('[data-remove-doc]');
+    if (!btn) return;
+    if (confirm('Remove this document link? This only removes the pointer here — the file itself is untouched wherever it actually lives.')) {
+      removeDocument(btn.dataset.removeDoc);
+    }
+  });
 })();
 </script>
 </body>

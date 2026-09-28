@@ -1,0 +1,300 @@
+<title>Hanson Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff; --stone: #f4f2ec; --stone2: #ece7db;
+    --green: #12181a; --green2: #1b2225;
+    --brass: #a67c3d; --brass-lt: #c49a5c; --brass-bg: rgba(166,124,61,0.08);
+    --slate: #6b7280; --border: #e4e0d3;
+    --text: var(--green);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--text); }
+  ::selection { background: var(--brass); color: var(--white); }
+  a { color: inherit; }
+  .serif { font-family: 'Newsreader', serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding-inline: 40px; }
+  @media (max-width: 720px) { .wrap { padding-inline: 20px; } }
+
+  /* nav */
+  .nav { position: sticky; top: 0; z-index: 40; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; padding-block: 18px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand-mark { width: 30px; height: 30px; background: var(--green); display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', serif; font-size: 12px; color: var(--brass-lt); flex-shrink: 0; }
+  .brand-word { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: -0.2px; }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--slate); font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta { background: var(--green); color: var(--white) !important; padding: 10px 20px; border-radius: 4px; font-size: 13.5px; font-weight: 600; }
+  .nav-cta:hover { background: var(--brass); }
+  @media (max-width: 780px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+  /* hero */
+  .hero { background: var(--green); color: var(--white); padding-top: 120px; padding-bottom: 100px; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(166,124,61,0.16), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 30%, rgba(166,124,61,0.09), transparent 60%);
+    pointer-events: none;
+  }
+  .hero-in { position: relative; max-width: 760px; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px; letter-spacing: 1.5px; color: var(--brass-lt); text-transform: uppercase;
+    border: 1px solid rgba(196,154,92,0.35); padding: 7px 14px; border-radius: 100px; margin-bottom: 30px;
+  }
+  .hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brass-lt); }
+  .hero-headline {
+    font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: -2px;
+    font-size: clamp(38px, 5.6vw, 64px); line-height: 1.06; text-wrap: balance;
+  }
+  .hero-headline .accent { color: var(--brass-lt); }
+  .hero-dek { font-size: 17px; line-height: 1.65; color: rgba(255,255,255,0.68); max-width: 560px; margin-top: 26px; }
+  .hero-ctas { display: flex; gap: 14px; margin-top: 40px; flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 4px; font-size: 14.5px; font-weight: 600; text-decoration: none; border: 1px solid transparent; }
+  .btn-primary { background: var(--brass); color: var(--green); }
+  .btn-primary:hover { background: var(--brass-lt); }
+  .btn-ghost { border-color: rgba(255,255,255,0.25); color: var(--white); }
+  .btn-ghost:hover { border-color: var(--white); }
+
+  /* stats strip */
+  .stats { border-bottom: 1px solid var(--border); }
+  .stats-in { display: grid; grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 700px) { .stats-in { grid-template-columns: 1fr; } }
+  .stat-cell { padding: 48px 40px; border-right: 1px solid var(--border); text-align: center; }
+  .stat-cell:last-child { border-right: none; }
+  @media (max-width: 700px) { .stat-cell { border-right: none; border-bottom: 1px solid var(--border); } .stat-cell:last-child { border-bottom: none; } }
+  .stat-num { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(32px, 4vw, 44px); letter-spacing: -1px; color: var(--green); }
+  .stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--slate); margin-top: 8px; }
+
+  /* section scaffolding */
+  section.block { padding-block: 96px; }
+  @media (max-width: 720px) { section.block { padding-block: 64px; } }
+  .block-stone { background: var(--stone); }
+  .sec-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: var(--brass); text-transform: uppercase; margin-bottom: 16px; }
+  .sec-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(28px, 3.6vw, 42px); letter-spacing: -1px; line-height: 1.1; max-width: 680px; text-wrap: balance; }
+  .sec-title.center { margin-inline: auto; text-align: center; }
+  .sec-sub { font-size: 15.5px; color: var(--slate); max-width: 560px; margin-top: 18px; line-height: 1.65; }
+  .sec-sub.center { margin-inline: auto; text-align: center; }
+  .sec-head { margin-bottom: 56px; }
+  .sec-head.center { text-align: center; }
+
+  /* principles */
+  .principles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  @media (max-width: 900px) { .principles { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .principles { grid-template-columns: 1fr; } }
+  .principle { background: var(--white); padding: 34px 28px; }
+  .principle-num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--brass); margin-bottom: 16px; }
+  .principle-h { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.2px; margin-bottom: 10px; }
+  .principle-p { font-size: 13.5px; color: var(--slate); line-height: 1.6; }
+
+  /* portfolio cards */
+  .pf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 900px) { .pf-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .pf-grid { grid-template-columns: 1fr; } }
+  .pf-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 28px 26px; transition: border-color 0.2s ease, transform 0.2s ease; }
+  .pf-card:hover { border-color: var(--brass); transform: translateY(-2px); }
+  .pf-logo { width: 44px; height: 44px; border-radius: 6px; background: var(--green); display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', serif; font-size: 15px; color: var(--brass-lt); margin-bottom: 20px; }
+  .pf-name { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16.5px; letter-spacing: -0.2px; }
+  .pf-sector { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--brass); margin-top: 4px; }
+  .pf-desc { font-size: 13.5px; color: var(--slate); line-height: 1.6; margin-top: 14px; }
+  .pf-card.ghost { border-style: dashed; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--slate); font-size: 13px; }
+
+  /* team */
+  .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  @media (max-width: 680px) { .team-grid { grid-template-columns: 1fr; } }
+  .team-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 30px; display: flex; gap: 20px; }
+  .team-photo { width: 68px; height: 68px; border-radius: 50%; background: var(--stone2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', serif; font-size: 22px; color: var(--brass); border: 1px solid var(--border); }
+  .team-name { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16.5px; }
+  .team-title { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brass); letter-spacing: 0.5px; margin-top: 3px; text-transform: uppercase; }
+  .team-bio { font-size: 13px; color: var(--slate); line-height: 1.6; margin-top: 12px; }
+
+  /* cta */
+  .cta-block { background: var(--green); color: var(--white); text-align: center; padding-block: 100px; }
+  .cta-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(30px, 4.4vw, 48px); letter-spacing: -1.2px; max-width: 720px; margin-inline: auto; text-wrap: balance; }
+  .cta-sub { font-size: 15.5px; color: rgba(255,255,255,0.65); margin-top: 18px; }
+  .cta-row { display: flex; justify-content: center; gap: 14px; margin-top: 36px; flex-wrap: wrap; }
+
+  /* footer */
+  footer { padding-block: 36px; border-top: 1px solid var(--border); }
+  .foot-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .foot-word { font-weight: 700; font-size: 14px; }
+  .foot-fine { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--slate); letter-spacing: 0.3px; }
+  .foot-links { display: flex; gap: 24px; }
+  .foot-links a { font-size: 13px; color: var(--slate); text-decoration: none; }
+  .foot-links a:hover { color: var(--green); }
+
+  .copy-btn { background: none; border: none; font-family: inherit; font-size: inherit; color: inherit; cursor: pointer; padding: 0; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.3); }
+  .copy-btn:hover { text-decoration-color: var(--brass-lt); }
+  .copy-note { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brass-lt); height: 14px; margin-top: 6px; }
+</style>
+
+<nav class="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="brand">
+      <div class="brand-mark">HC</div>
+      <div class="brand-word">Hanson Capital</div>
+    </a>
+    <div class="nav-links">
+      <a href="#approach">Approach</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#team">Team</a>
+      <a href="#contact" class="nav-cta">Get in touch</a>
+    </div>
+  </div>
+</nav>
+
+<div id="top" class="hero">
+  <div class="wrap hero-in">
+    <div class="hero-eyebrow"><span class="dot"></span> Los Angeles, California</div>
+    <h1 class="hero-headline">Backing durable businesses <span class="accent">built to last.</span></h1>
+    <p class="hero-dek">Hanson Capital acquires and operates founder-built companies across manufacturing, industrial services, and regional trades &mdash; the kind of businesses that don't need reinventing, just room to run.</p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn btn-primary">Get in touch</a>
+      <a href="#portfolio" class="btn btn-ghost">Our portfolio</a>
+    </div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="wrap stats-in">
+    <div class="stat-cell">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Portfolio Entities</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">2019</div>
+      <div class="stat-label">Founded</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">CA</div>
+      <div class="stat-label">Headquartered</div>
+    </div>
+  </div>
+</div>
+
+<section id="approach" class="block">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="sec-eyebrow" style="text-align:center">Our Approach</div>
+      <h2 class="sec-title center">A capital partner built on experience and alignment.</h2>
+      <p class="sec-sub center">We back businesses with real customers and real cash flow, then work inside them until they can stand fully on their own &mdash; not from a distance, and not on a five-year clock.</p>
+    </div>
+    <div class="principles">
+      <div class="principle">
+        <div class="principle-num">01</div>
+        <div class="principle-h">Proven, not promising</div>
+        <div class="principle-p">A decade of real customers and cash flow is the diligence &mdash; not a pitch deck and a projection.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">02</div>
+        <div class="principle-h">Operators, not spreadsheets</div>
+        <div class="principle-p">Hands-on operating attention from day one, not a quarterly check-in from a boardroom.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">03</div>
+        <div class="principle-h">Patient on purpose</div>
+        <div class="principle-p">No forced timelines and no flipping. Durable businesses are built in years, not fiscal quarters.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">04</div>
+        <div class="principle-h">Name stays on the door</div>
+        <div class="principle-p">The people and reputation that took decades to build stay exactly where they are.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="portfolio" class="block block-stone">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Portfolio</div>
+      <h2 class="sec-title">Companies we've acquired and put our hands on.</h2>
+    </div>
+    <div class="pf-grid">
+      <div class="pf-card">
+        <div class="pf-logo">FS</div>
+        <div class="pf-name">Fusion Sign &amp; Design</div>
+        <div class="pf-sector">Manufacturing &middot; 2019</div>
+        <div class="pf-desc">Commercial signage and fabrication, Southeast Texas &mdash; 20+ years operating, expanded regional footprint under Hanson Capital.</div>
+      </div>
+      <div class="pf-card ghost">Next portfolio company &mdash; swap in name, sector, and a short line once confirmed.</div>
+      <div class="pf-card ghost">Next portfolio company &mdash; swap in name, sector, and a short line once confirmed.</div>
+    </div>
+  </div>
+</section>
+
+<section id="team" class="block">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Leadership</div>
+      <h2 class="sec-title">The people behind the capital.</h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-photo">LH</div>
+        <div>
+          <div class="team-name">Loren Hanson</div>
+          <div class="team-title">Founder</div>
+          <div class="team-bio">Placeholder bio &mdash; swap in a short background paragraph once confirmed.</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-photo">&mdash;</div>
+        <div>
+          <div class="team-name">Add a team member</div>
+          <div class="team-title">Title</div>
+          <div class="team-bio">Placeholder card for a second leadership bio, if there's another name to include.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="cta-block">
+  <div class="wrap">
+    <h2 class="cta-title">If your company is built to last, we'd like to talk.</h2>
+    <p class="cta-sub">
+      <button class="copy-btn" onclick="copyText('loren@hansoncapital.com', this)">loren@hansoncapital.com</button>
+      &nbsp;&middot;&nbsp;
+      <button class="copy-btn" onclick="copyText('(714) 720-3481', this)">(714) 720-3481</button>
+    </p>
+    <div class="copy-note" style="text-align:center"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <div class="foot-word">Hanson Capital</div>
+    <div class="foot-links">
+      <a href="#approach">Approach</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#team">Team</a>
+    </div>
+    <div class="foot-fine">&copy; 2026 HANSON CAPITAL &mdash; LOS ANGELES, CA</div>
+  </div>
+</footer>
+
+<script>
+  function copyText(text, btn) {
+    var note = document.querySelector('.copy-note');
+    function ok(){ if(note){ note.textContent = 'Copied to clipboard'; setTimeout(function(){ note.textContent=''; }, 1600); } }
+    function fail(){
+      try {
+        var range = document.createRange();
+        range.selectNodeContents(btn);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      } catch(e) {}
+    }
+    try {
+      navigator.clipboard.writeText(text).then(ok, fail);
+    } catch(e) { fail(); }
+  }
+</script>

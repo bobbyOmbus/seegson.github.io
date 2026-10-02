@@ -1,300 +1,238 @@
-<title>Hanson Capital</title>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --white: #ffffff; --stone: #f4f2ec; --stone2: #ece7db;
-    --green: #12181a; --green2: #1b2225;
-    --brass: #a67c3d; --brass-lt: #c49a5c; --brass-bg: rgba(166,124,61,0.08);
-    --slate: #6b7280; --border: #e4e0d3;
-    --text: var(--green);
-    color-scheme: light;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--text); }
-  ::selection { background: var(--brass); color: var(--white); }
-  a { color: inherit; }
-  .serif { font-family: 'Newsreader', serif; }
-  .mono { font-family: 'IBM Plex Mono', monospace; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hanson Capital partners with visionary management teams to build enduring businesses.">
+  <title>Hanson Capital | Building Exceptional Companies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+*{box-sizing:border-box}
+:root{--ink:#10191b;--gold:#bd9254;--gold-light:#d8b77f;--paper:#fffefa;--cream:#f7f6f2;--muted:#626a69;--line:#dcd8ce}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans",Arial,sans-serif}
+a{color:inherit;text-decoration:none}
+.site-header{height:67px;background:#fffefa;position:sticky;top:0;z-index:10;border-bottom:1px solid #efede8}
+.header-inner{height:100%;max-width:1330px;width:calc(100% - 80px);margin:auto;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:13px;min-width:205px}
+.brand-mark{font:600 54px/.8 "Playfair Display",serif;color:var(--ink);position:relative;letter-spacing:-5px}
+.brand-mark:after{content:"";position:absolute;width:38px;height:2px;background:var(--gold);left:0;top:26px;transform:rotate(-25deg)}
+.brand-name{font-size:19px;line-height:1.02;letter-spacing:4px;font-weight:500}
+.brand-name span{display:block;font-size:13px;letter-spacing:4px;margin-top:4px}
+.main-nav{display:flex;align-items:center;gap:37px;margin-left:auto;margin-right:60px}
+.main-nav a,.investor-button{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap}
+.main-nav a{transition:color .2s}.main-nav a:hover{color:var(--gold)}
+.investor-button{background:var(--ink);color:white;padding:14px 18px;letter-spacing:1.6px}
+.investor-button span{color:var(--gold-light);font-size:17px;margin-left:12px}
+.menu-toggle{display:none;border:0;background:none;font-size:22px;color:var(--ink)}
+.hero{height:500px;min-height:500px;background:var(--ink);color:white;position:relative;overflow:hidden}
+.hero-image{position:absolute;inset:0;background-image:url("https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2200&q=90");background-size:cover;background-position:center 55%;filter:saturate(.65)}
+.hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,#081416 0%,#0b1719f5 31%,#0b1719c9 48%,#0b17195c 73%,#0b17192e 100%)}
+.hero-inner{max-width:1330px;width:calc(100% - 80px);height:100%;margin:auto;position:relative;display:flex;align-items:center}
+.hero-copy{max-width:650px;padding-top:5px}
+.eyebrow{display:flex;align-items:center;gap:18px;font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold-light);font-weight:500}
+.eyebrow>span{width:59px;height:1px;background:var(--gold)}
+.hero h1{font:400 clamp(42px,4.8vw,70px)/1.04 "Playfair Display",Georgia,serif;letter-spacing:-1.6px;margin:34px 0 20px;color:#fff}
+h1 em,h2 em{font-style:normal;color:var(--gold-light)}
+.hero-copy p{max-width:470px;color:#e0e3e0;font-size:14px;line-height:1.85;letter-spacing:.2px;margin:0}
+.hero-actions{display:flex;align-items:center;gap:38px;margin-top:24px}
+.button-gold{display:inline-flex;align-items:center;justify-content:center;gap:22px;padding:15px 31px;background:var(--gold-light);color:var(--ink);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.4px;transition:background .2s,transform .2s}
+.button-gold:hover{background:#e5c995;transform:translateY(-2px)}
+.button-gold span,.button-link span{font-size:17px;font-weight:400}
+.button-link{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:0 0 8px;border-bottom:1px solid var(--gold);display:inline-flex;gap:16px;align-items:center}
+.hero-pagination{position:absolute;right:0;bottom:27px;display:flex;align-items:center;gap:15px}
+.pagination-rule{width:105px;height:1px;background:linear-gradient(90deg,var(--gold) 0 50%,#a5a8a4 50%)}
+.slide-dot{border:0;background:none;color:#b5b9b6;padding:3px;font:12px "DM Sans";cursor:pointer}
+.slide-dot.active{color:white;font-weight:600}
+.stats{background:#f8f7f3}
+.stats-inner{max-width:1330px;width:calc(100% - 80px);margin:auto;display:grid;grid-template-columns:repeat(4,1fr);height:120px;align-items:center}
+.stat{text-align:center;position:relative}
+.stat:not(:last-child):after{content:"";height:40px;width:1px;background:#d7d1c4;position:absolute;right:0;top:50%;transform:translateY(-50%)}
+.stat strong{display:block;font:400 46px/1 "Playfair Display",Georgia,serif;color:var(--ink)}
+.stat span{display:block;margin-top:9px;font-size:9px;letter-spacing:2.4px;text-transform:uppercase}
+.companies-section{padding:40px 0 65px;background:var(--paper)}
+.companies-layout{max-width:1380px;width:calc(100% - 80px);margin:auto;display:grid;grid-template-columns: minmax(390px,1fr) minmax(0,1.42fr);gap:60px;align-items:center}
+.eyebrow-light{color:var(--gold)}
+.companies-intro h2,.section-heading h2,.contact-section h2{font:400 clamp(32px,3.4vw,48px)/1.08 "Playfair Display",Georgia,serif;letter-spacing:-1px;margin:27px 0 12px}
+.companies-intro h2 em,.section-heading h2 em,.contact-section h2 em{color:var(--gold)}
+.companies-intro p{font:14px/1.7 "Playfair Display",Georgia,serif;color:#555b59;max-width:500px;margin:0}
+.explore-link{display:inline-flex;gap:13px;align-items:center;margin-top:22px;padding-bottom:7px;border-bottom:1px solid var(--gold);font-size:9px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase}
+.explore-link span{font-size:17px;color:var(--gold)}
+.company-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}
+.company-card{display:block;background:#f5f4f0;min-width:0;transition:transform .25s,box-shadow .25s}
+.company-card:hover{transform:translateY(-5px);box-shadow:0 12px 30px #15202018}
+.company-card img{display:block;width:100%;height:185px;object-fit:cover;filter:saturate(.75)}
+.card-label{height:65px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:9px;line-height:1.5;letter-spacing:1.2px;text-transform:uppercase}
+.card-label b{font-size:16px;color:var(--gold);font-weight:400}
+.approach-section{padding:85px max(40px,calc((100% - 1200px)/2));background:var(--cream)}
+.section-heading{display:grid;grid-template-columns:1fr 1fr;column-gap:40px;align-items:end}
+.section-heading .eyebrow{grid-column:1/-1}
+.section-heading h2{margin-bottom:0}
+.section-heading>p{color:var(--muted);font-size:13px;line-height:1.8;max-width:430px;margin:0 0 3px}
+.approach-items{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:38px;background:var(--line);border:1px solid var(--line)}
+.approach-items article{background:var(--paper);padding:27px}
+.approach-items article>span{font-size:10px;color:var(--gold);letter-spacing:1px}
+.approach-items h3{font:500 16px "Playfair Display",Georgia,serif;margin:20px 0 9px}
+.approach-items p{font-size:12px;line-height:1.8;color:var(--muted);margin:0}
+.contact-section{text-align:center;padding:85px 20px;background:var(--ink);color:white}
+.contact-section .eyebrow{justify-content:center}
+.contact-section h2{font-size:48px;margin:25px 0}
+footer{background:#0b1214;color:#b7bcb9;padding:25px max(40px,calc((100% - 1330px)/2));display:flex;align-items:center;justify-content:space-between;gap:25px;font-size:10px;letter-spacing:.6px}
+.footer-brand{min-width:0;color:white}.footer-brand .brand-mark{font-size:35px;color:white}.footer-brand .brand-mark:after{top:18px;width:27px}.footer-brand .brand-name{font-size:13px}.footer-brand .brand-name span{font-size:9px}
+footer>div{display:flex;gap:20px}footer a:hover{color:var(--gold-light)}
+@media(max-width:1050px){.main-nav{gap:20px;margin-right:25px}.companies-layout{grid-template-columns:1fr;gap:30px}.companies-intro{max-width:650px}.company-card img{height:210px}}
+@media(max-width:700px){.header-inner,.hero-inner,.stats-inner,.companies-layout{width:calc(100% - 38px)}.site-header{height:65px}.brand{min-width:0}.brand-mark{font-size:43px}.brand-name{font-size:15px;letter-spacing:3px}.brand-name span{font-size:10px;letter-spacing:3px}.menu-toggle{display:block;margin-left:auto;margin-right:15px}.main-nav{display:none;position:absolute;top:65px;left:0;right:0;background:var(--paper);padding:18px 22px 22px;box-shadow:0 12px 20px #00000012;flex-direction:column;align-items:flex-start;gap:18px;margin:0}.main-nav.open{display:flex}.investor-button{font-size:8px;padding:12px 10px}.investor-button span{margin-left:5px}.hero{height:540px;min-height:540px}.hero-shade{background:linear-gradient(90deg,#081416f5,#0b1719c9 78%,#0b17198a)}.hero-copy{max-width:100%}.hero h1{font-size:clamp(39px,10vw,56px);letter-spacing:-1px;margin-top:26px}.hero-copy p{font-size:13px;max-width:430px}.hero-actions{gap:20px;flex-wrap:wrap}.button-gold{padding:14px 18px}.hero-pagination{bottom:18px}.pagination-rule{width:45px}.stats-inner{height:auto;grid-template-columns:repeat(2,1fr);padding:10px 0}.stat{padding:20px 4px}.stat:nth-child(2):after{display:none}.stat strong{font-size:36px}.stat span{font-size:8px;letter-spacing:1.6px}.companies-section{padding:55px 0}.companies-layout{gap:28px}.companies-intro h2{font-size:37px}.companies-intro p{font-size:13px}.company-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.company-card img{height:165px}.card-label{height:57px;padding:0 11px;font-size:8px}.approach-section{padding:60px 19px}.section-heading{display:block}.section-heading h2{font-size:37px}.section-heading>p{margin-top:17px}.approach-items{grid-template-columns:1fr;margin-top:27px}.approach-items article{padding:22px}.contact-section{padding:65px 18px}.contact-section h2{font-size:40px}footer{padding:22px 19px;flex-wrap:wrap}footer>div{width:100%;gap:15px}}
 
-  .wrap { max-width: 1180px; margin: 0 auto; padding-inline: 40px; }
-  @media (max-width: 720px) { .wrap { padding-inline: 20px; } }
-
-  /* nav */
-  .nav { position: sticky; top: 0; z-index: 40; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
-  .nav-in { display: flex; align-items: center; justify-content: space-between; padding-block: 18px; }
-  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .brand-mark { width: 30px; height: 30px; background: var(--green); display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', serif; font-size: 12px; color: var(--brass-lt); flex-shrink: 0; }
-  .brand-word { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: -0.2px; }
-  .nav-links { display: flex; gap: 32px; align-items: center; }
-  .nav-links a { text-decoration: none; color: var(--slate); font-size: 14px; font-weight: 500; }
-  .nav-links a:hover { color: var(--green); }
-  .nav-cta { background: var(--green); color: var(--white) !important; padding: 10px 20px; border-radius: 4px; font-size: 13.5px; font-weight: 600; }
-  .nav-cta:hover { background: var(--brass); }
-  @media (max-width: 780px) { .nav-links a:not(.nav-cta) { display: none; } }
-
-  /* hero */
-  .hero { background: var(--green); color: var(--white); padding-top: 120px; padding-bottom: 100px; position: relative; overflow: hidden; }
-  .hero::before {
-    content: ''; position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(166,124,61,0.16), transparent 60%),
-      radial-gradient(ellipse 700px 500px at 100% 30%, rgba(166,124,61,0.09), transparent 60%);
-    pointer-events: none;
-  }
-  .hero-in { position: relative; max-width: 760px; }
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace;
-    font-size: 11.5px; letter-spacing: 1.5px; color: var(--brass-lt); text-transform: uppercase;
-    border: 1px solid rgba(196,154,92,0.35); padding: 7px 14px; border-radius: 100px; margin-bottom: 30px;
-  }
-  .hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brass-lt); }
-  .hero-headline {
-    font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: -2px;
-    font-size: clamp(38px, 5.6vw, 64px); line-height: 1.06; text-wrap: balance;
-  }
-  .hero-headline .accent { color: var(--brass-lt); }
-  .hero-dek { font-size: 17px; line-height: 1.65; color: rgba(255,255,255,0.68); max-width: 560px; margin-top: 26px; }
-  .hero-ctas { display: flex; gap: 14px; margin-top: 40px; flex-wrap: wrap; }
-  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 4px; font-size: 14.5px; font-weight: 600; text-decoration: none; border: 1px solid transparent; }
-  .btn-primary { background: var(--brass); color: var(--green); }
-  .btn-primary:hover { background: var(--brass-lt); }
-  .btn-ghost { border-color: rgba(255,255,255,0.25); color: var(--white); }
-  .btn-ghost:hover { border-color: var(--white); }
-
-  /* stats strip */
-  .stats { border-bottom: 1px solid var(--border); }
-  .stats-in { display: grid; grid-template-columns: repeat(3, 1fr); }
-  @media (max-width: 700px) { .stats-in { grid-template-columns: 1fr; } }
-  .stat-cell { padding: 48px 40px; border-right: 1px solid var(--border); text-align: center; }
-  .stat-cell:last-child { border-right: none; }
-  @media (max-width: 700px) { .stat-cell { border-right: none; border-bottom: 1px solid var(--border); } .stat-cell:last-child { border-bottom: none; } }
-  .stat-num { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(32px, 4vw, 44px); letter-spacing: -1px; color: var(--green); }
-  .stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--slate); margin-top: 8px; }
-
-  /* section scaffolding */
-  section.block { padding-block: 96px; }
-  @media (max-width: 720px) { section.block { padding-block: 64px; } }
-  .block-stone { background: var(--stone); }
-  .sec-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: var(--brass); text-transform: uppercase; margin-bottom: 16px; }
-  .sec-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(28px, 3.6vw, 42px); letter-spacing: -1px; line-height: 1.1; max-width: 680px; text-wrap: balance; }
-  .sec-title.center { margin-inline: auto; text-align: center; }
-  .sec-sub { font-size: 15.5px; color: var(--slate); max-width: 560px; margin-top: 18px; line-height: 1.65; }
-  .sec-sub.center { margin-inline: auto; text-align: center; }
-  .sec-head { margin-bottom: 56px; }
-  .sec-head.center { text-align: center; }
-
-  /* principles */
-  .principles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-  @media (max-width: 900px) { .principles { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 560px) { .principles { grid-template-columns: 1fr; } }
-  .principle { background: var(--white); padding: 34px 28px; }
-  .principle-num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--brass); margin-bottom: 16px; }
-  .principle-h { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.2px; margin-bottom: 10px; }
-  .principle-p { font-size: 13.5px; color: var(--slate); line-height: 1.6; }
-
-  /* portfolio cards */
-  .pf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  @media (max-width: 900px) { .pf-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 620px) { .pf-grid { grid-template-columns: 1fr; } }
-  .pf-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 28px 26px; transition: border-color 0.2s ease, transform 0.2s ease; }
-  .pf-card:hover { border-color: var(--brass); transform: translateY(-2px); }
-  .pf-logo { width: 44px; height: 44px; border-radius: 6px; background: var(--green); display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', serif; font-size: 15px; color: var(--brass-lt); margin-bottom: 20px; }
-  .pf-name { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16.5px; letter-spacing: -0.2px; }
-  .pf-sector { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--brass); margin-top: 4px; }
-  .pf-desc { font-size: 13.5px; color: var(--slate); line-height: 1.6; margin-top: 14px; }
-  .pf-card.ghost { border-style: dashed; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--slate); font-size: 13px; }
-
-  /* team */
-  .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
-  @media (max-width: 680px) { .team-grid { grid-template-columns: 1fr; } }
-  .team-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 30px; display: flex; gap: 20px; }
-  .team-photo { width: 68px; height: 68px; border-radius: 50%; background: var(--stone2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', serif; font-size: 22px; color: var(--brass); border: 1px solid var(--border); }
-  .team-name { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16.5px; }
-  .team-title { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brass); letter-spacing: 0.5px; margin-top: 3px; text-transform: uppercase; }
-  .team-bio { font-size: 13px; color: var(--slate); line-height: 1.6; margin-top: 12px; }
-
-  /* cta */
-  .cta-block { background: var(--green); color: var(--white); text-align: center; padding-block: 100px; }
-  .cta-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(30px, 4.4vw, 48px); letter-spacing: -1.2px; max-width: 720px; margin-inline: auto; text-wrap: balance; }
-  .cta-sub { font-size: 15.5px; color: rgba(255,255,255,0.65); margin-top: 18px; }
-  .cta-row { display: flex; justify-content: center; gap: 14px; margin-top: 36px; flex-wrap: wrap; }
-
-  /* footer */
-  footer { padding-block: 36px; border-top: 1px solid var(--border); }
-  .foot-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-  .foot-word { font-weight: 700; font-size: 14px; }
-  .foot-fine { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--slate); letter-spacing: 0.3px; }
-  .foot-links { display: flex; gap: 24px; }
-  .foot-links a { font-size: 13px; color: var(--slate); text-decoration: none; }
-  .foot-links a:hover { color: var(--green); }
-
-  .copy-btn { background: none; border: none; font-family: inherit; font-size: inherit; color: inherit; cursor: pointer; padding: 0; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.3); }
-  .copy-btn:hover { text-decoration-color: var(--brass-lt); }
-  .copy-note { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brass-lt); height: 14px; margin-top: 6px; }
-</style>
-
-<nav class="nav">
-  <div class="wrap nav-in">
-    <a href="#top" class="brand">
-      <div class="brand-mark">HC</div>
-      <div class="brand-word">Hanson Capital</div>
-    </a>
-    <div class="nav-links">
-      <a href="#approach">Approach</a>
-      <a href="#portfolio">Portfolio</a>
-      <a href="#team">Team</a>
-      <a href="#contact" class="nav-cta">Get in touch</a>
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home" aria-label="Hanson Capital home">
+        <span class="brand-mark">H</span>
+        <span class="brand-name">HANSON<span>CAPITAL</span></span>
+      </a>
+      <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#approach">Our Approach</a>
+        <a href="#companies">Our Companies</a>
+        <a href="#team">Team</a>
+        <a href="#insights">Insights</a>
+      </nav>
+      <a class="investor-button" href="#contact">Investor Login <span>→</span></a>
     </div>
-  </div>
-</nav>
+  </header>
 
-<div id="top" class="hero">
-  <div class="wrap hero-in">
-    <div class="hero-eyebrow"><span class="dot"></span> Los Angeles, California</div>
-    <h1 class="hero-headline">Backing durable businesses <span class="accent">built to last.</span></h1>
-    <p class="hero-dek">Hanson Capital acquires and operates founder-built companies across manufacturing, industrial services, and regional trades &mdash; the kind of businesses that don't need reinventing, just room to run.</p>
-    <div class="hero-ctas">
-      <a href="#contact" class="btn btn-primary">Get in touch</a>
-      <a href="#portfolio" class="btn btn-ghost">Our portfolio</a>
-    </div>
-  </div>
-</div>
-
-<div class="stats">
-  <div class="wrap stats-in">
-    <div class="stat-cell">
-      <div class="stat-num">5</div>
-      <div class="stat-label">Portfolio Entities</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-num">2019</div>
-      <div class="stat-label">Founded</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-num">CA</div>
-      <div class="stat-label">Headquartered</div>
-    </div>
-  </div>
-</div>
-
-<section id="approach" class="block">
-  <div class="wrap">
-    <div class="sec-head center">
-      <div class="sec-eyebrow" style="text-align:center">Our Approach</div>
-      <h2 class="sec-title center">A capital partner built on experience and alignment.</h2>
-      <p class="sec-sub center">We back businesses with real customers and real cash flow, then work inside them until they can stand fully on their own &mdash; not from a distance, and not on a five-year clock.</p>
-    </div>
-    <div class="principles">
-      <div class="principle">
-        <div class="principle-num">01</div>
-        <div class="principle-h">Proven, not promising</div>
-        <div class="principle-p">A decade of real customers and cash flow is the diligence &mdash; not a pitch deck and a projection.</div>
-      </div>
-      <div class="principle">
-        <div class="principle-num">02</div>
-        <div class="principle-h">Operators, not spreadsheets</div>
-        <div class="principle-p">Hands-on operating attention from day one, not a quarterly check-in from a boardroom.</div>
-      </div>
-      <div class="principle">
-        <div class="principle-num">03</div>
-        <div class="principle-h">Patient on purpose</div>
-        <div class="principle-p">No forced timelines and no flipping. Durable businesses are built in years, not fiscal quarters.</div>
-      </div>
-      <div class="principle">
-        <div class="principle-num">04</div>
-        <div class="principle-h">Name stays on the door</div>
-        <div class="principle-p">The people and reputation that took decades to build stay exactly where they are.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="portfolio" class="block block-stone">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-eyebrow">Portfolio</div>
-      <h2 class="sec-title">Companies we've acquired and put our hands on.</h2>
-    </div>
-    <div class="pf-grid">
-      <div class="pf-card">
-        <div class="pf-logo">FS</div>
-        <div class="pf-name">Fusion Sign &amp; Design</div>
-        <div class="pf-sector">Manufacturing &middot; 2019</div>
-        <div class="pf-desc">Commercial signage and fabrication, Southeast Texas &mdash; 20+ years operating, expanded regional footprint under Hanson Capital.</div>
-      </div>
-      <div class="pf-card ghost">Next portfolio company &mdash; swap in name, sector, and a short line once confirmed.</div>
-      <div class="pf-card ghost">Next portfolio company &mdash; swap in name, sector, and a short line once confirmed.</div>
-    </div>
-  </div>
-</section>
-
-<section id="team" class="block">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-eyebrow">Leadership</div>
-      <h2 class="sec-title">The people behind the capital.</h2>
-    </div>
-    <div class="team-grid">
-      <div class="team-card">
-        <div class="team-photo">LH</div>
-        <div>
-          <div class="team-name">Loren Hanson</div>
-          <div class="team-title">Founder</div>
-          <div class="team-bio">Placeholder bio &mdash; swap in a short background paragraph once confirmed.</div>
+  <main>
+    <section class="hero" id="home" aria-label="Hanson Capital introduction">
+      <div class="hero-image"></div>
+      <div class="hero-shade"></div>
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="eyebrow"><span></span> Partnership for what’s next</div>
+          <h1 id="hero-title">Building Exceptional<br>Companies for<br>a <em>Stronger Tomorrow</em></h1>
+          <p id="hero-description">Hanson Capital partners with visionary management teams to build enduring businesses across key industries, creating long-term value for investors, partners and communities.</p>
+          <div class="hero-actions">
+            <a class="button-gold" href="#approach">Our Approach <span>→</span></a>
+            <a class="button-link" href="#companies">Our Companies <span>→</span></a>
+          </div>
+        </div>
+        <div class="hero-pagination" aria-label="Hero slides">
+          <span class="pagination-rule"></span>
+          <button class="slide-dot active" data-slide="0" aria-label="Slide 1">01</button>
+          <button class="slide-dot" data-slide="1" aria-label="Slide 2">02</button>
+          <button class="slide-dot" data-slide="2" aria-label="Slide 3">03</button>
         </div>
       </div>
-      <div class="team-card">
-        <div class="team-photo">&mdash;</div>
-        <div>
-          <div class="team-name">Add a team member</div>
-          <div class="team-title">Title</div>
-          <div class="team-bio">Placeholder card for a second leadership bio, if there's another name to include.</div>
+    </section>
+
+    <section class="stats" aria-label="Hanson Capital at a glance">
+      <div class="stats-inner">
+        <!-- Replace these illustrative figures with client-approved, verified company metrics before launch. -->
+        <div class="stat"><strong>25+</strong><span>Years of Experience</span></div>
+        <div class="stat"><strong>$12B+</strong><span>Capital Deployed</span></div>
+        <div class="stat"><strong>40+</strong><span>Platform Companies</span></div>
+        <div class="stat"><strong>100%</strong><span>Focus on Partnership</span></div>
+      </div>
+    </section>
+
+    <section class="companies-section" id="companies">
+      <div class="companies-layout">
+        <div class="companies-intro">
+          <div class="eyebrow eyebrow-light"><span></span> Our Companies</div>
+          <h2>Exceptional Businesses.<br><em>Lasting Impact.</em></h2>
+          <p>We partner with management teams to invest in and grow market-leading companies. Our companies benefit from our long-term perspective, operational expertise, and commitment to building enduring value.</p>
+          <a class="explore-link" href="#contact">Explore Our Companies <span>→</span></a>
+        </div>
+        <div class="company-cards">
+          <a class="company-card" href="#contact">
+            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=700&q=85" alt="Contemporary commercial building">
+            <span class="card-label">Consumer &amp;<br>Brands <b>→</b></span>
+          </a>
+          <a class="company-card" href="#contact">
+            <img src="https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=700&q=85" alt="Modern healthcare interior">
+            <span class="card-label">Healthcare<br>Services <b>→</b></span>
+          </a>
+          <a class="company-card" href="#contact">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=700&q=85" alt="Business technology workspace">
+            <span class="card-label">Business<br>Services <b>→</b></span>
+          </a>
+          <a class="company-card" href="#contact">
+            <img src="https://images.unsplash.com/photo-1513828583688-c52646b3b9e9?auto=format&fit=crop&w=700&q=85" alt="Industrial facility at dusk">
+            <span class="card-label">Industrial<br>Solutions <b>→</b></span>
+          </a>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section id="contact" class="cta-block">
-  <div class="wrap">
-    <h2 class="cta-title">If your company is built to last, we'd like to talk.</h2>
-    <p class="cta-sub">
-      <button class="copy-btn" onclick="copyText('loren@hansoncapital.com', this)">loren@hansoncapital.com</button>
-      &nbsp;&middot;&nbsp;
-      <button class="copy-btn" onclick="copyText('(714) 720-3481', this)">(714) 720-3481</button>
-    </p>
-    <div class="copy-note" style="text-align:center"></div>
-  </div>
-</section>
+    <section class="approach-section" id="approach">
+      <div class="section-heading">
+        <div class="eyebrow eyebrow-light"><span></span> Our Approach</div>
+        <h2>Partnership that builds<br><em>lasting value.</em></h2>
+        <p>We bring a long-term perspective, thoughtful capital and practical support to every partnership.</p>
+      </div>
+      <div class="approach-items">
+        <article><span>01</span><h3>Aligned Partnership</h3><p>We work collaboratively with management teams around shared goals and a common vision.</p></article>
+        <article><span>02</span><h3>Long-Term Perspective</h3><p>We focus on sustainable growth and the decisions that strengthen businesses over time.</p></article>
+        <article><span>03</span><h3>Operational Support</h3><p>We help leaders identify opportunities, solve challenges and execute thoughtfully.</p></article>
+      </div>
+    </section>
 
-<footer>
-  <div class="wrap foot-row">
-    <div class="foot-word">Hanson Capital</div>
-    <div class="foot-links">
-      <a href="#approach">Approach</a>
-      <a href="#portfolio">Portfolio</a>
-      <a href="#team">Team</a>
-    </div>
-    <div class="foot-fine">&copy; 2026 HANSON CAPITAL &mdash; LOS ANGELES, CA</div>
-  </div>
-</footer>
+    <section class="contact-section" id="contact">
+      <div class="eyebrow"><span></span> Start a Conversation</div>
+      <h2>Let’s build what’s<br><em>next.</em></h2>
+      <a class="button-gold" href="mailto:info@hansoncapital.com">Contact Hanson Capital <span>→</span></a>
+    </section>
+  </main>
 
-<script>
-  function copyText(text, btn) {
-    var note = document.querySelector('.copy-note');
-    function ok(){ if(note){ note.textContent = 'Copied to clipboard'; setTimeout(function(){ note.textContent=''; }, 1600); } }
-    function fail(){
-      try {
-        var range = document.createRange();
-        range.selectNodeContents(btn);
-        var sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-      } catch(e) {}
-    }
-    try {
-      navigator.clipboard.writeText(text).then(ok, fail);
-    } catch(e) { fail(); }
+  <footer id="about">
+    <a class="brand footer-brand" href="#home"><span class="brand-mark">H</span><span class="brand-name">HANSON<span>CAPITAL</span></span></a>
+    <span>© <span id="year"></span> Hanson Capital. All rights reserved.</span>
+    <div><a href="#approach">Our Approach</a><a href="#companies">Our Companies</a><a href="#contact">Contact</a></div>
+  </footer>
+  <script>
+const menuButton = document.querySelector('.menu-toggle');
+const nav = document.querySelector('.main-nav');
+menuButton.addEventListener('click', () => {
+  const isOpen = nav.classList.toggle('open');
+  menuButton.setAttribute('aria-expanded', String(isOpen));
+});
+nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+  nav.classList.remove('open');
+  menuButton.setAttribute('aria-expanded', 'false');
+}));
+
+// Hero slide controls: update headline/copy while keeping the same visual treatment.
+const slides = [
+  {
+    title: 'Building Exceptional<br>Companies for<br>a <em>Stronger Tomorrow</em>',
+    description: 'Hanson Capital partners with visionary management teams to build enduring businesses across key industries, creating long-term value for investors, partners and communities.'
+  },
+  {
+    title: 'Partnership with<br>a <em>Long-Term View</em>',
+    description: 'We bring thoughtful capital, operational perspective and a commitment to working alongside leaders as they build enduring businesses.'
+  },
+  {
+    title: 'Investing in What<br><em>Comes Next</em>',
+    description: 'We believe lasting value grows from strong teams, trusted relationships and a clear focus on the fundamentals of business.'
   }
-</script>
+];
+const title = document.getElementById('hero-title');
+const description = document.getElementById('hero-description');
+document.querySelectorAll('.slide-dot').forEach(button => {
+  button.addEventListener('click', () => {
+    const index = Number(button.dataset.slide);
+    title.innerHTML = slides[index].title;
+    description.textContent = slides[index].description;
+    document.querySelectorAll('.slide-dot').forEach(dot => dot.classList.remove('active'));
+    button.classList.add('active');
+  });
+});
+document.getElementById('year').textContent = new Date().getFullYear();
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seegson Hours</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f3f2ee; --surface: #ffffff; --raised: #faf9f6;
+  --ink: #0f1623; --ink2: #52514e; --muted: #7a7872;
+  --grid: #e1e0d9; --base: #c3c2b7; --ring: rgba(15,22,35,.12);
+  --accent: #b8860b; --accent-soft: #f5ecd3; --focus: #2a78d6;
+  --bar: #0f1623; --bar-ink: #ffffff;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7; --s8: #e34948;
+  --good: #0ca30c; --good-ink: #006300; --warn: #fab219; --warn-ink: #7a4f00;
+  --crit: #d03b3b; --crit-ink: #a42a2a; --info-ink: #1c5cab;
+  --track: #e6edf7;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --raised: #212120;
+    --ink: #ffffff; --ink2: #c3c2b7; --muted: #8f8d86;
+    --grid: #2c2c2a; --base: #383835; --ring: rgba(255,255,255,.14);
+    --accent: #d9a62e; --accent-soft: #2e2711; --focus: #6da7ec;
+    --bar: #0a0d14; --bar-ink: #ffffff;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+    --good-ink: #0ca30c; --warn-ink: #fab219; --crit-ink: #ee7b7b; --info-ink: #6da7ec;
+    --track: #232a36;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --raised: #212120;
+  --ink: #ffffff; --ink2: #c3c2b7; --muted: #8f8d86;
+  --grid: #2c2c2a; --base: #383835; --ring: rgba(255,255,255,.14);
+  --accent: #d9a62e; --accent-soft: #2e2711; --focus: #6da7ec;
+  --bar: #0a0d14; --bar-ink: #ffffff;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+  --good-ink: #0ca30c; --warn-ink: #fab219; --crit-ink: #ee7b7b; --info-ink: #6da7ec;
+  --track: #232a36;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--page); color: var(--ink);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+h1, h2, h3 { margin: 0; line-height: 1.2; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* top bar */
+.topbar { background: var(--bar); color: var(--bar-ink); }
+.topbar .in { max-width: 1160px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.brand { font-weight: 800; letter-spacing: .14em; font-size: 13px; }
+.brand i { font-style: normal; color: var(--accent); margin: 0 .35em; }
+.brand small { font-weight: 500; letter-spacing: 0; font-size: 13px; opacity: .72; margin-left: 12px; }
+.spacer { flex: 1; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px;
+  background: rgba(255,255,255,.1); color: var(--bar-ink); border: 0; cursor: pointer; font-size: 13px; }
+.chip:hover { background: rgba(255,255,255,.18); }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: #ff6b5e; }
+.btn-top { background: var(--accent); color: #0f1623; border: 0; border-radius: 6px; padding: 7px 14px; font-weight: 700; cursor: pointer; font-size: 13px; }
+.btn-top.ghost { background: transparent; color: var(--bar-ink); border: 1px solid rgba(255,255,255,.35); }
+nav.tabs { background: var(--surface); border-bottom: 1px solid var(--grid); }
+nav.tabs .in { max-width: 1160px; margin: 0 auto; padding: 0 12px; display: flex; gap: 2px; overflow-x: auto; }
+nav.tabs a { padding: 12px 14px; color: var(--ink2); text-decoration: none; font-weight: 600; font-size: 14px; border-bottom: 3px solid transparent; white-space: nowrap; }
+nav.tabs a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
+nav.tabs a:hover { color: var(--ink); }
+main { max-width: 1160px; margin: 0 auto; padding: 24px 20px 64px; } main > *, .card { min-width: 0; }
+.banner { background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; font-size: 14px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.banner b { font-weight: 700; }
+
+/* layout bits */
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.filters { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin-bottom: 20px; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field > span, .field > label { font-size: 13px; color: var(--ink2); font-weight: 600; }
+.field .hint { font-size: 12px; color: var(--muted); font-weight: 400; }
+input[type=text], input[type=date], input[type=number], select, textarea {
+  background: var(--raised); border: 1px solid var(--base); border-radius: 6px; padding: 8px 10px; min-width: 0; width: 100%; }
+textarea { resize: vertical; min-height: 64px; }
+select { padding-right: 24px; }
+.btn { background: var(--ink); color: var(--surface); border: 1px solid var(--ink); border-radius: 6px; padding: 8px 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { opacity: .88; }
+.btn.sec { background: transparent; color: var(--ink); border-color: var(--base); }
+.btn.sec:hover { border-color: var(--ink); opacity: 1; }
+.btn.danger { background: transparent; color: var(--crit-ink); border-color: var(--crit); }
+.btn.sm { padding: 4px 10px; font-size: 13px; }
+.btn.link { background: none; border: 0; padding: 0; color: var(--info-ink); text-decoration: underline; cursor: pointer; font-weight: 600; }
+.card { background: var(--surface); border: 1px solid var(--ring); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+.card > h2 { font-size: 17px; margin-bottom: 4px; }
+.card > .sub { color: var(--ink2); font-size: 13px; margin-bottom: 14px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 860px) { .grid4 { grid-template-columns: repeat(2, minmax(0,1fr)); } .grid3 { grid-template-columns: minmax(0,1fr); } }
+@media (max-width: 640px) { .grid2 { grid-template-columns: minmax(0,1fr); } main { padding: 16px 14px 48px; } }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: 28px; align-items: end; }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; gap: 16px; } }
+.hero .big { font-size: 64px; font-weight: 800; letter-spacing: -.025em; line-height: 1; }
+.hero .big small { font-size: 22px; font-weight: 600; letter-spacing: 0; color: var(--ink2); margin-left: 6px; }
+.hero .cap { color: var(--ink2); margin-top: 6px; }
+.hero .facts { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px 20px; }
+.fact b { display: block; font-size: 20px; font-weight: 700; }
+.fact span { color: var(--ink2); font-size: 13px; }
+.status { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; }
+.status.good { color: var(--good-ink); } .status.warn { color: var(--warn-ink); } .status.crit { color: var(--crit-ink); } .status.info { color: var(--info-ink); }
+.note { color: var(--ink2); font-size: 14px; margin-top: 10px; }
+
+/* ledger bar */
+.ledger { margin-top: 22px; }
+.ledger .track { position: relative; height: 30px; background: var(--track); border-radius: 6px; display: flex; gap: 2px; }
+.ledger .seg { height: 100%; min-width: 3px; cursor: default; }
+.ledger .seg:first-child { border-radius: 6px 0 0 6px; } .ledger .seg:last-child { border-radius: 0 4px 4px 0; }
+.ledger .seg:only-child { border-radius: 6px 4px 4px 6px; }
+.ledger .seg:hover { filter: brightness(1.12); }
+.ledger .mark { position: absolute; top: -7px; bottom: -7px; width: 3px; margin-left: -1px; background: var(--accent); border-radius: 2px; pointer-events: none; }
+.ledger .mark-l { position: absolute; top: -26px; transform: translateX(-50%); font-size: 12px; color: var(--ink2); white-space: nowrap; font-weight: 600; }
+.ledger .lim { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 2px solid var(--ink); pointer-events: none; }
+.ledger .axis { display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 14px; font-size: 13px; color: var(--ink2); }
+.legend .k { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex: none; }
+.ln { width: 18px; height: 0; border-top: 2px solid; display: inline-block; flex: none; }
+
+/* stat tiles */
+.tile { background: var(--raised); border: 1px solid var(--ring); border-radius: 8px; padding: 14px 16px; }
+.tile .l { color: var(--ink2); font-size: 13px; }
+.tile .v { font-size: 26px; font-weight: 700; margin-top: 2px; letter-spacing: -.01em; }
+.tile .d { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+/* tables */
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-size: 13px; font-weight: 600; color: var(--ink2); padding: 8px 10px; border-bottom: 1px solid var(--base); white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+td.r, th.r { text-align: right; } td.num, th.num { font-variant-numeric: tabular-nums; }
+tr.total td { font-weight: 700; border-top: 1px solid var(--base); border-bottom: 0; }
+tr.cur td { background: var(--accent-soft); }
+.muted { color: var(--muted); } .small { font-size: 13px; }
+.est { font-size: 11px; font-weight: 700; border: 1px solid var(--base); border-radius: 4px; padding: 0 5px; color: var(--ink2); margin-left: 6px; vertical-align: 1px; }
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--base); color: var(--ink2); white-space: nowrap; }
+.pill.good { color: var(--good-ink); border-color: var(--good); } .pill.warn { color: var(--warn-ink); border-color: var(--warn); }
+.pill.crit { color: var(--crit-ink); border-color: var(--crit); } .pill.info { color: var(--info-ink); border-color: var(--info-ink); }
+details.tablev { margin-top: 12px; } details.tablev summary { cursor: pointer; font-size: 13px; color: var(--info-ink); font-weight: 600; }
+
+/* chart */
+.chart { width: 100%; height: auto; display: block; }
+.chart text { font: 12px system-ui, sans-serif; fill: var(--muted); }
+.chart .lbl { fill: var(--ink2); font-weight: 600; }
+
+/* meter */
+.meter { height: 8px; background: var(--track); border-radius: 4px; overflow: hidden; display: flex; }
+.meter i { display: block; height: 100%; border-radius: 4px; }
+.catrow { display: grid; grid-template-columns: minmax(120px, 190px) 1fr 64px; gap: 12px; align-items: center; padding: 5px 0; font-size: 14px; }
+.catrow .meter { height: 12px; }
+
+/* projects */
+.proj { border: 1px solid var(--ring); border-radius: 10px; background: var(--surface); padding: 18px 20px; margin-bottom: 16px; }
+.proj .hd { display: flex; gap: 12px; align-items: start; flex-wrap: wrap; }
+.proj h3 { font-size: 17px; }
+.proj .meta { color: var(--ink2); font-size: 13px; }
+.goal { display: grid; grid-template-columns: 28px 1fr auto auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--grid); }
+.goal .t { min-width: 0; } .goal .t b { font-weight: 600; } .goal.done .t b { color: var(--muted); text-decoration: line-through; }
+.gicon { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--base); background: transparent; cursor: pointer; font-size: 13px; line-height: 1; display: grid; place-items: center; padding: 0; color: var(--ink2); }
+.gicon.done { background: var(--good); border-color: var(--good); color: #fff; } .gicon.prog { border-color: var(--info-ink); color: var(--info-ink); } .gicon.block { border-color: var(--crit); color: var(--crit-ink); }
+@media (max-width: 640px) { .goal { grid-template-columns: 28px 1fr; } .goal .gh, .goal .ga { grid-column: 2; } }
+
+/* modal & toast & tooltip */
+.scrim { position: fixed; inset: 0; background: rgba(8,10,16,.55); display: grid; place-items: start center; padding: 6vh 14px; overflow-y: auto; z-index: 50; }
+.modal { background: var(--surface); border-radius: 12px; width: min(640px, 100%); padding: 22px; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+.modal h2 { font-size: 19px; margin-bottom: 14px; }
+.modal .acts { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+.err { color: var(--crit-ink); font-size: 13px; font-weight: 600; min-height: 18px; }
+#toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--surface); padding: 10px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; z-index: 80; opacity: 0; pointer-events: none; transition: opacity .15s; }
+#toast.on { opacity: 1; }
+#tip { position: fixed; z-index: 70; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--base); border-radius: 8px; padding: 8px 10px; font-size: 13px; box-shadow: 0 6px 20px rgba(0,0,0,.18); display: none; max-width: 260px; }
+#tip .th { color: var(--ink2); margin-bottom: 4px; font-weight: 600; }
+#tip .tr { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+#tip .tr span.k { display: inline-flex; align-items: center; gap: 7px; color: var(--ink2); }
+#tip .tr b { font-weight: 700; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.timerbox { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; background: var(--raised); border: 1px solid var(--ring); border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; }
+.timerbox .clock { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 120px; }
+.empty { text-align: center; color: var(--ink2); padding: 28px 12px; }
+.empty b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 4px; }
+pre.out { background: var(--raised); border: 1px solid var(--ring); border-radius: 8px; padding: 14px; white-space: pre-wrap; font: 13px/1.55 ui-monospace, Menlo, Consolas, monospace; margin: 0; max-height: 420px; overflow: auto; }
+.foot { color: var(--muted); font-size: 13px; margin-top: 8px; }
+@media print {
+  .topbar, nav.tabs, .noprint, .btn, #toast, #tip { display: none !important; }
+  body, html { background: #fff; } .card, .proj { box-shadow: none; break-inside: avoid; }
+  main { max-width: none; padding: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="tip" role="tooltip"></div>
+<div id="modal-root"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script id="boot" type="application/json">{"mode":"admin"}</script>
+<script id="seed" type="application/json">{"v": 1, "clients": [{"id": "c_hanson", "name": "Hanson Capital", "contact": "Loren Hanson", "plan": {"start": "2026-09-01", "monthlyHours": 30, "monthlyFee": 1500, "overageRate": 75, "rolloverMax": 10, "balanceMax": 40, "maintenanceReserve": 5, "incrementMin": 15, "roundUpAt": 8, "openingRollover": 0, "pricingEnd": "2027-08-31", "note": "Terms from the draft service plan. Update in Settings once the plan is signed."}}], "projects": [{"id": "p_site", "clientId": "c_hanson", "name": "Hanson Capital website", "affiliate": "Hanson Capital", "status": "Active", "start": "2026-09-01", "target": "", "estHours": "", "summary": "Tell the story of Hanson Capital and replace the placeholder content with real content about the business.", "colorIdx": 0, "clientVisible": true, "goals": [{"id": "g_site1", "title": "Collect Loren's story and real content", "status": "In progress", "target": "", "estHours": "", "note": "Story walkthrough document sent."}, {"id": "g_site2", "title": "Replace placeholder content on the site", "status": "Not started", "target": "", "estHours": "", "note": ""}, {"id": "g_site3", "title": "Launch on the final domain", "status": "Not started", "target": "", "estHours": "", "note": ""}]}, {"id": "p_sch", "clientId": "c_hanson", "name": "Schoolhouse Master List app", "affiliate": "Schoolhouse", "status": "Active", "start": "2026-09-01", "target": "", "estHours": "", "summary": "Internal app for rosters, schedules and rate calculations.", "colorIdx": 1, "clientVisible": true, "goals": [{"id": "g_sch1", "title": "Weekly schedule view", "status": "In progress", "target": "", "estHours": "", "note": ""}, {"id": "g_sch2", "title": "Rate and subsidy calculations", "status": "Not started", "target": "", "estHours": "", "note": ""}]}], "entries": [{"id": "e_seed1", "date": "2026-10-05", "projectId": "p_site", "goalId": "g_site1", "person": "Bobby", "category": "Planning", "minutes": 120, "desc": "Reviewed inspiration sites and the site's current content", "internal": "", "kind": "normal", "estimate": false, "created": 1}], "credits": [], "team": ["Bobby", "Will"], "settings": {}, "timer": {"running": false}}</script>
+<script>
+(function () {
+"use strict";
+
+/* ====================== helpers ====================== */
+var BOOT = JSON.parse(document.getElementById("boot").textContent);
+var MODE = BOOT.mode === "client" ? "client" : "admin";
+var SEED = JSON.parse(document.getElementById("seed").textContent);
+var KEY = "seegson-hours-v1";
+
+function h(tag, props) {
+  var el = document.createElement(tag), pending;
+  var kids = Array.prototype.slice.call(arguments, 2);
+  if (props) Object.keys(props).forEach(function (k) {
+    var v = props[k];
+    if (v == null || v === false) return;
+    if (k === "class") el.className = v;
+    else if (k === "style" && typeof v === "object") Object.assign(el.style, v);
+    else if (k.slice(0, 2) === "on" && typeof v === "function") el.addEventListener(k.slice(2), v);
+    else if (k === "value") pending = v;
+    else if (k === "checked" || k === "disabled" || k === "selected") el[k] = !!v;
+    else el.setAttribute(k, v === true ? "" : v);
+  });
+  add(el, kids);
+  if (pending !== undefined) el.value = pending;
+  return el;
+}
+function add(el, kids) {
+  kids.forEach(function (k) {
+    if (Array.isArray(k)) return add(el, k);
+    if (k == null || k === false) return;
+    el.append(k instanceof Node ? k : document.createTextNode(String(k)));
+  });
+}
+var NS = "http://www.w3.org/2000/svg";
+function sv(tag, props) {
+  var el = document.createElementNS(NS, tag);
+  var kids = Array.prototype.slice.call(arguments, 2);
+  if (props) Object.keys(props).forEach(function (k) {
+    var v = props[k]; if (v == null) return;
+    el.setAttribute(k, v);
+  });
+  kids.forEach(function (k) { if (k) el.append(k instanceof Node ? k : document.createTextNode(k)); });
+  return el;
+}
+function uid(p) { return p + Math.random().toString(36).slice(2, 9); }
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function pad(n) { return String(n).padStart(2, "0"); }
+function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+function pd(s) { var a = s.split("-").map(Number); return new Date(a[0], a[1] - 1, a[2]); }
+function todayStr() { return ymd(new Date()); }
+function addDays(s, n) { var d = pd(s); d.setDate(d.getDate() + n); return ymd(d); }
+function addMonths(s, n) {
+  var d = pd(s), day = d.getDate(); d.setDate(1); d.setMonth(d.getMonth() + n);
+  var dim = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(); d.setDate(Math.min(day, dim)); return ymd(d);
+}
+function diffDays(a, b) { return Math.round((pd(b) - pd(a)) / 864e5); }
+function mondayOf(s) { var d = pd(s); return addDays(s, -((d.getDay() + 6) % 7)); }
+function fmtD(s, withYear) { if (!s) return ""; return pd(s).toLocaleDateString("en-US", withYear ? { month: "short", day: "numeric", year: "numeric" } : { month: "short", day: "numeric" }); }
+function fmtLong(s) { return pd(s).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); }
+function fh(min) { return String(Number((min / 60).toFixed(2))); }
+function hm(min) { return Math.floor(min / 60) + ":" + pad(Math.round(min % 60)); }
+function money(n) { return "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 }); }
+function parseDur(s) {
+  s = String(s || "").trim().toLowerCase(); if (!s) return null; var m;
+  if ((m = s.match(/^(\d+):(\d{1,2})$/))) return +m[1] * 60 + +m[2];
+  if ((m = s.match(/^(\d+(?:\.\d+)?)$/))) return Math.round(parseFloat(s) * 60);
+  m = s.match(/^(?:(\d+(?:\.\d+)?)\s*h(?:ours?|rs?)?)?\s*(?:(\d+)\s*m(?:in(?:ute)?s?)?)?$/);
+  if (m && (m[1] || m[2])) return Math.round((parseFloat(m[1]) || 0) * 60 + (+m[2] || 0));
+  return null;
+}
+function colorVar(i) { return "var(--s" + ((i % 8) + 1) + ")"; }
+function niceMax(v) { if (v <= 0) return 1; var p = Math.pow(10, Math.floor(Math.log10(v))), f = v / p;
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p; }
+function toast(msg) { var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toast.t); toast.t = setTimeout(function () { t.classList.remove("on"); }, 2200); }
+function download(name, text, type) {
+  var a = h("a", { href: URL.createObjectURL(new Blob([text], { type: type || "text/plain" })), download: name });
+  document.body.append(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+function copyText(t) {
+  if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t).then(function () { toast("Copied"); }, fallback);
+  fallback();
+  function fallback() { var ta = h("textarea", { style: { position: "fixed", opacity: 0 } }); ta.value = t; document.body.append(ta); ta.select();
+    try { document.execCommand("copy"); toast("Copied"); } catch (e) { toast("Select the text and copy it"); } ta.remove(); }
+}
+
+/* ====================== data ====================== */
+var CATS = ["Planning", "Design", "Development", "Testing", "Meetings and communication", "Research", "Documentation", "Deployment", "Maintenance and support", "Revisions", "New feature"];
+var MAINT = "Maintenance and support";
+var PSTAT = ["Planning", "Active", "On hold", "Complete"];
+var GSTAT = ["Not started", "In progress", "Done", "Blocked"];
+var state = load();
+function load() {
+  if (MODE === "client") return clone(SEED);
+  try { var raw = localStorage.getItem(KEY); if (raw) return normalize(JSON.parse(raw)); } catch (e) {}
+  return normalize(clone(SEED));
+}
+function normalize(s) {
+  s.clients = s.clients || []; s.projects = s.projects || []; s.entries = s.entries || []; s.credits = s.credits || [];
+  s.team = s.team || ["Bobby", "Will"]; s.settings = s.settings || {}; s.timer = s.timer || { running: false };
+  return s;
+}
+var storageOk = true;
+function save() {
+  if (MODE === "client") return;
+  state.updatedAt = new Date().toISOString();
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { storageOk = false; }
+}
+function mutate(fn) { fn(state); save(); render(); }
+
+/* ====================== calculations ====================== */
+function clientProjects(cid) { return state.projects.filter(function (p) { return p.clientId === cid; }); }
+function clientEntries(cid) { var ids = {}; clientProjects(cid).forEach(function (p) { ids[p.id] = 1; });
+  return state.entries.filter(function (e) { return ids[e.projectId]; }); }
+function projColor(p) { return colorVar(p.colorIdx || 0); }
+
+function computePeriods(c) {
+  var pl = c.plan, out = [], roll = (pl.openingRollover || 0) * 60;
+  var ents = clientEntries(c.id), t = todayStr();
+  var last = ents.reduce(function (m, e) { return e.date > m ? e.date : m; }, pl.start);
+  var limit = t > last ? t : last; if (limit < pl.start) limit = pl.start;
+  var inc = pl.incrementMin || 15, up = pl.roundUpAt || Math.ceil(inc / 2);
+  for (var i = 0; i < 80; i++) {
+    var start = addMonths(pl.start, i), next = addMonths(pl.start, i + 1), end = addDays(next, -1);
+    if (start > limit) break;
+    var closed = t > end, current = t >= start && t <= end;
+    var inP = ents.filter(function (e) { return e.date >= start && e.date <= end; });
+    var counted = inP.filter(function (e) { return e.kind !== "warranty"; });
+    var exact = counted.reduce(function (s, e) { return s + e.minutes; }, 0);
+    var floorM = Math.floor(exact / inc) * inc, rem = exact - floorM;
+    var billed = closed ? floorM + (rem >= up ? inc : 0) : floorM, pending = closed ? 0 : rem;
+    var credit = state.credits.filter(function (k) { return k.clientId === c.id && k.date >= start && k.date <= end; })
+      .reduce(function (s, k) { return s + k.hours * 60; }, 0);
+    var planMin = pl.monthlyHours * 60;
+    var purchased = Math.min(pl.balanceMax * 60, planMin + roll);
+    var fromCredit = Math.min(credit, billed), fromPurch = billed - fromCredit;
+    var overage = Math.max(0, fromPurch - purchased), unused = Math.max(0, purchased - fromPurch);
+    var rollOut = Math.min(pl.rolloverMax * 60, unused);
+    var maint = counted.filter(function (e) { return e.category === MAINT; }).reduce(function (s, e) { return s + e.minutes; }, 0);
+    var warranty = inP.filter(function (e) { return e.kind === "warranty"; }).reduce(function (s, e) { return s + e.minutes; }, 0);
+    out.push({ i: i, start: start, end: end, next: next, closed: closed, current: current, entries: inP, exact: exact, billed: billed,
+      pending: pending, planMin: planMin, rollIn: roll, credit: credit, avail: purchased + credit, overage: overage, unused: unused,
+      rollOut: rollOut, maint: maint, warranty: warranty, estCount: counted.filter(function (e) { return e.estimate; }).length });
+    roll = rollOut;
+  }
+  return out;
+}
+function pace(per) {
+  var days = diffDays(per.start, per.next), el = Math.min(days, Math.max(1, diffDays(per.start, todayStr()) + 1));
+  var frac = el / days, used = per.billed + per.pending;
+  return { days: days, elapsed: el, frac: frac, expected: per.avail * frac, used: used,
+    proj: frac >= 0.2 ? used / frac : null, daysLeft: Math.max(0, diffDays(todayStr(), per.end)) };
+}
+function paceStatus(per) {
+  if (!per.current) return null;
+  var p = pace(per);
+  if (per.overage > 0) return { cls: "crit", icon: "⚠", label: "Over the included hours" };
+  if (p.used > p.expected * 1.15 + 60) return { cls: "warn", icon: "▲", label: "Running ahead of pace" };
+  if (p.used < p.expected * 0.4 && p.frac > 0.3) return { cls: "info", icon: "▽", label: "Light so far" };
+  return { cls: "good", icon: "✓", label: "On pace" };
+}
+function byProject(per, cid) {
+  var m = {};
+  per.entries.filter(function (e) { return e.kind !== "warranty"; }).forEach(function (e) { m[e.projectId] = (m[e.projectId] || 0) + e.minutes; });
+  return clientProjects(cid).map(function (p) { return { p: p, min: m[p.id] || 0 }; }).filter(function (x) { return x.min > 0; });
+}
+function projTotals(pid) {
+  var all = state.entries.filter(function (e) { return e.projectId === pid && e.kind !== "warranty"; });
+  return all.reduce(function (s, e) { return s + e.minutes; }, 0);
+}
+function goalMin(gid) { return state.entries.filter(function (e) { return e.goalId === gid && e.kind !== "warranty"; }).reduce(function (s, e) { return s + e.minutes; }, 0); }
+
+/* ====================== ui state ====================== */
+var ui = { tab: "dashboard", clientId: null, periodIdx: null, preview: false,
+  f: { project: "", person: "", category: "", from: "", to: "", q: "" }, week: null, draft: null };
+function curClient() {
+  var c = state.clients.find(function (x) { return x.id === ui.clientId; }) || state.clients[0];
+  if (c) ui.clientId = c.id; return c;
+}
+function readHash() { var t = (location.hash || "").replace("#/", ""); if (["dashboard", "log", "entries", "projects", "reports", "settings"].indexOf(t) >= 0) ui.tab = t; }
+window.addEventListener("hashchange", function () { readHash(); render(); window.scrollTo(0, 0); });
+
+/* ====================== tooltip ====================== */
+var tipEl = document.getElementById("tip");
+function showTip(ev, head, rows) {
+  tipEl.replaceChildren();
+  if (head) tipEl.append(h("div", { class: "th" }, head));
+  rows.forEach(function (r) {
+    tipEl.append(h("div", { class: "tr" }, h("span", { class: "k" }, r.color ? h("span", { class: r.line ? "ln" : "sw", style: r.line ? { borderColor: r.color } : { background: r.color } }) : null, r.k), h("b", { class: "num" }, r.v)));
+  });
+  tipEl.style.display = "block";
+  var w = tipEl.offsetWidth, hh = tipEl.offsetHeight, x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + w > window.innerWidth - 8) x = ev.clientX - w - 14;
+  if (y + hh > window.innerHeight - 8) y = ev.clientY - hh - 14;
+  tipEl.style.left = Math.max(8, x) + "px"; tipEl.style.top = Math.max(8, y) + "px";
+}
+function hideTip() { tipEl.style.display = "none"; }
+
+/* ====================== modal ====================== */
+function openModal(title, body, actions) {
+  closeModal();
+  var root = document.getElementById("modal-root"), prev = document.activeElement;
+  var m = h("div", { class: "modal", role: "dialog", "aria-modal": "true", "aria-label": title }, h("h2", null, title), body, h("div", { class: "acts" }, actions));
+  var scrim = h("div", { class: "scrim", onmousedown: function (e) { if (e.target === scrim) closeModal(); } }, m);
+  root.append(scrim);
+  scrim._prev = prev;
+  scrim.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModal(); });
+  var f = m.querySelector("input,select,textarea,button"); if (f) f.focus();
+}
+function closeModal() { var root = document.getElementById("modal-root"); var s = root.firstChild; root.replaceChildren(); if (s && s._prev && s._prev.focus) try { s._prev.focus(); } catch (e) {} }
+function confirmBox(title, msg, okLabel, fn) {
+  openModal(title, h("p", { style: { margin: 0 } }, msg), [h("button", { class: "btn sec", onclick: closeModal }, "Cancel"),
+    h("button", { class: "btn danger", onclick: function () { closeModal(); fn(); } }, okLabel)]);
+}
+
+/* ====================== shared UI parts ====================== */
+function field(label, input, hint) { return h("div", { class: "field" }, h("label", null, label), input, hint ? h("span", { class: "hint" }, hint) : null); }
+function sel(opts, val, props) {
+  return h("select", props, opts.map(function (o) { var v = typeof o === "object" ? o.v : o, l = typeof o === "object" ? o.l : o; return h("option", { value: v }, l); })) && (function () {
+    var s = h("select", props, opts.map(function (o) { var v = typeof o === "object" ? o.v : o, l = typeof o === "object" ? o.l : o; return h("option", { value: v }, l); }));
+    s.value = val == null ? "" : val; return s; })();
+}
+function statusPill(txt, cls, icon) { return h("span", { class: "pill " + cls }, icon + " " + txt); }
+function projStatusPill(st) { return st === "Active" ? statusPill(st, "info", "●") : st === "Complete" ? statusPill(st, "good", "✓") : st === "On hold" ? statusPill(st, "warn", "❚❚") : statusPill(st, "", "○"); }
+function goalIcon(st) { return { "Not started": "", "In progress": "◐", "Done": "✓", "Blocked": "!" }[st] || ""; }
+function goalCls(st) { return { "In progress": "prog", "Done": "done", "Blocked": "block" }[st] || ""; }
+function periodLabel(p) { return fmtD(p.start) + " – " + fmtD(p.end, true) + (p.current ? " (current)" : ""); }
+function periodSelect(periods, idx, onchange) {
+  var s = h("select", { "aria-label": "Service period", onchange: function () { onchange(+s.value); } },
+    periods.slice().reverse().map(function (p) { return h("option", { value: p.i }, periodLabel(p)); }));
+  s.value = idx; return s;
+}
+function pickPeriod(periods) {
+  var idx = ui.periodIdx;
+  if (idx == null || !periods[idx]) { var cur = periods.find(function (p) { return p.current; }); idx = cur ? cur.i : periods.length - 1; }
+  return periods[idx];
+}
+
+/* ---- hero + ledger ---- */
+function heroBlock(c, per) {
+  var rem = per.avail - per.billed, over = per.overage > 0, ps = paceStatus(per), p = pace(per);
+  var bigTxt = over ? fh(per.overage) : fh(Math.max(0, rem));
+  var cap = over ? "hours over the included amount" : per.closed ? "hours unused when the period closed" : "hours remaining this period";
+  var facts = [];
+  facts.push(h("div", { class: "fact" }, h("b", { class: "num" }, fh(per.billed) + " h"), h("span", null, "used of " + fh(per.avail) + " h available")));
+  if (per.current) {
+    facts.push(h("div", { class: "fact" }, h("b", { class: "num" }, p.daysLeft + (p.daysLeft === 1 ? " day" : " days")), h("span", null, "left, period ends " + fmtD(per.end))));
+    facts.push(h("div", { class: "fact" }, h("b", { class: "num" }, p.proj != null ? "≈ " + fh(p.proj) + " h" : "Too early"), h("span", null, p.proj != null ? "projected by period end" : "to project this period")));
+  } else {
+    facts.push(h("div", { class: "fact" }, h("b", { class: "num" }, fh(per.rollOut) + " h"), h("span", null, "rolled into next period")));
+  }
+  facts.push(h("div", { class: "fact" }, h("b", { class: "num" }, fh(per.exact) + " h"), h("span", null, "logged, exact (billed in " + c.plan.incrementMin + "-minute steps)")));
+  var note = null;
+  if (over) note = "Extra hours need written approval at " + money(c.plan.overageRate) + " per hour. Pending: " + money(per.overage / 60 * c.plan.overageRate) + ".";
+  else if (per.current) note = "If the rest of the period stays quiet, up to " + fh(Math.min(c.plan.rolloverMax * 60, Math.max(0, per.avail - per.credit - per.billed))) + " h roll into next month (limit " + c.plan.rolloverMax + " h).";
+  return h("div", { class: "card" },
+    h("div", { class: "hero" },
+      h("div", null, h("div", { class: "big num" }, bigTxt, h("small", null, "h")), h("div", { class: "cap" }, cap),
+        ps ? h("div", { class: "status " + ps.cls, style: { marginTop: "12px" } }, ps.icon + " " + ps.label) : null),
+      h("div", { class: "facts" }, facts)),
+    note ? h("div", { class: "note" }, note) : null,
+    ledgerBlock(c, per));
+}
+function ledgerBlock(c, per) {
+  var parts = byProject(per, c.id), total = Math.max(per.avail, per.billed + per.pending, 1);
+  var p = pace(per), track = h("div", { class: "track", role: "img", "aria-label": "Hours used by project against hours available" });
+  parts.forEach(function (x) {
+    track.append(h("div", { class: "seg", style: { width: (x.min / total * 100) + "%", background: projColor(x.p) },
+      onpointermove: function (e) { showTip(e, x.p.name, [{ k: "Hours", v: fh(x.min) + " h", color: projColor(x.p) }, { k: "Share of used", v: Math.round(x.min / per.exact * 100) + "%" }]); }, onpointerleave: hideTip }));
+  });
+  if (per.current) {
+    var left = (p.expected / total * 100);
+    track.append(h("div", { class: "mark", style: { left: left + "%" } }), h("div", { class: "mark-l", style: { left: Math.min(94, Math.max(6, left)) + "%" } }, "expected by today"));
+  }
+  if (total > per.avail) track.append(h("div", { class: "lim", style: { left: (per.avail / total * 100) + "%" } }));
+  var legend = h("div", { class: "legend" }, parts.map(function (x) { return h("span", { class: "k" }, h("span", { class: "sw", style: { background: projColor(x.p) } }), x.p.name + " " + fh(x.min) + " h"); }),
+    per.current ? h("span", { class: "k" }, h("span", { class: "ln", style: { borderColor: "var(--accent)" } }), "Expected pace") : null);
+  return h("div", { class: "ledger", style: { marginTop: per.current ? "40px" : "26px" } }, track,
+    h("div", { class: "axis" }, h("span", null, "0"), h("span", null, fh(per.avail) + " h available" + (per.credit ? " (includes " + fh(per.credit) + " h credit)" : ""))),
+    parts.length ? legend : h("div", { class: "note" }, "No hours logged in this period yet."));
+}
+
+/* ---- burn-up chart ---- */
+function burnChart(c, per) {
+  var W = 760, H = 270, L = 46, R = 70, T = 16, B = 32, days = diffDays(per.start, per.next);
+  var daily = []; for (var d = 0; d < days; d++) daily.push(0);
+  per.entries.filter(function (e) { return e.kind !== "warranty"; }).forEach(function (e) { daily[diffDays(per.start, e.date)] += e.minutes; });
+  var t = todayStr(), lastDay = per.closed ? days - 1 : Math.min(days - 1, Math.max(0, diffDays(per.start, t)));
+  var cum = [], run = 0; for (var i = 0; i <= lastDay; i++) { run += daily[i]; cum.push(run); }
+  var ymax = niceMax(Math.max(per.avail, run) / 60 * 1.05), X = function (i) { return L + (W - L - R) * (i / (days - 1)); }, Y = function (hv) { return T + (H - T - B) * (1 - hv / ymax); };
+  var svg = sv("svg", { class: "chart", viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Cumulative hours used compared with expected pace" });
+  var step = ymax <= 6 ? 1 : ymax <= 12 ? 2 : ymax <= 30 ? 5 : ymax <= 60 ? 10 : ymax <= 120 ? 20 : 50;
+  for (var g = 0; g <= ymax + 0.001; g += step) {
+    svg.append(sv("line", { x1: L, x2: W - R, y1: Y(g), y2: Y(g), stroke: "var(--grid)", "stroke-width": 1 }), sv("text", { x: L - 8, y: Y(g) + 4, "text-anchor": "end" }, String(g)));
+  }
+  svg.append(sv("line", { x1: L, x2: W - R, y1: Y(0), y2: Y(0), stroke: "var(--base)", "stroke-width": 1 }));
+  for (var xd = 0; xd < days; xd += 7) svg.append(sv("text", { x: X(xd), y: H - 10, "text-anchor": "middle" }, fmtD(addDays(per.start, xd))));
+  svg.append(sv("line", { x1: L, x2: W - R, y1: Y(per.avail / 60), y2: Y(per.avail / 60), stroke: "var(--ink)", "stroke-width": 1 }),
+    sv("text", { x: W - R + 8, y: Y(per.avail / 60) + 4, class: "lbl" }, fh(per.avail) + " h"));
+  svg.append(sv("path", { d: "M" + X(0) + "," + Y(0) + " L" + X(days - 1) + "," + Y(per.avail / 60), fill: "none", stroke: "var(--accent)", "stroke-width": 2, "stroke-linecap": "round" }),
+    sv("text", { x: W - R + 8, y: Y(per.avail / 60) + 18, class: "lbl" }, "Pace"));
+  var path = cum.map(function (v, k) { return (k ? "L" : "M") + X(k) + "," + Y(v / 60); }).join(" ");
+  svg.append(sv("path", { d: path + " L" + X(cum.length - 1) + "," + Y(0) + " L" + X(0) + "," + Y(0) + " Z", fill: "var(--s1)", opacity: 0.1 }),
+    sv("path", { d: path, fill: "none", stroke: "var(--s1)", "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+  var ex = X(cum.length - 1), ey = Y(run / 60);
+  svg.append(sv("circle", { cx: ex, cy: ey, r: 5, fill: "var(--s1)", stroke: "var(--surface)", "stroke-width": 2 }),
+    sv("text", { x: Math.min(ex + 10, W - R + 8), y: ey - 10, class: "lbl" }, "Used " + fh(run) + " h"));
+  var cross = sv("line", { y1: T, y2: H - B, stroke: "var(--ink2)", "stroke-width": 1, style: "display:none" });
+  var hit = sv("rect", { x: L, y: T, width: W - L - R, height: H - T - B, fill: "transparent", tabindex: 0 });
+  function at(ev) {
+    var r = svg.getBoundingClientRect(), px = (ev.clientX - r.left) / r.width * W;
+    var k = Math.max(0, Math.min(days - 1, Math.round((px - L) / (W - L - R) * (days - 1))));
+    cross.setAttribute("x1", X(k)); cross.setAttribute("x2", X(k)); cross.style.display = "";
+    var used = k <= lastDay ? cum[k] : null, date = addDays(per.start, k);
+    var rows = [];
+    rows.push({ k: "Used so far", v: used == null ? "–" : fh(used) + " h", color: "var(--s1)", line: true });
+    rows.push({ k: "Expected pace", v: fh(per.avail * (k + 1) / days) + " h", color: "var(--accent)", line: true });
+    rows.push({ k: "Logged that day", v: fh(daily[k]) + " h" });
+    showTip(ev, fmtLong(date), rows);
+  }
+  hit.addEventListener("pointermove", at); hit.addEventListener("pointerleave", function () { cross.style.display = "none"; hideTip(); });
+  svg.append(cross, hit);
+  var tbl = h("details", { class: "tablev" }, h("summary", null, "View as table"),
+    h("div", { class: "tw" }, h("table", null, h("thead", null, h("tr", null, h("th", null, "Day"), h("th", { class: "r" }, "Logged"), h("th", { class: "r" }, "Used so far"), h("th", { class: "r" }, "Expected pace"))),
+      h("tbody", null, daily.map(function (m, k) { if (k > lastDay && !m) return null; if (!m && k % 1 === 0 && !(k === lastDay)) return null;
+        return h("tr", null, h("td", null, fmtLong(addDays(per.start, k))), h("td", { class: "r num" }, fh(m) + " h"), h("td", { class: "r num" }, k <= lastDay ? fh(cum[k]) + " h" : "–"), h("td", { class: "r num" }, fh(per.avail * (k + 1) / days) + " h")); })))));
+  return h("div", { class: "card" }, h("h2", null, "Hours used through the period"), h("div", { class: "sub" }, "Cumulative hours against the expected pace. Staying under the gold line means the month is on track."),
+    h("div", { class: "legend", style: { marginTop: 0, marginBottom: "8px" } },
+      h("span", { class: "k" }, h("span", { class: "ln", style: { borderColor: "var(--s1)" } }), "Used"),
+      h("span", { class: "k" }, h("span", { class: "ln", style: { borderColor: "var(--accent)" } }), "Expected pace"),
+      h("span", { class: "k" }, h("span", { class: "ln", style: { borderColor: "var(--ink)" } }), "Hours available")), svg, tbl);
+}
+
+/* ---- tiles, project table, categories, history ---- */
+function tilesBlock(c, per) {
+  var pl = c.plan;
+  var tiles = [
+    ["Plan hours", fh(per.planMin) + " h", per.rollIn ? "plus " + fh(per.rollIn) + " h rolled over" : "no rollover into this period"],
+    ["Credits", fh(per.credit) + " h", per.credit ? "capacity credit this period" : "none this period"],
+    [per.warranty ? "Warranty fixes" : "Maintenance", per.warranty ? fh(per.warranty) + " h" : fh(per.maint) + " h", per.warranty ? "not counted against hours" : "of about " + pl.maintenanceReserve + " h reserved"],
+    ["Overage pending", per.overage ? money(per.overage / 60 * pl.overageRate) : "$0", per.overage ? fh(per.overage) + " h over, needs written approval" : "within included hours"]
+  ];
+  return h("div", { class: "grid4", style: { marginBottom: "20px" } }, tiles.map(function (t) { return h("div", { class: "tile" }, h("div", { class: "l" }, t[0]), h("div", { class: "v num" }, t[1]), h("div", { class: "d" }, t[2])); }));
+}
+function projectTable(c, per) {
+  var rows = byProject(per, c.id).sort(function (a, b) { return b.min - a.min; });
+  var tot = rows.reduce(function (s, x) { return s + x.min; }, 0);
+  return h("div", { class: "card" }, h("h2", null, "Hours by project"), h("div", { class: "sub" }, "Where this period's hours went."),
+    rows.length ? h("div", { class: "tw" }, h("table", null, h("thead", null, h("tr", null, h("th", null, "Project"), h("th", { class: "r" }, "This period"), h("th", { class: "r" }, "Share"), h("th", { class: "r" }, "All time"), h("th", null, "Budget"))),
+      h("tbody", null, rows.map(function (x) {
+        var all = projTotals(x.p.id), est = x.p.estHours ? x.p.estHours * 60 : 0;
+        return h("tr", null, h("td", null, h("span", { class: "sw", style: { background: projColor(x.p), marginRight: "8px" } }), x.p.name, x.p.affiliate ? h("div", { class: "muted small" }, x.p.affiliate) : null),
+          h("td", { class: "r num" }, fh(x.min) + " h"), h("td", { class: "r num" }, Math.round(x.min / tot * 100) + "%"), h("td", { class: "r num" }, fh(all) + " h"),
+          h("td", { style: { minWidth: "130px" } }, est ? [h("div", { class: "meter" }, h("i", { style: { width: Math.min(100, all / est * 100) + "%", background: all > est ? "var(--crit)" : "var(--s1)" } })), h("div", { class: "muted small" }, fh(all) + " of " + x.p.estHours + " h estimated")] : h("span", { class: "muted small" }, "No estimate set")));
+      })))) : h("div", { class: "empty" }, "No hours logged in this period."));
+}
+function categoryBlock(c, per) {
+  var m = {}; per.entries.filter(function (e) { return e.kind !== "warranty"; }).forEach(function (e) { m[e.category] = (m[e.category] || 0) + e.minutes; });
+  var rows = Object.keys(m).map(function (k) { return [k, m[k]]; }).sort(function (a, b) { return b[1] - a[1]; });
+  var max = rows.length ? rows[0][1] : 1;
+  return h("div", { class: "card" }, h("h2", null, "Type of work"), h("div", { class: "sub" }, "How the hours split between planning, building, testing and support."),
+    rows.length ? rows.map(function (r) { return h("div", { class: "catrow" }, h("span", null, r[0]), h("div", { class: "meter", onpointermove: function (e) { showTip(e, r[0], [{ k: "Hours", v: fh(r[1]) + " h" }]); }, onpointerleave: hideTip }, h("i", { style: { width: (r[1] / max * 100) + "%", background: "var(--s1)" } })), h("b", { class: "num", style: { textAlign: "right" } }, fh(r[1]) + " h")); })
+      : h("div", { class: "empty" }, "Nothing logged yet."));
+}
+function historyBlock(c, periods, selIdx) {
+  var rows = periods.slice().reverse();
+  return h("div", { class: "card" }, h("h2", null, "Period history"), h("div", { class: "sub" }, "Each service period: what was available, what was used, and what carried forward."),
+    h("div", { class: "tw" }, h("table", null, h("thead", null, h("tr", null, ["Period", "Plan", "Rolled in", "Credit", "Available", "Used", "Over", "Rolled out"].map(function (x, i) { return h("th", { class: i ? "r" : "" }, x); }))),
+      h("tbody", null, rows.map(function (p) {
+        return h("tr", { class: p.i === selIdx ? "cur" : "" }, h("td", null, fmtD(p.start) + " – " + fmtD(p.end), p.current ? h("span", { class: "est" }, "open") : null),
+          h("td", { class: "r num" }, fh(p.planMin)), h("td", { class: "r num" }, fh(p.rollIn)), h("td", { class: "r num" }, fh(p.credit)), h("td", { class: "r num" }, fh(p.avail)),
+          h("td", { class: "r num" }, fh(p.billed) + (p.estCount ? "*" : "")), h("td", { class: "r num" }, p.overage ? fh(p.overage) : "–"), h("td", { class: "r num" }, p.closed ? fh(p.rollOut) : "–"));
+      })))), periods.some(function (p) { return p.estCount; }) ? h("div", { class: "foot" }, "* Includes hours logged as estimates, from before exact tracking began.") : null);
+}
+function activityBlock(c, per, opts) {
+  var list = per.entries.slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+  var showP = !(state.settings && state.settings.hidePerson);
+  return h("div", { class: "card" }, h("h2", null, "Activity"), h("div", { class: "sub" }, "What was worked on, most recent first."),
+    list.length ? h("div", { class: "tw" }, h("table", null, h("thead", null, h("tr", null, h("th", null, "Date"), h("th", null, "Project"), h("th", null, "Work done"), h("th", { class: "r" }, "Hours"))),
+      h("tbody", null, list.map(function (e) { var p = state.projects.find(function (x) { return x.id === e.projectId; });
+        return h("tr", null, h("td", { style: { whiteSpace: "nowrap" } }, fmtD(e.date)), h("td", null, p ? p.name : "", h("div", { class: "muted small" }, e.category + (showP && e.person ? " · " + e.person : ""))),
+          h("td", null, e.desc || h("span", { class: "muted" }, "–"), e.estimate ? h("span", { class: "est" }, "est.") : null, e.kind === "warranty" ? h("span", { class: "est" }, "warranty fix") : null),
+          h("td", { class: "r num" }, fh(e.minutes)));
+      })))) : h("div", { class: "empty" }, h("b", null, "No activity in this period"), "Hours will show up here as they are logged."));
+}
+function goalsBlock(c, editable) {
+  var projs = clientProjects(c.id).filter(function (p) { return editable || p.clientVisible !== false; });
+  return h("div", { class: "card" }, h("h2", null, "Projects and goals"), h("div", { class: "sub" }, "Where each project stands against its goals."),
+    projs.length ? projs.map(function (p) { return projectCard(p, editable); }) : h("div", { class: "empty" }, "No projects yet."));
+}
+
+/* ---- project card (admin + client) ---- */
+function projectCard(p, editable) {
+  var all = projTotals(p.id), est = p.estHours ? p.estHours * 60 : 0, done = p.goals.filter(function (g) { return g.status === "Done"; }).length;
+  var body = h("div", { class: "proj", style: { borderLeft: "5px solid " + projColor(p) } },
+    h("div", { class: "hd" },
+      h("div", { style: { flex: 1, minWidth: "200px" } }, h("h3", null, p.name), h("div", { class: "meta" }, (p.affiliate ? p.affiliate + " · " : "") + (p.target ? "target " + fmtD(p.target, true) : "no target date"))),
+      projStatusPill(p.status),
+      editable ? h("button", { class: "btn sec sm", onclick: function () { projectModal(p); } }, "Edit project") : null),
+    p.summary ? h("p", { class: "muted", style: { margin: "8px 0 0", color: "var(--ink2)" } }, p.summary) : null,
+    h("div", { class: "row", style: { marginTop: "12px", gap: "24px" } },
+      h("div", null, h("b", { class: "num" }, fh(all) + " h"), h("span", { class: "muted small" }, " logged" + (est ? " of " + p.estHours + " h estimated" : ""))),
+      p.goals.length ? h("div", null, h("b", { class: "num" }, done + " of " + p.goals.length), h("span", { class: "muted small" }, " goals done")) : null),
+    est ? h("div", { class: "meter", style: { marginTop: "8px" } }, h("i", { style: { width: Math.min(100, all / est * 100) + "%", background: all > est ? "var(--crit)" : projColor(p) } })) : null,
+    h("div", { style: { marginTop: "12px" } }, p.goals.map(function (g) { return goalRow(p, g, editable); })),
+    editable ? h("div", { style: { marginTop: "10px" } }, h("button", { class: "btn sec sm", onclick: function () { goalModal(p, null); } }, "Add goal")) : null);
+  return body;
+}
+function goalRow(p, g, editable) {
+  var gm = goalMin(g.id), icon = editable
+    ? h("button", { class: "gicon " + goalCls(g.status), title: g.status + ". Click to change.", "aria-label": g.title + ": " + g.status + ". Change status.", onclick: function () {
+      mutate(function () { g.status = GSTAT[(GSTAT.indexOf(g.status) + 1) % GSTAT.length]; }); } }, goalIcon(g.status))
+    : h("span", { class: "gicon " + goalCls(g.status), title: g.status }, goalIcon(g.status));
+  return h("div", { class: "goal " + (g.status === "Done" ? "done" : "") }, icon,
+    h("div", { class: "t" }, h("b", null, g.title), h("div", { class: "muted small" }, g.status + (g.target ? " · target " + fmtD(g.target) : "") + (g.note ? " · " + g.note : ""))),
+    h("div", { class: "gh num small" }, gm || g.estHours ? fh(gm) + " h" + (g.estHours ? " of " + g.estHours + " h" : "") : ""),
+    editable ? h("div", { class: "ga" }, h("button", { class: "btn link small", onclick: function () { goalModal(p, g); } }, "Edit")) : h("span"));
+}
+
+/* ====================== forms / modals ====================== */
+function projectOptions(selectedId) {
+  var groups = state.clients.map(function (c) { return h("optgroup", { label: c.name }, clientProjects(c.id).map(function (p) { return h("option", { value: p.id }, p.name); })); });
+  var s = h("select", { name: "project" }, groups); if (selectedId) s.value = selectedId; return s;
+}
+function entryForm(e, opts) {
+  opts = opts || {};
+  var proj = projectOptions(e.projectId), goal = h("select", { name: "goal" });
+  function fillGoals() {
+    var p = state.projects.find(function (x) { return x.id === proj.value; }); goal.replaceChildren(h("option", { value: "" }, "No specific goal"));
+    if (p) p.goals.forEach(function (g) { goal.append(h("option", { value: g.id }, g.title)); }); goal.value = (e.goalId && p && p.goals.some(function (g) { return g.id === e.goalId; })) ? e.goalId : "";
+  }
+  proj.addEventListener("change", function () { e.goalId = ""; fillGoals(); }); fillGoals();
+  var date = h("input", { type: "date", value: e.date || todayStr(), name: "date" });
+  var person = h("select", { name: "person" }, state.team.map(function (t) { return h("option", { value: t }, t); })); person.value = e.person || (state.settings.lastPerson || state.team[0]);
+  var cat = h("select", { name: "cat" }, CATS.map(function (t) { return h("option", { value: t }, t); })); cat.value = e.category || "Development";
+  var dur = h("input", { type: "text", name: "dur", value: e.minutes ? hm(e.minutes) : "", placeholder: "1.5, 1:30 or 90m", autocomplete: "off", inputmode: "text" });
+  var chips = h("div", { class: "chips" }, [["+15m", 15], ["+30m", 30], ["+1h", 60], ["+2h", 120]].map(function (c) {
+    return h("button", { type: "button", class: "btn sec sm", onclick: function () { var cur = parseDur(dur.value) || 0; dur.value = hm(cur + c[1]); } }, c[0]); }));
+  var desc = h("textarea", { name: "desc", rows: 3, placeholder: "What was done? Clients can see this." }); desc.value = e.desc || "";
+  var note = h("textarea", { name: "note", rows: 2, placeholder: "Only visible to Seegson. Never shown in the client view." }); note.value = e.internal || "";
+  var warranty = h("input", { type: "checkbox", id: "f-w", checked: e.kind === "warranty" });
+  var estimate = h("input", { type: "checkbox", id: "f-e", checked: !!e.estimate });
+  var err = h("div", { class: "err", role: "alert" });
+  var el = h("div", null,
+    h("div", { class: "grid2" }, field("Project", proj), field("Goal", goal)),
+    h("div", { class: "grid3", style: { marginTop: "12px" } }, field("Date", date), field("Who worked", person), field("Type of work", cat)),
+    h("div", { style: { marginTop: "12px" } }, field("Time spent", dur, "Hours (1.5), hours and minutes (1:30), or minutes (90m)"), chips),
+    h("div", { style: { marginTop: "12px" } }, field("Work done", desc)),
+    h("div", { style: { marginTop: "12px" } }, field("Internal note", note)),
+    h("div", { class: "row", style: { marginTop: "12px", gap: "20px" } },
+      h("label", { class: "row", style: { gap: "8px", cursor: "pointer" } }, warranty, h("span", null, "Warranty fix, does not use retainer hours")),
+      h("label", { class: "row", style: { gap: "8px", cursor: "pointer" } }, estimate, h("span", null, "Estimate, from before exact tracking"))),
+    err);
+  function read() {
+    var mins = parseDur(dur.value);
+    if (!proj.value) { err.textContent = "Choose a project."; return null; }
+    if (!date.value) { err.textContent = "Choose a date."; return null; }
+    if (!mins || mins <= 0) { err.textContent = "Enter the time spent, for example 1.5, 1:30 or 90m."; return null; }
+    if (mins > 24 * 60) { err.textContent = "That is more than 24 hours. Check the time."; return null; }
+    err.textContent = "";
+    return { projectId: proj.value, goalId: goal.value || "", date: date.value, person: person.value, category: cat.value, minutes: mins,
+      desc: desc.value.trim(), internal: note.value.trim(), kind: warranty.checked ? "warranty" : "normal", estimate: estimate.checked };
+  }
+  return { el: el, read: read, setDur: function (m) { dur.value = hm(m); }, dur: dur, reset: function () { desc.value = ""; note.value = ""; dur.value = ""; warranty.checked = false; estimate.checked = false; } };
+}
+function entryModal(entry) {
+  var f = entryForm(entry);
+  openModal("Edit time entry", f.el, [
+    h("button", { class: "btn danger", style: { marginRight: "auto" }, onclick: function () { confirmBox("Delete this entry?", "This removes " + fh(entry.minutes) + " h from the totals.", "Delete entry", function () { mutate(function (s) { s.entries = s.entries.filter(function (x) { return x.id !== entry.id; }); }); toast("Entry deleted"); }); } }, "Delete"),
+    h("button", { class: "btn sec", onclick: closeModal }, "Cancel"),
+    h("button", { class: "btn", onclick: function () { var v = f.read(); if (!v) return; closeModal(); mutate(function () { Object.assign(entry, v, { updated: Date.now() }); }); toast("Entry saved"); } }, "Save changes")]);
+}
+function projectModal(p) {
+  var isNew = !p; var cl = curClient();
+  var d = p || { id: uid("p_"), clientId: cl.id, name: "", affiliate: "", status: "Active", start: todayStr(), target: "", estHours: "", summary: "", colorIdx: clientProjects(cl.id).length, clientVisible: true, goals: [] };
+  var name = h("input", { type: "text", value: d.name }), aff = h("input", { type: "text", value: d.affiliate || "", placeholder: "Which affiliate or company is this for?" });
+  var stat = sel(PSTAT, d.status), target = h("input", { type: "date", value: d.target || "" }), est = h("input", { type: "number", min: 0, step: 0.5, value: d.estHours || "", placeholder: "Optional" });
+  var sum = h("textarea", { rows: 3 }); sum.value = d.summary || "";
+  var vis = h("input", { type: "checkbox", checked: d.clientVisible !== false });
+  var clientSel = sel(state.clients.map(function (c) { return { v: c.id, l: c.name }; }), d.clientId);
+  var err = h("div", { class: "err" });
+  var body = h("div", null, h("div", { class: "grid2" }, field("Project name", name), field("Affiliate or company", aff)),
+    h("div", { class: "grid3", style: { marginTop: "12px" } }, field("Status", stat), field("Target date", target), field("Estimated hours", est, "Used for the budget bar")),
+    h("div", { style: { marginTop: "12px" } }, field("Goal statement", sum, "One or two sentences on what this project is for. Clients see this.")),
+    state.clients.length > 1 ? h("div", { style: { marginTop: "12px" } }, field("Retainer", clientSel)) : null,
+    h("label", { class: "row", style: { gap: "8px", marginTop: "12px", cursor: "pointer" } }, vis, h("span", null, "Show this project in the client view")), err);
+  var acts = [];
+  if (!isNew) acts.push(h("button", { class: "btn danger", style: { marginRight: "auto" }, onclick: function () {
+    var n = state.entries.filter(function (e) { return e.projectId === d.id; }).length;
+    confirmBox("Delete " + d.name + "?", n ? "This also deletes its " + n + " time entries." : "This project has no time entries.", "Delete project", function () {
+      mutate(function (s) { s.projects = s.projects.filter(function (x) { return x.id !== d.id; }); s.entries = s.entries.filter(function (e) { return e.projectId !== d.id; }); }); toast("Project deleted"); }); } }, "Delete"));
+  acts.push(h("button", { class: "btn sec", onclick: closeModal }, "Cancel"),
+    h("button", { class: "btn", onclick: function () {
+      if (!name.value.trim()) { err.textContent = "Give the project a name."; return; }
+      closeModal();
+      mutate(function (s) { Object.assign(d, { name: name.value.trim(), affiliate: aff.value.trim(), status: stat.value, target: target.value, estHours: est.value ? +est.value : "", summary: sum.value.trim(), clientVisible: vis.checked, clientId: clientSel.value });
+        if (isNew) s.projects.push(d); }); toast(isNew ? "Project added" : "Project saved"); } }, isNew ? "Add project" : "Save project"));
+  openModal(isNew ? "New project" : "Edit project", body, acts);
+}
+function goalModal(p, g) {
+  var isNew = !g, d = g || { id: uid("g_"), title: "", status: "Not started", target: "", estHours: "", note: "" };
+  var title = h("input", { type: "text", value: d.title }), stat = sel(GSTAT, d.status), target = h("input", { type: "date", value: d.target || "" });
+  var est = h("input", { type: "number", min: 0, step: 0.5, value: d.estHours || "" }), note = h("input", { type: "text", value: d.note || "", placeholder: "Optional. Clients see this." });
+  var err = h("div", { class: "err" });
+  var acts = [];
+  if (!isNew) acts.push(h("button", { class: "btn danger", style: { marginRight: "auto" }, onclick: function () { closeModal(); mutate(function (s) { p.goals = p.goals.filter(function (x) { return x.id !== d.id; }); s.entries.forEach(function (e) { if (e.goalId === d.id) e.goalId = ""; }); }); toast("Goal deleted"); } }, "Delete"));
+  acts.push(h("button", { class: "btn sec", onclick: closeModal }, "Cancel"), h("button", { class: "btn", onclick: function () {
+    if (!title.value.trim()) { err.textContent = "Describe the goal."; return; } closeModal();
+    mutate(function () { Object.assign(d, { title: title.value.trim(), status: stat.value, target: target.value, estHours: est.value ? +est.value : "", note: note.value.trim() }); if (isNew) p.goals.push(d); }); toast("Goal saved"); } }, isNew ? "Add goal" : "Save goal"));
+  openModal((isNew ? "New goal for " : "Edit goal for ") + p.name, h("div", null, field("Goal", title), h("div", { class: "grid3", style: { marginTop: "12px" } }, field("Status", stat), field("Target date", target), field("Estimated hours", est)), h("div", { style: { marginTop: "12px" } }, field("Note", note)), err), acts);
+}
+
+/* ====================== views ====================== */
+function viewDashboard(admin) {
+  var c = curClient(); if (!c) return h("div", { class: "empty" }, "No client yet. Add one in Settings.");
+  var periods = computePeriods(c), per = pickPeriod(periods), out = [];
+  var filters = h("div", { class: "filters" },
+    state.clients.length > 1 && admin ? field("Client", sel(state.clients.map(function (x) { return { v: x.id, l: x.name }; }), c.id, { onchange: function (e) { ui.clientId = e.target.value; ui.periodIdx = null; render(); } })) : null,
+    field("Service period", periodSelect(periods, per.i, function (i) { ui.periodIdx = i; render(); })));
+  out.push(filters, heroBlock(c, per), tilesBlock(c, per), burnChart(c, per));
+  out.push(h("div", { class: "grid2" }, projectTable(c, per), categoryBlock(c, per)));
+  if (!admin) out.push(goalsBlock(c, false));
+  out.push(activityBlock(c, per), historyBlock(c, periods, per.i));
+  return h("div", null, out);
+}
+function viewLog() {
+  var e = ui.draft || { person: state.settings.lastPerson, category: "Development", date: todayStr() };
+  var tm = state.timer || {}, f = entryForm(e), clock = h("div", { class: "clock", "aria-live": "off" }, "0:00:00");
+  function tick() { if (!state.timer.running) { clock.textContent = "0:00:00"; return; } var s = Math.floor((Date.now() - state.timer.startedAt) / 1000);
+    clock.textContent = Math.floor(s / 3600) + ":" + pad(Math.floor(s / 60) % 60) + ":" + pad(s % 60); }
+  tick(); if (tm.running) { clearInterval(viewLog.iv); viewLog.iv = setInterval(tick, 1000); }
+  var timerBox = h("div", { class: "timerbox" }, clock,
+    tm.running ? h("button", { class: "btn", onclick: function () {
+      var mins = Math.max(1, Math.round((Date.now() - state.timer.startedAt) / 60000));
+      mutate(function (s) { s.timer = { running: false }; }); ui.draft = Object.assign({}, e, { minutes: mins }); render(); toast("Timer stopped. Add the details and save."); } }, "Stop timer")
+      : h("button", { class: "btn", onclick: function () { mutate(function (s) { s.timer = { running: true, startedAt: Date.now() }; }); } }, "Start timer"),
+    h("span", { class: "muted small" }, tm.running ? "Timer running. Stop it to fill in the time below." : "Start a timer while you work, or enter the time by hand."));
+  var again = h("input", { type: "checkbox", id: "again" });
+  var save = h("button", { class: "btn", onclick: function () {
+    var v = f.read(); if (!v) return;
+    mutate(function (s) { s.entries.push(Object.assign({ id: uid("e_"), created: Date.now() }, v)); s.settings.lastPerson = v.person; });
+    ui.draft = null; toast("Saved " + fh(v.minutes) + " h"); } }, "Save time entry");
+  var today = state.entries.filter(function (x) { return x.date === todayStr(); });
+  return h("div", null, timerBox,
+    h("div", { class: "card" }, h("h2", null, "Log time"), h("div", { class: "sub" }, "Record what was done and how long it took. Short, plain descriptions work best, since clients can read them."), f.el, h("div", { class: "row", style: { marginTop: "16px" } }, save)),
+    h("div", { class: "card" }, h("h2", null, "Logged today"), today.length ? entryTable(today, false) : h("div", { class: "empty" }, "Nothing logged today yet.")));
+}
+function entryTable(list, withProject) {
+  var tot = list.reduce(function (s, e) { return s + (e.kind === "warranty" ? 0 : e.minutes); }, 0);
+  return h("div", { class: "tw" }, h("table", null,
+    h("thead", null, h("tr", null, h("th", null, "Date"), h("th", null, "Project"), h("th", null, "Who"), h("th", null, "Work done"), h("th", { class: "r" }, "Hours"), h("th", null, ""))),
+    h("tbody", null, list.map(function (e) { var p = state.projects.find(function (x) { return x.id === e.projectId; }), g = p && p.goals.find(function (x) { return x.id === e.goalId; });
+      return h("tr", null, h("td", { style: { whiteSpace: "nowrap" } }, fmtD(e.date, true)),
+        h("td", null, p ? h("span", null, h("span", { class: "sw", style: { background: projColor(p), marginRight: "7px" } }), p.name) : "(deleted project)", h("div", { class: "muted small" }, e.category + (g ? " · " + g.title : ""))),
+        h("td", null, e.person || ""), h("td", { style: { minWidth: "220px" } }, e.desc || h("span", { class: "muted" }, "–"), e.estimate ? h("span", { class: "est" }, "est.") : null, e.kind === "warranty" ? h("span", { class: "est" }, "warranty") : null, e.internal ? h("div", { class: "muted small" }, "Internal: " + e.internal) : null),
+        h("td", { class: "r num" }, fh(e.minutes), h("div", { class: "muted small" }, hm(e.minutes))),
+        h("td", null, h("button", { class: "btn link small", onclick: function () { entryModal(e); } }, "Edit")));
+    }), h("tr", { class: "total" }, h("td", { colSpan: 4 }, "Total counted against hours"), h("td", { class: "r num" }, fh(tot)), h("td")))));
+}
+function viewEntries() {
+  var c = curClient(), pids = clientProjects(c.id);
+  var box = h("div"), F = ui.f;
+  function filtered() {
+    var ids = {}; pids.forEach(function (p) { ids[p.id] = 1; });
+    return state.entries.filter(function (e) {
+      return ids[e.projectId] && (!F.project || e.projectId === F.project) && (!F.person || e.person === F.person) && (!F.category || e.category === F.category)
+        && (!F.from || e.date >= F.from) && (!F.to || e.date <= F.to) && (!F.q || (e.desc + " " + e.internal).toLowerCase().indexOf(F.q.toLowerCase()) >= 0);
+    }).sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : (b.created || 0) - (a.created || 0); });
+  }
+  function draw() { var list = filtered(); box.replaceChildren(list.length ? entryTable(list, true) : h("div", { class: "empty" }, h("b", null, "No entries match"), "Clear a filter, or log time from the Log time tab.")); count.textContent = list.length + (list.length === 1 ? " entry" : " entries"); }
+  var count = h("span", { class: "muted small" });
+  var q = h("input", { type: "text", value: F.q, placeholder: "Search descriptions", oninput: function () { F.q = q.value; draw(); } });
+  var fl = h("div", { class: "filters" },
+    field("Project", sel([{ v: "", l: "All projects" }].concat(pids.map(function (p) { return { v: p.id, l: p.name }; })), F.project, { onchange: function (e) { F.project = e.target.value; draw(); } })),
+    field("Who", sel([{ v: "", l: "Everyone" }].concat(state.team.map(function (t) { return { v: t, l: t }; })), F.person, { onchange: function (e) { F.person = e.target.value; draw(); } })),
+    field("Type of work", sel([{ v: "", l: "All types" }].concat(CATS.map(function (t) { return { v: t, l: t }; })), F.category, { onchange: function (e) { F.category = e.target.value; draw(); } })),
+    field("From", h("input", { type: "date", value: F.from, onchange: function (e) { F.from = e.target.value; draw(); } })),
+    field("To", h("input", { type: "date", value: F.to, onchange: function (e) { F.to = e.target.value; draw(); } })),
+    field("Search", q), h("button", { class: "btn sec", onclick: function () { ui.f = { project: "", person: "", category: "", from: "", to: "", q: "" }; render(); } }, "Clear filters"));
+  draw();
+  return h("div", { class: "card" }, h("div", { class: "row", style: { justifyContent: "space-between", marginBottom: "10px" } }, h("h2", null, "Time entries"), h("div", { class: "row" }, count,
+    h("button", { class: "btn sec sm", onclick: function () { exportCsv(filtered()); } }, "Download CSV"))), fl, box);
+}
+function exportCsv(list) {
+  var q = function (v) { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  var rows = [["Date", "Project", "Goal", "Who", "Type of work", "Hours", "Minutes", "Counts against hours", "Estimate", "Work done", "Internal note"]];
+  list.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; }).forEach(function (e) { var p = state.projects.find(function (x) { return x.id === e.projectId; }) || {}, g = (p.goals || []).find(function (x) { return x.id === e.goalId; }) || {};
+    rows.push([e.date, p.name, g.title, e.person, e.category, fh(e.minutes), e.minutes, e.kind === "warranty" ? "No (warranty)" : "Yes", e.estimate ? "Yes" : "", e.desc, e.internal]); });
+  download("seegson-hours-" + todayStr() + ".csv", rows.map(function (r) { return r.map(q).join(","); }).join("\n"), "text/csv"); toast("CSV downloaded");
+}
+function viewProjects() {
+  var c = curClient(), projs = clientProjects(c.id);
+  return h("div", null, h("div", { class: "row", style: { justifyContent: "space-between", marginBottom: "14px" } }, h("div", null, h("h2", { style: { fontSize: "20px" } }, "Projects and goals"), h("div", { class: "muted small" }, "Click a goal's circle to move it from not started, to in progress, to done, to blocked.")),
+    h("button", { class: "btn", onclick: function () { projectModal(null); } }, "New project")),
+    projs.length ? projs.map(function (p) { return projectCard(p, true); }) : h("div", { class: "card empty" }, h("b", null, "No projects yet"), "Add the first project to start tracking its goals and hours."));
+}
+
+/* ---- reports ---- */
+function weekReport(c, mon) {
+  var sun = addDays(mon, 6), ents = clientEntries(c.id).filter(function (e) { return e.date >= mon && e.date <= sun; }), periods = computePeriods(c);
+  var per = periods.find(function (p) { return sun >= p.start && mon <= p.end; }) || periods[periods.length - 1];
+  var counted = ents.filter(function (e) { return e.kind !== "warranty"; }), tot = counted.reduce(function (s, e) { return s + e.minutes; }, 0);
+  var L = []; L.push("WEEKLY UPDATE: " + c.name, "Week of " + fmtD(mon) + " to " + fmtD(sun, true), "");
+  L.push("ACTIVE WORK");
+  var any = false;
+  clientProjects(c.id).forEach(function (p) {
+    var pe = ents.filter(function (e) { return e.projectId === p.id; }); var mins = pe.filter(function (e) { return e.kind !== "warranty"; }).reduce(function (s, e) { return s + e.minutes; }, 0);
+    if (!pe.length && p.status !== "Active") return; any = true;
+    L.push(p.name + " (" + p.status + ", " + (mins ? "~" + fh(mins) + " hrs this week" : "no hours this week") + ")");
+    var seen = {}; pe.forEach(function (e) { if (e.desc && !seen[e.desc]) { seen[e.desc] = 1; L.push("  - " + e.desc); } });
+    var doneNow = p.goals.filter(function (g) { return g.status === "Done"; }).length; if (p.goals.length) L.push("  Goals: " + doneNow + " of " + p.goals.length + " done");
+    L.push("");
+  });
+  if (!any) L.push("Nothing active.", "");
+  L.push("HOURS SUMMARY", "This week: " + fh(tot) + " hours", "This service period (" + fmtD(per.start) + " to " + fmtD(per.end) + "): " + fh(per.billed + per.pending) + " of " + fh(per.avail) + " hours used",
+    "Remaining: " + fh(Math.max(0, per.avail - per.billed - per.pending)) + " hours" + (per.overage ? " (over by " + fh(per.overage) + " h, needs approval)" : ""));
+  if (per.current) L.push("Next period starts: " + fmtD(per.next, true));
+  var warr = ents.filter(function (e) { return e.kind === "warranty"; }).reduce(function (s, e) { return s + e.minutes; }, 0); if (warr) L.push("Warranty fixes (not counted): " + fh(warr) + " hours");
+  return { text: L.join("\n"), total: tot, entries: ents };
+}
+function viewReports() {
+  var c = curClient(); if (!ui.week) ui.week = addDays(mondayOf(todayStr()), -7);
+  var out = h("pre", { class: "out" }), rep;
+  function draw() { rep = weekReport(c, ui.week); out.textContent = rep.text; }
+  draw();
+  var week = h("input", { type: "date", value: ui.week, onchange: function (e) { if (e.target.value) { ui.week = mondayOf(e.target.value); render(); } } });
+  var periods = computePeriods(c), per = pickPeriod(periods);
+  return h("div", null,
+    h("div", { class: "card" }, h("h2", null, "Weekly update"), h("div", { class: "sub" }, "Builds the text for the Monday update from what was logged. Copy it into the weekly update document and adjust the wording."),
+      h("div", { class: "filters" }, field("Week containing", week, "Weeks run Monday to Sunday"),
+        h("button", { class: "btn sec", onclick: function () { ui.week = addDays(mondayOf(todayStr()), -7); render(); } }, "Last week"), h("button", { class: "btn sec", onclick: function () { ui.week = mondayOf(todayStr()); render(); } }, "This week")), out,
+      h("div", { class: "row", style: { marginTop: "12px" } }, h("button", { class: "btn", onclick: function () { copyText(out.textContent); } }, "Copy text"))),
+    h("div", { class: "card" }, h("h2", null, "Period statement"), h("div", { class: "sub" }, "A printable summary of one service period, for the monthly conversation or for records."),
+      h("div", { class: "filters" }, field("Service period", periodSelect(periods, per.i, function (i) { ui.periodIdx = i; render(); })), h("button", { class: "btn", onclick: function () { window.print(); } }, "Print or save as PDF"),
+        h("button", { class: "btn sec", onclick: function () { exportCsv(per.entries); } }, "Download CSV")),
+      h("div", { class: "foot" }, "Printing from here includes the whole dashboard. Choose \"Save as PDF\" in the print window.")));
+}
+
+/* ---- settings ---- */
+function viewSettings() {
+  var out = [];
+  state.clients.forEach(function (c) { out.push(planCard(c)); });
+  out.push(h("div", { class: "card" }, h("h2", null, "Add a client"), h("div", { class: "sub" }, "Each client gets their own retainer, service periods and client view."),
+    h("button", { class: "btn", onclick: function () { clientModal(); } }, "Add client")));
+  var team = h("input", { type: "text", value: state.team.join(", ") });
+  out.push(h("div", { class: "card" }, h("h2", null, "Team"), h("div", { class: "sub" }, "Names that appear in the Who worked list. Separate with commas."), h("div", { class: "row" }, h("div", { style: { flex: 1, minWidth: "240px" } }, team),
+    h("button", { class: "btn", onclick: function () { var t = team.value.split(",").map(function (x) { return x.trim(); }).filter(Boolean); if (!t.length) return; mutate(function (s) { s.team = t; }); toast("Team saved"); } }, "Save team")),
+    h("label", { class: "row", style: { gap: "8px", marginTop: "12px", cursor: "pointer" } }, h("input", { type: "checkbox", checked: !!state.settings.hidePerson, onchange: function (e) { mutate(function (s) { s.settings.hidePerson = e.target.checked; }); } }), h("span", null, "Hide who worked in the client view"))));
+  out.push(dataCard());
+  return h("div", null, out);
+}
+function planCard(c) {
+  var pl = c.plan, rows = [["start", "Plan start date", "date", "First day of the first service period"], ["monthlyHours", "Hours per month", "number", "Included in the retainer"], ["monthlyFee", "Monthly fee ($)", "number", ""],
+    ["overageRate", "Extra hour rate ($)", "number", "Needs written approval before it applies"], ["rolloverMax", "Rollover limit (hours)", "number", "Unused hours that carry into the next period"], ["balanceMax", "Maximum available (hours)", "number", "Ceiling for plan hours plus rollover"],
+    ["maintenanceReserve", "Maintenance reserve (hours)", "number", "Hours set aside for support"], ["incrementMin", "Billing step (minutes)", "number", "Hours count in cumulative steps of this size"], ["roundUpAt", "Round up at (minutes)", "number", "Leftover minutes at period end round up at or above this"],
+    ["openingRollover", "Opening rollover (hours)", "number", "Hours carried in from before the plan start"]];
+  var inputs = {}, name = h("input", { type: "text", value: c.name }), contact = h("input", { type: "text", value: c.contact || "" });
+  var grid = h("div", { class: "grid3" }, rows.map(function (r) { inputs[r[0]] = h("input", { type: r[2], value: pl[r[0]], step: r[2] === "number" ? "any" : null }); return field(r[1], inputs[r[0]], r[3]); }));
+  return h("div", { class: "card" }, h("h2", null, c.name + ": retainer terms"), h("div", { class: "sub" }, pl.note || "These numbers drive the hours, rollover and overage calculations."),
+    h("div", { class: "grid2", style: { marginBottom: "12px" } }, field("Client name", name), field("Main contact", contact)), grid,
+    h("div", { class: "row", style: { marginTop: "14px" } }, h("button", { class: "btn", onclick: function () {
+      mutate(function () { c.name = name.value.trim() || c.name; c.contact = contact.value.trim();
+        rows.forEach(function (r) { var v = inputs[r[0]].value; pl[r[0]] = r[2] === "number" ? (v === "" ? 0 : +v) : (v || pl[r[0]]); }); }); toast("Terms saved"); } }, "Save terms"),
+      h("button", { class: "btn sec", onclick: function () { creditModal(c); } }, "Add capacity credit"),
+      state.clients.length > 1 ? h("button", { class: "btn danger", onclick: function () { confirmBox("Delete " + c.name + "?", "This deletes its projects and time entries too.", "Delete client", function () { mutate(function (s) { var ids = clientProjects(c.id).map(function (p) { return p.id; }); s.clients = s.clients.filter(function (x) { return x.id !== c.id; }); s.projects = s.projects.filter(function (p) { return p.clientId !== c.id; }); s.entries = s.entries.filter(function (e) { return ids.indexOf(e.projectId) < 0; }); ui.clientId = null; }); }); } }, "Delete client") : null),
+    state.credits.filter(function (k) { return k.clientId === c.id; }).length ? h("div", { style: { marginTop: "14px" } }, h("b", { class: "small" }, "Capacity credits"), state.credits.filter(function (k) { return k.clientId === c.id; }).map(function (k) {
+      return h("div", { class: "row small", style: { padding: "4px 0" } }, h("span", null, fmtD(k.date, true) + ": " + k.hours + " h" + (k.note ? " (" + k.note + ")" : "")), h("button", { class: "btn link small", onclick: function () { mutate(function (s) { s.credits = s.credits.filter(function (x) { return x.id !== k.id; }); }); } }, "Remove")); })) : null);
+}
+function creditModal(c) {
+  var date = h("input", { type: "date", value: todayStr() }), hrs = h("input", { type: "number", min: 0, step: 0.25 }), note = h("input", { type: "text", placeholder: "Why it was issued" }), err = h("div", { class: "err" });
+  openModal("Add capacity credit", h("div", null, h("div", { class: "grid2" }, field("Date issued", date), field("Hours", hrs)), h("div", { style: { marginTop: "12px" } }, field("Note", note)), err),
+    [h("button", { class: "btn sec", onclick: closeModal }, "Cancel"), h("button", { class: "btn", onclick: function () { if (!(+hrs.value > 0)) { err.textContent = "Enter the credit hours."; return; } closeModal(); mutate(function (s) { s.credits.push({ id: uid("k_"), clientId: c.id, date: date.value, hours: +hrs.value, note: note.value.trim() }); }); toast("Credit added"); } }, "Add credit")]);
+}
+function clientModal() {
+  var name = h("input", { type: "text" }), contact = h("input", { type: "text" }), err = h("div", { class: "err" });
+  openModal("Add client", h("div", null, h("div", { class: "grid2" }, field("Client name", name), field("Main contact", contact)), h("p", { class: "muted small" }, "Starts with the same retainer terms as the first client. Change them after adding."), err),
+    [h("button", { class: "btn sec", onclick: closeModal }, "Cancel"), h("button", { class: "btn", onclick: function () { if (!name.value.trim()) { err.textContent = "Enter a client name."; return; } closeModal();
+      var id = uid("c_"); mutate(function (s) { var base = clone(s.clients[0] ? s.clients[0].plan : SEED.clients[0].plan); base.start = todayStr(); base.note = ""; s.clients.push({ id: id, name: name.value.trim(), contact: contact.value.trim(), plan: base }); ui.clientId = id; }); toast("Client added"); } }, "Add client")]);
+}
+function dataCard() {
+  var lb = state.settings.lastBackup, fileIn = h("input", { type: "file", accept: ".json,application/json", style: { display: "none" }, onchange: function (e) { importFile(e.target.files[0]); e.target.value = ""; } });
+  return h("div", { class: "card" }, h("h2", null, "Your data"),
+    h("div", { class: "sub" }, "Everything is saved in this browser only. Download a backup after each work session, and use it to move your hours between computers."),
+    h("div", { class: "row" }, h("button", { class: "btn", onclick: exportJson }, "Download backup"), h("button", { class: "btn sec", onclick: function () { fileIn.click(); } }, "Import a backup"), fileIn,
+      h("button", { class: "btn sec", onclick: function () { confirmBox("Load sample data?", "This replaces everything here with made-up example hours so you can see how the tool looks. Download a backup first if you have real hours.", "Replace with sample data", function () { mutate(function (s) { Object.assign(s, sampleState()); }); toast("Sample data loaded"); }); } }, "Load sample data"),
+      h("button", { class: "btn danger", onclick: function () { confirmBox("Reset to the starting data?", "This deletes all hours you have logged here and restores the starting projects.", "Reset", function () { mutate(function (s) { Object.assign(s, normalize(clone(SEED))); }); toast("Reset"); }); } }, "Reset")),
+    h("div", { class: "foot" }, lb ? "Last backup: " + new Date(lb).toLocaleString() : "No backup downloaded yet.", storageOk ? "" : " Warning: this browser blocked saving. Download a backup before closing."));
+}
+function exportJson() { state.settings.lastBackup = new Date().toISOString(); save(); download("seegson-hours-backup-" + todayStr() + ".json", JSON.stringify(state, null, 1), "application/json"); toast("Backup downloaded"); render(); }
+function importFile(file) {
+  if (!file) return;
+  var r = new FileReader(); r.onload = function () {
+    var data; try { data = normalize(JSON.parse(r.result)); if (!data.clients.length) throw 0; } catch (e) { toast("That file is not a Seegson Hours backup"); return; }
+    openModal("Import backup", h("p", { style: { margin: 0 } }, "The backup has " + data.entries.length + " time entries across " + data.projects.length + " projects. Merge adds anything missing here and keeps the newer version of anything in both. Replace swaps everything."),
+      [h("button", { class: "btn sec", onclick: closeModal }, "Cancel"), h("button", { class: "btn danger", onclick: function () { closeModal(); mutate(function (s) { Object.assign(s, data); }); toast("Backup restored"); } }, "Replace everything"),
+        h("button", { class: "btn", onclick: function () { closeModal(); mutate(function (s) { mergeInto(s, data); }); toast("Backup merged"); } }, "Merge")]);
+  }; r.readAsText(file);
+}
+function mergeInto(s, d) {
+  function by(arr, key) { var m = {}; arr.forEach(function (x) { m[x[key]] = x; }); return m; }
+  ["clients", "projects", "credits"].forEach(function (k) { var m = by(s[k], "id"); d[k].forEach(function (x) { if (!m[x.id]) s[k].push(x); }); });
+  var m = by(s.entries, "id"); d.entries.forEach(function (x) { var ex = m[x.id]; if (!ex) s.entries.push(x); else if ((x.updated || x.created || 0) > (ex.updated || ex.created || 0)) Object.assign(ex, x); });
+  d.team.forEach(function (t) { if (s.team.indexOf(t) < 0) s.team.push(t); });
+}
+
+/* ---- publish client view ---- */
+function publishModal() {
+  var c = curClient(), projs = clientProjects(c.id), checks = {};
+  var list = projs.map(function (p) { checks[p.id] = h("input", { type: "checkbox", checked: p.clientVisible !== false }); return h("label", { class: "row", style: { gap: "8px", padding: "3px 0", cursor: "pointer" } }, checks[p.id], h("span", null, p.name)); });
+  var desc = h("input", { type: "checkbox", checked: true }), who = h("input", { type: "checkbox", checked: !state.settings.hidePerson });
+  var body = h("div", null, h("p", { style: { marginTop: 0, color: "var(--ink2)" } }, "This builds a read-only copy of the hours dashboard for " + c.name + " with your current numbers baked in. Internal notes are never included. Upload the file to your site (for example as demo/hanson-hours/index.html) and share the link."),
+    h("b", { class: "small" }, "Projects to include"), h("div", { style: { margin: "6px 0 12px" } }, list),
+    h("label", { class: "row", style: { gap: "8px", cursor: "pointer" } }, desc, h("span", null, "Show what was worked on")), h("label", { class: "row", style: { gap: "8px", cursor: "pointer", marginTop: "6px" } }, who, h("span", null, "Show who worked")));
+  openModal("Publish client view", body, [h("button", { class: "btn sec", onclick: closeModal }, "Cancel"), h("button", { class: "btn", onclick: function () {
+    var ids = projs.filter(function (p) { return checks[p.id].checked; }).map(function (p) { return p.id; });
+    if (!ids.length) { toast("Include at least one project"); return; }
+    var html = buildSnapshot(c.id, ids, desc.checked, who.checked); closeModal();
+    download("index.html", html, "text/html"); toast("Client view downloaded"); } }, "Download client view")]);
+}
+function buildSnapshot(cid, pids, showDesc, showWho) {
+  var c = clone(state.clients.find(function (x) { return x.id === cid; }));
+  var data = { v: 1, clients: [c], team: state.team.slice(), settings: { hidePerson: !showWho }, credits: clone(state.credits.filter(function (k) { return k.clientId === cid; })), timer: { running: false }, generatedAt: new Date().toISOString(),
+    projects: clone(state.projects.filter(function (p) { return pids.indexOf(p.id) >= 0; })).map(function (p) { p.clientVisible = true; return p; }),
+    entries: clone(state.entries.filter(function (e) { return pids.indexOf(e.projectId) >= 0; })).map(function (e) { delete e.internal; if (!showDesc) e.desc = ""; if (!showWho) e.person = ""; return e; }) };
+  data.projects.forEach(function (p) { p.goals.forEach(function (g) { delete g.internalNote; }); });
+  var docEl = document.documentElement.cloneNode(true);
+  ["app", "modal-root", "toast"].forEach(function (id) { var n = docEl.querySelector("#" + id); if (n) n.replaceChildren(); });
+  var t = docEl.querySelector("#tip"); if (t) { t.replaceChildren(); t.removeAttribute("style"); }
+  docEl.querySelector("#seed").textContent = JSON.stringify(data).replace(/</g, "\\u003c");
+  docEl.querySelector("#boot").textContent = JSON.stringify({ mode: "client", generatedAt: data.generatedAt });
+  return "<!doctype html>\n" + docEl.outerHTML;
+}
+
+/* ====================== shell ====================== */
+function topbar(admin) {
+  var c = curClient(), tm = state.timer || {};
+  return h("header", { class: "topbar" }, h("div", { class: "in" },
+    h("div", { class: "brand" }, "SEEGSON", h("i", null, "·"), "SOLUTIONS", h("small", null, admin ? "Hours" : (c ? c.name + " hours" : "Hours"))),
+    h("div", { class: "spacer" }),
+    admin && tm.running ? h("button", { class: "chip", onclick: function () { location.hash = "#/log"; }, title: "Timer running" }, h("span", { class: "dot" }), "Timer running") : null,
+    admin && !ui.preview ? h("button", { class: "btn-top ghost", onclick: function () { ui.preview = true; render(); window.scrollTo(0, 0); } }, "Preview client view") : null,
+    admin && !ui.preview ? h("button", { class: "btn-top", onclick: publishModal }, "Publish client view") : null,
+    admin && ui.preview ? h("button", { class: "btn-top", onclick: function () { ui.preview = false; render(); } }, "Back to editing") : null));
+}
+var TABS = [["dashboard", "Dashboard"], ["log", "Log time"], ["entries", "Time entries"], ["projects", "Projects"], ["reports", "Reports"], ["settings", "Settings"]];
+function render() {
+  var app = document.getElementById("app"); clearInterval(viewLog.iv); hideTip();
+  var scroll = window.scrollY; app.replaceChildren();
+  if (MODE === "client" || ui.preview) { app.append(topbar(false), clientMain()); }
+  else {
+    var view = { dashboard: function () { return viewDashboard(true); }, log: viewLog, entries: viewEntries, projects: viewProjects, reports: viewReports, settings: viewSettings }[ui.tab]();
+    var banner = null;
+    if (!state.settings.lastBackup && state.entries.length) banner = h("div", { class: "banner" }, h("span", null, h("b", null, "No backup yet. "), "Your hours are saved in this browser only."), h("button", { class: "btn sm", onclick: exportJson }, "Download backup"));
+    app.append(topbar(true), h("nav", { class: "tabs", "aria-label": "Sections" }, h("div", { class: "in" }, TABS.map(function (t) { return h("a", { href: "#/" + t[0], "aria-current": ui.tab === t[0] ? "page" : null }, t[1]); }))), h("main", null, banner, view));
+  }
+  window.scrollTo(0, scroll);
+}
+function clientMain() {
+  var c = curClient(), gen = BOOT.generatedAt || state.updatedAt;
+  var head = h("div", { style: { marginBottom: "18px" } }, h("h1", { style: { fontSize: "26px", letterSpacing: "-.01em" } }, "Hours and progress"),
+    h("div", { class: "muted" }, c ? "Prepared for " + (c.contact ? c.contact + ", " : "") + c.name : "", gen ? " · Updated " + fmtD(gen.slice(0, 10), true) : ""));
+  var prev = (MODE !== "client") ? h("div", { class: "banner noprint" }, h("b", null, "Preview."), h("span", null, "This is what " + (c && c.contact ? c.contact.split(" ")[0] : "your client") + " will see. Internal notes are hidden.")) : null;
+  var foot = h("div", { class: "foot", style: { marginTop: "28px" } }, "Hours are counted in " + (c ? c.plan.incrementMin : 15) + "-minute steps. Questions? Reply to your weekly update or contact Bobby Julian at bobby@seegsonsolutions.com or 832-806-5186.");
+  return h("main", null, prev, head, viewDashboard(false), foot);
+}
+
+/* ====================== sample data (for trying the tool) ====================== */
+function sampleState() {
+  var s = normalize(clone(SEED)); s.entries = [];
+  var rows = [["2026-09-02", 0, 1.5, "Planning", "Kickoff call and scope notes"], ["2026-09-04", 0, 2.25, "Design", "Three design directions for the public site"], ["2026-09-08", 0, 1.75, "Development", "Built the first version of the public site"],
+    ["2026-09-10", 1, 1, "Maintenance and support", "Fixed a roster filter bug"], ["2026-09-15", 1, 2.5, "Development", "Weekly schedule view for the Master List app"], ["2026-09-17", 0, 1.25, "Revisions", "Adjusted layout after feedback"],
+    ["2026-09-22", 1, 3, "Development", "Rate and subsidy split calculations"], ["2026-09-24", 0, 2, "Deployment", "Deployed the chosen direction to the demo link"], ["2026-09-29", 1, 1.5, "Testing", "Walked Amber through the testing build"],
+    ["2026-09-30", 0, 0.75, "Meetings and communication", "Monthly check-in call"], ["2026-10-01", 0, 2, "Research", "Reviewed inspiration sites"], ["2026-10-03", 0, 1.5, "Documentation", "Story walkthrough for the site content"],
+    ["2026-10-05", 1, 2, "Development", "Attendance export"], ["2026-10-06", 0, 1.25, "Planning", "Plan the real content for the site"]];
+  rows.forEach(function (r, i) { s.entries.push({ id: "e_s" + i, date: r[0], projectId: s.projects[r[1]].id, goalId: "", person: i % 3 === 2 ? "Will" : "Bobby", category: r[3], minutes: Math.round(r[2] * 60), desc: r[4], internal: "", kind: "normal", estimate: false, created: i }); });
+  return s;
+}
+
+/* ====================== boot ====================== */
+readHash(); render();
+if (MODE === "admin") window.addEventListener("beforeunload", save);
+})();
+</script>
+</body>
+</html>

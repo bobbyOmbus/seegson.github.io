@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17A2C6">
+<title>Schoolhouse Daycare — Master List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Nunito+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#33404F; --ink-soft:#5C6B7C; --muted:#8695A5;
+  --paper:#FDF7EC; --surface:#FFFFFF; --rule:#E9E2D6; --rule-soft:#F4EFE5;
+
+  --sky:#17A2C6; --sky-soft:#DDF3F9; --sky-deep:#0E86A5;
+  --grass:#4FB06C; --grass-soft:#E2F4E7; --grass-deep:#3E9459;
+  --sun:#F6B927; --sun-soft:#FEF3D8; --sun-deep:#A87400;
+  --coral:#F4735C; --coral-soft:#FDE7E2; --coral-deep:#C94D37;
+  --grape:#9271DB; --grape-soft:#EEE8FA; --grape-deep:#6E4EB5;
+
+  --display:'Baloo 2','Trebuchet MS',system-ui,cursive;
+  --body:'Nunito Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --r:14px; --shadow:0 1px 2px rgba(51,64,79,.05),0 8px 22px rgba(51,64,79,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--sky);outline-offset:2px;border-radius:6px}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;margin:0}
+
+/* ---------- masthead ---------- */
+header.mast{background:var(--sky);color:#fff;padding:16px 20px 0}
+.mast-in{max-width:1280px;margin:0 auto}
+.mast-top{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between}
+.brand{font-family:var(--display);font-weight:700;font-size:30px;letter-spacing:-.01em;line-height:1.05}
+.brand span{color:#FFE9A8;font-weight:600}
+.mast-sub{font-size:12px;color:#C9EEF7;margin:3px 0 0;letter-spacing:.03em}
+.mast-acts{display:flex;gap:7px;flex-wrap:wrap}
+.btn{border:1px solid var(--rule);background:var(--surface);color:var(--ink);border-radius:11px;padding:8px 14px;font-weight:700;font-size:14px;transition:.13s}
+.btn:hover{background:var(--rule-soft)}
+.btn-primary{background:var(--grass);border-color:var(--grass);color:#fff}
+.btn-primary:hover{background:var(--grass-deep)}
+.btn-ghost{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.34);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.26)}
+.btn-sm{padding:6px 11px;font-size:13px}
+.btn-xs{padding:4px 9px;font-size:12px;border-radius:9px}
+.btn-danger{color:var(--coral-deep);border-color:#F3CDC4}
+.btn-danger:hover{background:var(--coral-soft)}
+
+/* ---------- ledger ---------- */
+.ledger{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:9px;margin:15px 0 14px}
+.led{background:var(--surface);border-radius:13px;padding:11px 14px;box-shadow:0 3px 10px rgba(51,64,79,.1);border-top:4px solid var(--sky)}
+.led:nth-child(2){border-top-color:var(--grape)}
+.led:nth-child(3){border-top-color:var(--grass)}
+.led:nth-child(4){border-top-color:var(--sun)}
+.led:nth-child(5){border-top-color:var(--coral)}
+.led b{display:block;font-family:var(--mono);font-size:21px;font-weight:600;letter-spacing:-.03em;color:var(--ink)}
+.led i{display:block;font-style:normal;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;font-weight:700}
+.led small{color:var(--muted);font-size:11.5px}
+
+/* ---------- tabs ---------- */
+nav.tabs{background:var(--sky);padding:0 20px;position:relative}
+nav.tabs:after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;
+  background:repeating-linear-gradient(90deg,var(--sun) 0 22px,var(--coral) 22px 44px,var(--grape) 44px 66px,var(--grass) 66px 88px)}
+.tabs-in{max-width:1280px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs-in::-webkit-scrollbar{display:none}
+.tab{background:transparent;border:0;border-bottom:4px solid transparent;color:#C9EEF7;padding:11px 14px;font-weight:700;font-size:14px;white-space:nowrap}
+.tab:hover{color:#fff}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:#fff}
+.tab .cnt{font-family:var(--mono);font-size:11.5px;background:rgba(255,255,255,.22);border-radius:20px;padding:1px 7px;margin-left:6px;font-weight:500}
+.tab[aria-selected="true"] .cnt{background:#fff;color:var(--sky-deep)}
+
+/* ---------- toolbar ---------- */
+.wrap{max-width:1280px;margin:0 auto;padding:18px 20px 24px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.search{flex:1;min-width:180px;position:relative}
+.search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--rule);border-radius:11px;background:var(--surface)}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.4}
+select.filter{padding:9px 11px;border:1px solid var(--rule);border-radius:11px;background:var(--surface);font-weight:600}
+
+/* ---------- week strip ---------- */
+.week{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.wd{background:var(--surface);border:1px solid var(--rule);border-radius:13px;padding:10px 12px;box-shadow:var(--shadow)}
+.wd.today{border-color:var(--sky);box-shadow:0 0 0 2px var(--sky-soft),var(--shadow)}
+.wd h4{font-size:14px;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:baseline}
+.wd h4 em{font-style:normal;font-family:var(--mono);font-size:19px;color:var(--ink);font-weight:600}
+.wd .split{font-size:11.5px;color:var(--muted);margin-top:2px}
+.wd .staff{font-size:11.5px;margin-top:5px;padding-top:5px;border-top:1px dashed var(--rule);color:var(--ink-soft)}
+.wd .staff b{font-family:var(--mono)}
+
+/* ---------- roster ---------- */
+.roster{display:flex;flex-direction:column;gap:8px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:15px;padding:12px 15px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center}
+.card.flagged{border-left:5px solid var(--sun)}
+.avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:17px;color:#fff;flex-shrink:0}
+.c-main{min-width:0;cursor:pointer}
+.c-name{font-family:var(--display);font-weight:600;font-size:19px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.2}
+.c-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:4px;font-size:12.5px;color:var(--muted)}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:700;letter-spacing:.01em}
+.p-ft{background:var(--grass-soft);color:var(--grass-deep)}
+.p-pt{background:var(--rule-soft);color:var(--ink-soft)}
+.p-infant{background:var(--sun-soft);color:var(--sun-deep)}
+.p-pre{background:var(--sky-soft);color:var(--sky-deep)}
+.p-half{background:var(--grape-soft);color:var(--grape-deep)}
+.p-sub{background:var(--coral-soft);color:var(--coral-deep)}
+.p-legacy{background:var(--rule-soft);color:var(--ink-soft);border:1px dashed #CFC3AE}
+.p-change{background:var(--grape-soft);color:var(--grape-deep)}
+.p-allergy{background:var(--coral);color:#fff}
+.c-right{display:flex;align-items:center;gap:14px}
+
+/* ---------- signature: the attendance card ---------- */
+.punch{display:flex;gap:3px}
+.punch button{width:35px;height:39px;border:1.5px solid var(--rule);background:var(--surface);border-radius:10px;font-family:var(--mono);font-size:13px;font-weight:600;color:#B9B0A2;display:flex;align-items:center;justify-content:center;transition:.12s}
+.punch button:hover{border-color:var(--grass);color:var(--grass-deep)}
+.punch button.on{background:var(--grass);border-color:var(--grass);color:#fff}
+.money{text-align:right;min-width:118px;cursor:pointer}
+.money b{font-family:var(--mono);font-size:19px;font-weight:600;display:block;letter-spacing:-.03em}
+.money small{font-size:11px;color:var(--muted);display:block}
+.money .rc{color:var(--coral-deep);font-size:11.5px;font-family:var(--mono)}
+
+.flagnote{grid-column:1/-1;background:var(--sun-soft);border-radius:10px;padding:8px 11px;font-size:12.5px;color:var(--sun-deep);display:flex;gap:7px}
+.empty{background:var(--surface);border:2px dashed var(--rule);border-radius:15px;padding:44px 20px;text-align:center;color:var(--muted)}
+.empty h3{color:var(--ink);margin-bottom:6px;font-size:21px}
+.grouphdr{font-family:var(--display);font-weight:600;font-size:16px;color:var(--ink-soft);margin:18px 0 2px;display:flex;align-items:center;gap:10px}
+.grouphdr:after{content:"";flex:1;height:2px;background:var(--rule);border-radius:2px}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed;inset:0;background:rgba(51,64,79,.45);opacity:0;pointer-events:none;transition:.2s;z-index:40}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(520px,100%);background:var(--paper);z-index:50;transform:translateX(100%);transition:transform .24s cubic-bezier(.32,.72,0,1);display:flex;flex-direction:column;box-shadow:-8px 0 34px rgba(51,64,79,.2)}
+.drawer.open{transform:none}
+.dr-head{background:var(--sky);color:#fff;padding:14px 18px 0}
+.dr-title{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.dr-title h2{font-size:21px;display:flex;align-items:center;gap:10px;min-width:0}
+.dr-title .avatar{width:36px;height:36px;font-size:15px;border:2px solid rgba(255,255,255,.5)}
+.dr-sub{font-size:12px;color:#C9EEF7;margin:1px 0 0}
+.dr-tabs{display:flex;gap:2px;margin-top:11px;overflow-x:auto;scrollbar-width:none}
+.dr-tabs::-webkit-scrollbar{display:none}
+.dr-tabs button{background:transparent;border:0;border-bottom:4px solid transparent;color:#C9EEF7;padding:8px 12px;font-weight:700;font-size:14px;white-space:nowrap}
+.dr-tabs button.on{color:#fff;border-bottom-color:#fff}
+.dr-body{flex:1;overflow-y:auto;padding:16px 18px 22px}
+.dr-foot{border-top:1px solid var(--rule);background:var(--surface);padding:11px 16px;display:flex;gap:8px;justify-content:space-between;align-items:center}
+.x{background:transparent;border:0;color:#fff;font-size:26px;line-height:1;padding:0 6px;opacity:.8}
+.x:hover{opacity:1}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:9px 11px;border:1px solid var(--rule);border-radius:11px;background:var(--surface)}
+.field textarea{min-height:58px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;border:1px solid var(--rule);border-radius:11px;overflow:hidden;background:var(--surface)}
+.seg button{flex:1;border:0;background:transparent;padding:9px 6px;font-size:13.5px;font-weight:700;color:var(--muted);border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--grass);color:#fff}
+.hint{font-size:12px;color:var(--muted);margin-top:5px}
+.hint b{color:var(--ink)}
+.cardrate{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--sun-soft);border-radius:11px;padding:8px 12px;font-size:12.5px;color:var(--sun-deep);margin-top:7px;font-weight:600}
+.cardrate button{border:0;background:#fff;border-radius:8px;padding:4px 11px;font-size:12px;font-weight:800;color:var(--sun-deep);white-space:nowrap}
+.calc{background:var(--surface);border:1px solid var(--rule);border-radius:13px;padding:13px 15px;margin:16px 0 4px}
+.calc h4{font-size:16px;color:var(--ink-soft);margin-bottom:8px}
+.calcrow{display:flex;justify-content:space-between;padding:5px 0;font-size:14px;border-bottom:1px dashed var(--rule);gap:10px}
+.calcrow:last-child{border:0;padding-top:9px;margin-top:3px;border-top:2.5px solid var(--ink);font-weight:800;font-size:16px}
+.calcrow span:last-child{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.calcrow.neg span:last-child{color:var(--coral-deep)}
+
+/* ---------- people & notes ---------- */
+.sec{margin-bottom:20px}
+.sec-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px}
+.sec-hd h3{font-size:17px}
+.sec-hd p{margin:1px 0 0;font-size:12px;color:var(--muted)}
+.person{background:var(--surface);border:1px solid var(--rule);border-radius:13px;padding:11px 13px;margin-bottom:8px}
+.person .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.person .nm{font-weight:800;font-size:15px}
+.person .rel{font-size:12.5px;color:var(--muted)}
+.person a{color:var(--sky-deep);font-weight:700;text-decoration:none;font-family:var(--mono);font-size:13.5px}
+.person a:hover{text-decoration:underline}
+.person .row2{margin-top:8px}
+.person .fields{display:none;margin-top:9px;padding-top:9px;border-top:1px dashed var(--rule)}
+.person.editing .fields{display:block}
+.person.editing .top .nm{color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:20px}
+.chip.ok{background:var(--grass-soft);color:var(--grass-deep)}
+.chip.no{background:var(--coral-soft);color:var(--coral-deep)}
+.chip.id{background:var(--sun-soft);color:var(--sun-deep)}
+.note{background:var(--surface);border:1px solid var(--rule);border-radius:13px;padding:11px 13px;margin-bottom:8px;border-left:5px solid var(--rule)}
+.note.billing{border-left-color:var(--grass)}
+.note.behavior{border-left-color:var(--grape)}
+.note.family{border-left-color:var(--sky)}
+.note.care{border-left-color:var(--coral)}
+.note.general{border-left-color:var(--muted)}
+.note .nhd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px}
+.note .ncat{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.note.billing .ncat{color:var(--grass-deep)} .note.behavior .ncat{color:var(--grape-deep)}
+.note.family .ncat{color:var(--sky-deep)} .note.care .ncat{color:var(--coral-deep)} .note.general .ncat{color:var(--muted)}
+.note .ndate{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+.note p{margin:0;font-size:14px;white-space:pre-wrap}
+.note .nact{display:flex;gap:6px;margin-top:8px}
+.notefilter{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.notefilter button{border:1px solid var(--rule);background:var(--surface);border-radius:20px;padding:4px 11px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+.notefilter button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.addbox{background:var(--surface);border:1px solid var(--rule);border-radius:13px;padding:12px 13px;margin-bottom:12px}
+.alert{background:var(--coral-soft);border:1px solid #F5C6BB;border-radius:12px;padding:10px 13px;margin-bottom:14px;font-size:13.5px;color:var(--coral-deep);font-weight:600}
+.alert b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+
+/* ---------- statement ---------- */
+.stmt{background:#fff;border:1px solid var(--rule);border-radius:13px;padding:18px}
+.stmt-hd{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2.5px solid var(--ink);padding-bottom:10px;margin-bottom:12px;gap:10px}
+.stmt-hd h3{font-size:19px}
+.stmt-hd .lic{font-size:11px;color:var(--muted);text-align:right}
+.stmt table{width:100%;border-collapse:collapse;font-size:13.5px}
+.stmt td{padding:6px 0;border-bottom:1px dashed var(--rule)}
+.stmt td:last-child{text-align:right;font-family:var(--mono)}
+.stmt tr.tot td{border-bottom:0;border-top:2.5px solid var(--ink);font-weight:800;font-size:15.5px;padding-top:9px}
+.stmt .foot{margin-top:12px;font-size:11.5px;color:var(--muted)}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 14px 10px 18px;border-radius:26px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.22s;z-index:70;box-shadow:0 8px 26px rgba(51,64,79,.35);display:flex;align-items:center;gap:12px}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{background:var(--sun);border:0;color:#4A3300;border-radius:20px;padding:5px 13px;font-weight:800;font-size:13px}
+footer.lic{max-width:1280px;margin:0 auto;padding:4px 20px 44px;color:var(--muted);font-size:12px;display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+footer.lic em{font-family:var(--display);font-size:15px;font-style:normal;color:var(--ink-soft)}
+
+@media(max-width:820px){
+  .week{grid-template-columns:repeat(2,1fr)}
+  .week .wd:last-child{grid-column:1/-1}
+}
+@media(max-width:760px){
+  .card{grid-template-columns:auto 1fr}
+  .c-right{grid-column:1/-1;justify-content:space-between;border-top:1px solid var(--rule-soft);padding-top:10px}
+  .brand{font-size:25px}
+  header.mast{padding:13px 14px 0}
+  .wrap{padding:14px 14px 18px}
+  .mast-acts{width:100%}
+  .mast-acts .btn{flex:1;text-align:center;padding:7px 4px;font-size:12.5px}
+  .ledger{grid-template-columns:1fr 1fr;gap:7px}
+  .led b{font-size:18px} .led small{display:none}
+  .toolbar{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .toolbar::-webkit-scrollbar{display:none}
+  .search{position:sticky;left:0;flex:0 0 60%;min-width:0}
+  select.filter{flex:0 0 auto}
+  .punch{flex:1;margin-right:10px}
+  .punch button{flex:1;width:auto}
+  .row2{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- print ---------- */
+@media print{
+  header.mast,nav.tabs,.toolbar,.week,.punch,.scrim,.dr-head,.dr-foot,.notefilter,.addbox,.nact,footer.lic,.toast{display:none!important}
+  body{background:#fff}
+  .card{box-shadow:none;break-inside:avoid;border-color:#ccc}
+  body.printing .wrap{display:none}
+  body.printing .drawer{position:static;transform:none;width:100%;box-shadow:none;background:#fff}
+  body.printing .dr-body{overflow:visible;padding:0}
+  body.printing .stmt{border:0;padding:0}
+}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="mast-in">
+    <div class="mast-top">
+      <div>
+        <div class="brand">Schoolhouse <span>Master List</span></div>
+        <p class="mast-sub">Sample data · a Seegson Solutions demo</p>
+      </div>
+      <div class="mast-acts">
+        <button class="btn btn-ghost btn-sm" id="btnCsv">Export CSV</button>
+        <button class="btn btn-ghost btn-sm" id="btnSheet">Pickup sheet</button>
+        <button class="btn btn-ghost btn-sm" id="btnBackup">Save backup</button>
+        <button class="btn btn-ghost btn-sm" id="btnRestore">Restore</button>
+        <button class="btn btn-primary" id="btnAdd">Add child</button>
+      </div>
+    </div>
+    <div class="ledger" id="ledger"></div>
+  </div>
+</header>
+
+<nav class="tabs"><div class="tabs-in" id="tabs" role="tablist"></div></nav>
+
+<main class="wrap">
+  <div class="alert" style="background:var(--sky-soft);border-color:#B6E3EF;color:var(--sky-deep)">
+  <b>Demo</b>Everything here is invented sample data. Edits stay in this browser and reset if you clear it.</div>
+<div class="week" id="week"></div>
+  <div class="toolbar">
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search names, notes, parents, pickups" autocomplete="off">
+    </div>
+    <select class="filter" id="fRoom"><option value="">All programs</option><option value="infant">Infant &amp; Toddler</option><option value="preschool">Preschool &amp; TK</option><option value="halfday">Half day</option></select>
+    <select class="filter" id="fSched"><option value="">Full and part time</option><option value="FT">Full time only</option><option value="PT">Part time only</option></select>
+    <select class="filter" id="fFlag">
+      <option value="">Everyone in this group</option>
+      <option value="review">Needs a look</option>
+      <option value="legacy">Below the card rate</option>
+      <option value="rcoe">Has RCOE</option>
+      <option value="allergy">Has an allergy noted</option>
+      <option value="nocontact">Missing emergency contact</option>
+      <option value="nopickup">No one approved for pickup</option>
+      <option value="agingup">Ready to move up</option>
+    </select>
+    <select class="filter" id="fSort"><option value="name">Sort by name</option><option value="parent">Sort by parent amount</option><option value="weekly">Sort by weekly total</option><option value="start">Sort by start date</option><option value="age">Sort by age</option></select>
+  </div>
+  <div class="roster" id="roster"></div>
+</main>
+<footer class="lic">
+  <em>Every name and number on this page is made up.</em>
+  <span>A Seegson Solutions demo · <span id="cnt"></span></span>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drName">
+  <div class="dr-head">
+    <div class="dr-title">
+      <h2 id="drName"></h2>
+      <button class="x" id="drClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="dr-tabs" id="drTabs"></div>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+  <div class="dr-foot">
+    <button class="btn btn-danger btn-sm" id="drDelete">Remove</button>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-sm" id="drCancel">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="drSave">Save child</button>
+    </div>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="fileIn" accept="application/json" hidden>
+
+<script>
+const SEED = [{"id":"c_d32","name":"Arlo Calloway","dob":"2025-09-08","allergies":"","care":"","guardians":[{"id":"g32a","name":"Marcus Calloway","rel":"Father","phone":"951-555-7007","email":"calloway.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[],"pickup":[{"id":"u32","name":"Uncle Ben","rel":"Aunt","phone":"951-555-8907","email":"","note":"","ok":true,"idCheck":true,"primary":false}],"noteList":[{"id":"n32behavior24","date":"2026-06-06","cat":"behavior","text":"Rough transition at drop-off; the blue blanket helps.","pin":true},{"id":"n32family916","date":"2026-07-27","cat":"family","text":"Parents separated; both are on the pickup list and both want updates.","pin":false}],"terms":[{"id":"t_d32_0","start":"2026-09-01","end":"","section":"expected","program":"infant","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":435,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d25","name":"August Ferris","dob":"2021-04-20","allergies":"","care":"","guardians":[{"id":"g25a","name":"Priya Ferris","rel":"Stepfather","phone":"951-555-4367","email":"ferris.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g25b","name":"Nia Ferris","rel":"Grandmother","phone":"951-555-9067","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[],"pickup":[{"id":"u25","name":"Uncle Ben","rel":"Family friend","phone":"951-555-0914","email":"","note":"","ok":true,"idCheck":true,"primary":false}],"noteList":[{"id":"n25general59","date":"2026-05-01","cat":"general","text":"Loves the sandbox. Will stay out there all morning if allowed.","pin":false},{"id":"n25family926","date":"2026-06-15","cat":"family","text":"Parents separated; both are on the pickup list and both want updates.","pin":false},{"id":"n25care730","date":"2026-07-20","cat":"care","text":"Naps hard from 12:30, needs the sound machine.","pin":false}],"terms":[{"id":"t_d25_0","start":"2026-03-07","end":"","section":"active","program":"halfday","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":275,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d14","name":"August Ibarra","dob":"2023-02-05","allergies":"","care":"Naps best in the corner cot.","guardians":[{"id":"g14a","name":"Tomas Ibarra","rel":"Father","phone":"951-555-3387","email":"ibarra.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g14b","name":"Jordan Ibarra","rel":"Mother","phone":"951-555-3392","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e14","name":"Maya Prescott","rel":"Aunt","phone":"951-555-8385","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[{"id":"n14general822","date":"2026-04-16","cat":"general","text":"Loves the sandbox. Will stay out there all morning if allowed.","pin":true},{"id":"n14behavior38","date":"2026-08-20","cat":"behavior","text":"Rough transition at drop-off; the blue blanket helps.","pin":false}],"terms":[{"id":"t_d14_0","start":"2026-02-07","end":"","section":"active","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d13","name":"August Salgado","dob":"2023-04-14","allergies":"","care":"","guardians":[{"id":"g13a","name":"Ola Salgado","rel":"Grandmother","phone":"951-555-5376","email":"salgado.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[{"id":"e13","name":"Bill Ferris","rel":"Family friend","phone":"951-555-9639","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u13","name":"Ms. Adeyemi","rel":"Uncle","phone":"951-555-8789","email":"","note":"","ok":false,"idCheck":true,"primary":false}],"noteList":[{"id":"n13general209","date":"2026-08-21","cat":"general","text":"Loves the sandbox. Will stay out there all morning if allowed.","pin":false},{"id":"n13behavior221","date":"2026-08-20","cat":"behavior","text":"Big week \u2014 shared the blocks without being asked.","pin":false},{"id":"n13family139","date":"2026-05-24","cat":"family","text":"Parents separated; both are on the pickup list and both want updates.","pin":false}],"terms":[{"id":"t_d13_0","start":"2026-05-11","end":"","section":"active","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"amount","discountValue":25,"rcoe":170.14,"dateNote":""}]},{"id":"c_d27","name":"Bram Ferris","dob":"2022-12-23","allergies":"","care":"","guardians":[{"id":"g27a","name":"Tomas Ferris","rel":"Grandmother","phone":"951-555-5627","email":"ferris.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[{"id":"e27","name":"Ruth Mora","rel":"Uncle","phone":"951-555-3375","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u27","name":"Grandma Vi","rel":"Neighbor","phone":"951-555-5174","email":"","note":"","ok":false,"idCheck":false,"primary":false}],"noteList":[{"id":"n27care94","date":"2026-04-05","cat":"care","text":"Still working on the spoon. Bring a second shirt.","pin":false},{"id":"n27care134","date":"2026-05-06","cat":"care","text":"Naps hard from 12:30, needs the sound machine.","pin":false}],"terms":[{"id":"t_d27_0","start":"2026-01-28","end":"","section":"monthly","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"amount","discountValue":25,"rcoe":336.07,"dateNote":""}]},{"id":"c_d19","name":"Bram Halloran","dob":"2022-08-04","allergies":"Peanuts \u2014 carries an EpiPen in the front cubby","care":"","guardians":[{"id":"g19a","name":"Marcus Halloran","rel":"Stepfather","phone":"951-555-7563","email":"halloran.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[{"id":"e19","name":"Bill Prescott","rel":"Grandfather","phone":"951-555-2344","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[{"id":"n19behavior492","date":"2026-04-17","cat":"behavior","text":"Rough transition at drop-off; the blue blanket helps.","pin":false}],"terms":[{"id":"t_d19_0","start":"2026-01-20","end":"","section":"active","program":"preschool","schedule":"PT","days":{"mon":true,"tue":true,"wed":false,"thu":false,"fri":false},"rateBasis":"daily","rate":70,"discountType":"none","discountValue":0,"rcoe":336.07,"dateNote":""}]},{"id":"c_d22","name":"Bram Nakamura","dob":"2023-02-12","allergies":"","care":"Naps best in the corner cot.","guardians":[{"id":"g22a","name":"Priya Nakamura","rel":"Stepfather","phone":"951-555-8956","email":"nakamura.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g22b","name":"Alexis Nakamura","rel":"Father","phone":"951-555-1570","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[],"pickup":[],"noteList":[{"id":"n22billing528","date":"2026-04-18","cat":"billing","text":"Paying two weeks ahead through the fall.","pin":false},{"id":"n22behavior302","date":"2026-04-21","cat":"behavior","text":"Rough transition at drop-off; the blue blanket helps.","pin":false}],"terms":[{"id":"t_d22_0","start":"2026-06-17","end":"","section":"active","program":"preschool","schedule":"PT","days":{"mon":true,"tue":false,"wed":false,"thu":true,"fri":true},"rateBasis":"daily","rate":85,"discountType":"percent","discountValue":10,"rcoe":0,"dateNote":""}]},{"id":"c_d16","name":"Clementine Ashby","dob":"2023-09-19","allergies":"","care":"","guardians":[{"id":"g16a","name":"Marcus Ashby","rel":"Stepfather","phone":"951-555-2282","email":"ashby.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[],"pickup":[],"noteList":[{"id":"n16behavior739","date":"2026-05-03","cat":"behavior","text":"Big week \u2014 shared the blocks without being asked.","pin":false},{"id":"n16care308","date":"2026-07-04","cat":"care","text":"Naps hard from 12:30, needs the sound machine.","pin":true},{"id":"n16billing364","date":"2026-08-02","cat":"billing","text":"Switched to the monthly-on-the-1st schedule.","pin":false}],"terms":[{"id":"t_d16_0","start":"2026-05-20","end":"","section":"active","program":"preschool","schedule":"PT","days":{"mon":true,"tue":false,"wed":true,"thu":false,"fri":true},"rateBasis":"daily","rate":95,"discountType":"percent","discountValue":10,"rcoe":170.14,"dateNote":""}]},{"id":"c_d24","name":"Clementine Prescott","dob":"2022-07-05","allergies":"Dairy \u2014 soy milk sent from home","care":"","guardians":[{"id":"g24a","name":"Priya Prescott","rel":"Grandmother","phone":"951-555-1070","email":"prescott.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g24b","name":"Jordan Prescott","rel":"Grandmother","phone":"951-555-2647","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[],"pickup":[{"id":"u24","name":"Grandma Vi","rel":"Family friend","phone":"951-555-0381","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"noteList":[],"terms":[{"id":"t_d24_0","start":"2026-07-04","end":"","section":"active","program":"halfday","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":275,"discountType":"none","discountValue":0,"rcoe":336.07,"dateNote":""}]},{"id":"c_d10","name":"Della Lindqvist","dob":"2021-09-20","allergies":"","care":"Naps best in the corner cot.","guardians":[{"id":"g10a","name":"Marcus Lindqvist","rel":"Mother","phone":"951-555-6273","email":"lindqvist.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[{"id":"e10","name":"Carmen Oyelaran","rel":"Family friend","phone":"951-555-5448","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[{"id":"n10billing739","date":"2026-04-07","cat":"billing","text":"Switched to the monthly-on-the-1st schedule.","pin":false}],"terms":[{"id":"t_d10_0","start":"2026-05-23","end":"","section":"active","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d21","name":"Della Oyelaran","dob":"2022-10-04","allergies":"","care":"","guardians":[{"id":"g21a","name":"Tomas Oyelaran","rel":"Stepfather","phone":"951-555-4996","email":"oyelaran.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[{"id":"e21","name":"Maya Keating","rel":"Grandfather","phone":"951-555-1438","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[{"id":"n21family224","date":"2026-06-22","cat":"family","text":"Baby sister due in November.","pin":false},{"id":"n21family375","date":"2026-04-11","cat":"family","text":"Parents separated; both are on the pickup list and both want updates.","pin":false},{"id":"n21billing582","date":"2026-08-22","cat":"billing","text":"Switched to the monthly-on-the-1st schedule.","pin":false}],"terms":[{"id":"t_d21_0","start":"2026-04-21","end":"","section":"active","program":"preschool","schedule":"PT","days":{"mon":true,"tue":true,"wed":false,"thu":false,"fri":true},"rateBasis":"daily","rate":70,"discountType":"none","discountValue":0,"rcoe":170.14,"dateNote":""}]},{"id":"c_d11","name":"Etta Duarte","dob":"2023-06-17","allergies":"Egg \u2014 kitchen has the substitution list","care":"","guardians":[{"id":"g11a","name":"Dana Duarte","rel":"Stepfather","phone":"951-555-0675","email":"duarte.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g11b","name":"Sam Duarte","rel":"Father","phone":"951-555-7809","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e11","name":"Carmen Vasquez","rel":"Family friend","phone":"951-555-9585","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[],"terms":[{"id":"t_d11_0","start":"2026-03-23","end":"","section":"active","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d26","name":"Etta Ibarra","dob":"2021-03-21","allergies":"","care":"","guardians":[{"id":"g26a","name":"Marcus Ibarra","rel":"Father","phone":"951-555-1450","email":"ibarra.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g26b","name":"Jordan Ibarra","rel":"Stepfather","phone":"951-555-7778","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e26","name":"Carmen Nakamura","rel":"Aunt","phone":"951-555-3176","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u26","name":"Grandma Vi","rel":"Family friend","phone":"951-555-3514","email":"","note":"","ok":true,"idCheck":true,"primary":false}],"noteList":[{"id":"n26behavior318","date":"2026-07-03","cat":"behavior","text":"Big week \u2014 shared the blocks without being asked.","pin":false},{"id":"n26family478","date":"2026-04-12","cat":"family","text":"Parents separated; both are on the pickup list and both want updates.","pin":true},{"id":"n26general143","date":"2026-04-22","cat":"general","text":"Loves the sandbox. Will stay out there all morning if allowed.","pin":false}],"terms":[{"id":"t_d26_0","start":"2026-02-09","end":"","section":"monthly","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"none","discountValue":0,"rcoe":170.14,"dateNote":""}]},{"id":"c_d33","name":"Ezra Prescott","dob":"2025-01-10","allergies":"No allergies, but no berries (dislikes)","care":"","guardians":[{"id":"g33a","name":"Ola Prescott","rel":"Mother","phone":"951-555-3303","email":"prescott.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g33b","name":"Sam Prescott","rel":"Stepfather","phone":"951-555-0362","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e33","name":"Carmen Keating","rel":"Grandfather","phone":"951-555-3970","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u33","name":"Grandma Vi","rel":"Aunt","phone":"951-555-5114","email":"","note":"","ok":true,"idCheck":true,"primary":false}],"noteList":[{"id":"n33care342","date":"2026-07-14","cat":"care","text":"Naps hard from 12:30, needs the sound machine.","pin":true},{"id":"n33behavior228","date":"2026-06-04","cat":"behavior","text":"Big week \u2014 shared the blocks without being asked.","pin":false}],"terms":[{"id":"t_d33_0","start":"2026-09-01","end":"","section":"expected","program":"infant","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":435,"discountType":"none","discountValue":0,"rcoe":336.07,"dateNote":""}]},{"id":"c_d17","name":"Freya Nakamura","dob":"2021-02-13","allergies":"","care":"","guardians":[{"id":"g17b","name":"Jordan Nakamura","rel":"Father","phone":"951-555-4304","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e17","name":"Carmen Calloway","rel":"Uncle","phone":"951-555-6255","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u17","name":"Ms. Adeyemi","rel":"Neighbor","phone":"951-555-4616","email":"","note":"","ok":false,"idCheck":false,"primary":false}],"noteList":[{"id":"n17general455","date":"2026-04-18","cat":"general","text":"Loves the sandbox. Will stay out there all morning if allowed.","pin":false},{"id":"n17billing777","date":"2026-04-13","cat":"billing","text":"Switched to the monthly-on-the-1st schedule.","pin":false},{"id":"n17family163","date":"2026-07-16","cat":"family","text":"Baby sister due in November.","pin":false}],"terms":[{"id":"t_d17_0","start":"2026-05-06","end":"","section":"active","program":"preschool","schedule":"PT","days":{"mon":true,"tue":true,"wed":false,"thu":false,"fri":true},"rateBasis":"daily","rate":95,"discountType":"percent","discountValue":10,"rcoe":336.07,"dateNote":""}]},{"id":"c_d28","name":"Hazel Vasquez","dob":"2023-07-14","allergies":"","care":"","guardians":[{"id":"g28a","name":"Ola Vasquez","rel":"Stepfather","phone":"951-555-8009","email":"vasquez.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g28b","name":"Nia Vasquez","rel":"Mother","phone":"951-555-6665","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e28","name":"Maya Lindqvist","rel":"Grandfather","phone":"951-555-8781","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u28","name":"Ms. Adeyemi","rel":"Uncle","phone":"951-555-5707","email":"","note":"","ok":true,"idCheck":true,"primary":false}],"noteList":[{"id":"n28behavior300","date":"2026-04-20","cat":"behavior","text":"Rough transition at drop-off; the blue blanket helps.","pin":false},{"id":"n28family259","date":"2026-08-10","cat":"family","text":"Baby sister due in November.","pin":false},{"id":"n28care361","date":"2026-08-17","cat":"care","text":"Naps hard from 12:30, needs the sound machine.","pin":false}],"terms":[{"id":"t_d28_0","start":"2026-01-06","end":"","section":"summer","program":"preschool","schedule":"PT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":false},"rateBasis":"daily","rate":95,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d8","name":"Iris Halloran","dob":"2025-05-27","allergies":"Egg \u2014 kitchen has the substitution list","care":"","guardians":[{"id":"g8a","name":"Renee Halloran","rel":"Stepfather","phone":"951-555-5267","email":"halloran.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[],"pickup":[],"noteList":[{"id":"n8billing284","date":"2026-08-02","cat":"billing","text":"Switched to the monthly-on-the-1st schedule.","pin":false},{"id":"n8billing287","date":"2026-08-12","cat":"billing","text":"Paying two weeks ahead through the fall.","pin":false}],"terms":[{"id":"t_d8_0","start":"2026-06-03","end":"","section":"active","program":"infant","schedule":"PT","days":{"mon":false,"tue":true,"wed":false,"thu":true,"fri":false},"rateBasis":"daily","rate":95,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d1","name":"Iris Lindqvist","dob":"2025-06-15","allergies":"","care":"Naps best in the corner cot.","guardians":[{"id":"g1a","name":"Priya Lindqvist","rel":"Stepfather","phone":"951-555-9131","email":"lindqvist.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[],"pickup":[],"noteList":[{"id":"n1behavior30","date":"2026-04-19","cat":"behavior","text":"Rough transition at drop-off; the blue blanket helps.","pin":false},{"id":"n1family410","date":"2026-04-28","cat":"family","text":"Parents separated; both are on the pickup list and both want updates.","pin":false}],"terms":[{"id":"t_d1_0","start":"2026-07-15","end":"","section":"active","program":"infant","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":435,"discountType":"none","discountValue":0,"rcoe":259.09,"dateNote":""}]},{"id":"c_d0","name":"Maeve Vasquez","dob":"2025-09-16","allergies":"","care":"","guardians":[{"id":"g0a","name":"Ola Vasquez","rel":"Mother","phone":"951-555-9855","email":"vasquez.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[],"pickup":[],"noteList":[{"id":"n0billing851","date":"2026-08-03","cat":"billing","text":"Paying two weeks ahead through the fall.","pin":true}],"terms":[{"id":"t_d0_0","start":"2025-09-02","end":"2026-06-15","section":"active","program":"infant","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":435,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""},{"id":"t_d0_1","start":"2026-06-15","end":"","section":"active","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d2","name":"Nora Ashby","dob":"2025-01-16","allergies":"","care":"","guardians":[{"id":"g2a","name":"Priya Ashby","rel":"Grandmother","phone":"951-555-0348","email":"ashby.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[],"pickup":[{"id":"u2","name":"Uncle Ben","rel":"Aunt","phone":"951-555-0279","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"noteList":[{"id":"n2general192","date":"2026-07-17","cat":"general","text":"Loves the sandbox. Will stay out there all morning if allowed.","pin":false}],"terms":[{"id":"t_d2_0","start":"2026-02-07","end":"","section":"active","program":"infant","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":435,"discountType":"none","discountValue":0,"rcoe":170.14,"dateNote":""}]},{"id":"c_d7","name":"Nora Whitlock","dob":"2025-10-22","allergies":"","care":"","guardians":[{"id":"g7a","name":"Ola Whitlock","rel":"Father","phone":"951-555-8593","email":"whitlock.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g7b","name":"Sam Whitlock","rel":"Stepfather","phone":"951-555-8264","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[],"pickup":[{"id":"u7","name":"Ms. Adeyemi","rel":"Uncle","phone":"951-555-7159","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"noteList":[{"id":"n7behavior393","date":"2026-05-19","cat":"behavior","text":"Rough transition at drop-off; the blue blanket helps.","pin":false}],"terms":[{"id":"t_d7_0","start":"2026-04-25","end":"","section":"active","program":"infant","schedule":"PT","days":{"mon":true,"tue":false,"wed":true,"thu":false,"fri":false},"rateBasis":"daily","rate":110,"discountType":"none","discountValue":0,"rcoe":336.07,"dateNote":""}]},{"id":"c_d29","name":"Odell Keating","dob":"2023-02-05","allergies":"Egg \u2014 kitchen has the substitution list","care":"","guardians":[{"id":"g29a","name":"Dana Keating","rel":"Stepfather","phone":"951-555-2321","email":"keating.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g29b","name":"Jordan Keating","rel":"Grandmother","phone":"951-555-2861","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[],"pickup":[],"noteList":[{"id":"n29behavior956","date":"2026-04-10","cat":"behavior","text":"Big week \u2014 shared the blocks without being asked.","pin":false},{"id":"n29billing372","date":"2026-05-25","cat":"billing","text":"Switched to the monthly-on-the-1st schedule.","pin":false}],"terms":[{"id":"t_d29_0","start":"2026-06-22","end":"","section":"summer","program":"preschool","schedule":"PT","days":{"mon":true,"tue":true,"wed":true,"thu":false,"fri":true},"rateBasis":"daily","rate":95,"discountType":"none","discountValue":0,"rcoe":259.09,"dateNote":""}]},{"id":"c_d23","name":"Odell Nakamura","dob":"2023-06-03","allergies":"Dairy \u2014 soy milk sent from home","care":"Naps best in the corner cot.","guardians":[{"id":"g23a","name":"Renee Nakamura","rel":"Grandmother","phone":"951-555-7621","email":"nakamura.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g23b","name":"Sam Nakamura","rel":"Grandmother","phone":"951-555-2339","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e23","name":"Carmen Duarte","rel":"Grandfather","phone":"951-555-0857","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u23","name":"Ms. Adeyemi","rel":"Aunt","phone":"951-555-6292","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"noteList":[],"terms":[{"id":"t_d23_0","start":"2026-03-24","end":"","section":"active","program":"preschool","schedule":"PT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":false},"rateBasis":"daily","rate":95,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d31","name":"Odell Salgado","dob":"2021-07-27","allergies":"","care":"","guardians":[{"id":"g31b","name":"Jordan Salgado","rel":"Grandmother","phone":"951-555-7197","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e31","name":"Carmen Oyelaran","rel":"Neighbor","phone":"951-555-9822","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[{"id":"n31billing864","date":"2026-07-08","cat":"billing","text":"Switched to the monthly-on-the-1st schedule.","pin":false}],"terms":[{"id":"t_d31_0","start":"2026-04-15","end":"","section":"leaving","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"none","discountValue":0,"rcoe":170.14,"dateNote":""}]},{"id":"c_d15","name":"Odell Whitlock","dob":"2023-03-27","allergies":"No allergies, but no berries (dislikes)","care":"","guardians":[{"id":"g15a","name":"Priya Whitlock","rel":"Stepfather","phone":"951-555-7750","email":"whitlock.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g15b","name":"Sam Whitlock","rel":"Stepfather","phone":"951-555-3542","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e15","name":"Ruth Calloway","rel":"Uncle","phone":"951-555-3069","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u15","name":"Ms. Adeyemi","rel":"Neighbor","phone":"951-555-6740","email":"","note":"","ok":false,"idCheck":false,"primary":false}],"noteList":[],"terms":[{"id":"t_d15_0","start":"2026-02-04","end":"","section":"active","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d6","name":"Poppy Calloway","dob":"2025-02-28","allergies":"","care":"","guardians":[{"id":"g6a","name":"Renee Calloway","rel":"Stepfather","phone":"951-555-6312","email":"calloway.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[{"id":"e6","name":"Ruth Duarte","rel":"Aunt","phone":"951-555-4314","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[{"id":"n6care451","date":"2026-07-27","cat":"care","text":"Naps hard from 12:30, needs the sound machine.","pin":false},{"id":"n6care531","date":"2026-08-01","cat":"care","text":"Still working on the spoon. Bring a second shirt.","pin":false}],"terms":[{"id":"t_d6_0","start":"2026-06-16","end":"","section":"active","program":"infant","schedule":"PT","days":{"mon":true,"tue":false,"wed":false,"thu":true,"fri":false},"rateBasis":"daily","rate":100,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d3","name":"Poppy Halloran","dob":"2025-07-07","allergies":"No allergies, but no berries (dislikes)","care":"","guardians":[{"id":"g3a","name":"Marcus Halloran","rel":"Father","phone":"951-555-7334","email":"halloran.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g3b","name":"Sam Halloran","rel":"Grandmother","phone":"951-555-6427","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e3","name":"Ruth Keating","rel":"Grandfather","phone":"951-555-4081","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u3","name":"Ms. Adeyemi","rel":"Neighbor","phone":"951-555-7525","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"noteList":[{"id":"n3care187","date":"2026-05-10","cat":"care","text":"Naps hard from 12:30, needs the sound machine.","pin":false}],"terms":[{"id":"t_d3_0","start":"2026-01-13","end":"","section":"active","program":"infant","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":435,"discountType":"percent","discountValue":10,"rcoe":0,"dateNote":""}]},{"id":"c_d5","name":"Theo Keating","dob":"2025-08-08","allergies":"Dairy \u2014 soy milk sent from home","care":"","guardians":[{"id":"g5a","name":"Marcus Keating","rel":"Stepfather","phone":"951-555-5522","email":"keating.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[{"id":"e5","name":"Carmen Halloran","rel":"Grandfather","phone":"951-555-0674","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[{"id":"n5family21","date":"2026-08-21","cat":"family","text":"Baby sister due in November.","pin":true},{"id":"n5family68","date":"2026-06-11","cat":"family","text":"Parents separated; both are on the pickup list and both want updates.","pin":true},{"id":"n5billing74","date":"2026-04-15","cat":"billing","text":"Paying two weeks ahead through the fall.","pin":false}],"terms":[{"id":"t_d5_0","start":"2026-03-14","end":"","section":"active","program":"infant","schedule":"PT","days":{"mon":false,"tue":true,"wed":false,"thu":false,"fri":true},"rateBasis":"daily","rate":85,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d9","name":"Tobias Ashby","dob":"2023-01-25","allergies":"","care":"","guardians":[{"id":"g9a","name":"Renee Ashby","rel":"Grandmother","phone":"951-555-1377","email":"ashby.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[{"id":"e9","name":"Bill Mora","rel":"Uncle","phone":"951-555-0276","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[],"terms":[{"id":"t_d9_0","start":"2026-04-15","end":"","section":"active","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"none","discountValue":0,"rcoe":336.07,"dateNote":""}]},{"id":"c_d12","name":"Tobias Lindqvist","dob":"2021-11-06","allergies":"","care":"","guardians":[{"id":"g12a","name":"Marcus Lindqvist","rel":"Grandmother","phone":"951-555-9487","email":"lindqvist.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g12b","name":"Nia Lindqvist","rel":"Mother","phone":"951-555-8344","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e12","name":"Bill Ashby","rel":"Grandfather","phone":"951-555-0820","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[{"id":"n12general95","date":"2026-05-03","cat":"general","text":"Loves the sandbox. Will stay out there all morning if allowed.","pin":false},{"id":"n12billing469","date":"2026-07-26","cat":"billing","text":"Switched to the monthly-on-the-1st schedule.","pin":false},{"id":"n12behavior275","date":"2026-05-16","cat":"behavior","text":"Rough transition at drop-off; the blue blanket helps.","pin":false}],"terms":[{"id":"t_d12_0","start":"2026-07-24","end":"","section":"active","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d20","name":"Tobias Prescott","dob":"2023-04-08","allergies":"","care":"","guardians":[{"id":"g20a","name":"Priya Prescott","rel":"Grandmother","phone":"951-555-7066","email":"prescott.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g20b","name":"Jordan Prescott","rel":"Mother","phone":"951-555-3746","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e20","name":"Ruth Duarte","rel":"Uncle","phone":"951-555-9121","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u20","name":"Ms. Adeyemi","rel":"Family friend","phone":"951-555-7940","email":"","note":"","ok":true,"idCheck":true,"primary":false}],"noteList":[{"id":"n20behavior122","date":"2026-07-26","cat":"behavior","text":"Big week \u2014 shared the blocks without being asked.","pin":false},{"id":"n20billing858","date":"2026-05-15","cat":"billing","text":"Switched to the monthly-on-the-1st schedule.","pin":false},{"id":"n20care264","date":"2026-07-26","cat":"care","text":"Naps hard from 12:30, needs the sound machine.","pin":false}],"terms":[{"id":"t_d20_0","start":"2026-06-09","end":"","section":"active","program":"preschool","schedule":"PT","days":{"mon":true,"tue":true,"wed":true,"thu":false,"fri":false},"rateBasis":"daily","rate":85,"discountType":"none","discountValue":0,"rcoe":259.09,"dateNote":""}]},{"id":"c_d30","name":"Winnie Ibarra","dob":"2022-03-26","allergies":"","care":"","guardians":[{"id":"g30a","name":"Tomas Ibarra","rel":"Stepfather","phone":"951-555-0641","email":"ibarra.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g30b","name":"Nia Ibarra","rel":"Mother","phone":"951-555-9430","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e30","name":"Maya Halloran","rel":"Neighbor","phone":"951-555-4099","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[],"noteList":[{"id":"n30billing738","date":"2026-05-13","cat":"billing","text":"Paying two weeks ahead through the fall.","pin":false},{"id":"n30general614","date":"2026-04-16","cat":"general","text":"Loves the sandbox. Will stay out there all morning if allowed.","pin":false}],"terms":[{"id":"t_d30_0","start":"2026-04-02","end":"","section":"leaving","program":"preschool","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":375,"discountType":"none","discountValue":0,"rcoe":0,"dateNote":""}]},{"id":"c_d18","name":"Winnie Whitlock","dob":"2022-05-17","allergies":"","care":"","guardians":[{"id":"g18a","name":"Priya Whitlock","rel":"Grandmother","phone":"951-555-0540","email":"whitlock.family@example.com","note":"","ok":true,"idCheck":false,"primary":true},{"id":"g18b","name":"Alexis Whitlock","rel":"Mother","phone":"951-555-2665","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"emergency":[{"id":"e18","name":"Bill Calloway","rel":"Neighbor","phone":"951-555-6617","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u18","name":"Ms. Adeyemi","rel":"Aunt","phone":"951-555-3765","email":"","note":"","ok":true,"idCheck":true,"primary":false}],"noteList":[{"id":"n18billing535","date":"2026-04-26","cat":"billing","text":"Paying two weeks ahead through the fall.","pin":false}],"terms":[{"id":"t_d18_0","start":"2026-04-16","end":"","section":"active","program":"preschool","schedule":"PT","days":{"mon":false,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"daily","rate":70,"discountType":"none","discountValue":0,"rcoe":259.09,"dateNote":""}]},{"id":"c_d4","name":"Wren Lindqvist","dob":"2025-11-18","allergies":"Egg \u2014 kitchen has the substitution list","care":"","guardians":[{"id":"g4a","name":"Renee Lindqvist","rel":"Grandmother","phone":"951-555-4006","email":"lindqvist.family@example.com","note":"","ok":true,"idCheck":false,"primary":true}],"emergency":[{"id":"e4","name":"Bill Whitlock","rel":"Neighbor","phone":"951-555-8620","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"pickup":[{"id":"u4","name":"Grandma Vi","rel":"Uncle","phone":"951-555-3842","email":"","note":"","ok":true,"idCheck":false,"primary":false}],"noteList":[],"terms":[{"id":"t_d4_0","start":"2026-02-24","end":"","section":"active","program":"infant","schedule":"FT","days":{"mon":true,"tue":true,"wed":true,"thu":true,"fri":true},"rateBasis":"weekly","rate":435,"discountType":"none","discountValue":0,"rcoe":336.07,"dateNote":""}]}];
+
+/* ---------- published tuition, from schoolhousedaycare.org/tuition ---------- */
+const CARD = {
+  infant:    { label:'Infant & Toddler', short:'Infant', weekly:435, daily:110, minDays:2, maxAge:2,  ratio:4  },
+  preschool: { label:'Preschool & TK',   short:'Preschool', weekly:375, daily:95, minDays:2, maxAge:5, ratio:12 },
+  halfday:   { label:'Half day, 8–12',   short:'Half day',  weekly:275, daily:null, minDays:0, maxAge:5, ratio:12 }
+};
+const NOTE_CATS = [['billing','Billing'],['behavior','Behavior'],['family','Family & parents'],['care','Daily care'],['general','General']];
+const DAYS = [['mon','Monday','M'],['tue','Tuesday','T'],['wed','Wednesday','W'],['thu','Thursday','T'],['fri','Friday','F']];
+const YEAR = 2026;
+const GROUPS = [
+  ['active','Enrolled'], ['monthly','Monthly billing'], ['expected','Starting soon'],
+  ['summer','Summer only'], ['leaving','Leaving for TK'], ['archived','No longer attending']
+];
+const AVATAR = ['var(--sky)','var(--grass)','var(--sun)','var(--coral)','var(--grape)'];
+const KEY = 'schoolhouse-demo-v2';
+
+/* ---------- storage ---------- */
+const store = {
+  async load(){
+    try{ if(window.storage){ const r = await window.storage.get(KEY); if(r&&r.value) return JSON.parse(r.value); } }catch(e){}
+    try{ const v = window.localStorage && localStorage.getItem(KEY); if(v) return JSON.parse(v); }catch(e){}
+    return null;
+  },
+  async save(data){
+    const s = JSON.stringify(data);
+    try{ if(window.storage) await window.storage.set(KEY, s); }catch(e){}
+    try{ if(window.localStorage) localStorage.setItem(KEY, s); }catch(e){}
+  }
+};
+
+let students = [], tab = 'active', drTab = 'details', noteFilter = 'all';
+let editing = null, draft = null, saveTimer = null, undoBuf = null, undoTimer = null;
+
+const $ = id => document.getElementById(id);
+const money = n => '$' + (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const money0 = n => '$' + Math.round(n).toLocaleString('en-US');
+const uid = p => (p||'s') + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const today = () => new Date().toISOString().slice(0,10);
+const initials = n => n.trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase() || '?';
+const avatarFor = s => AVATAR[[...s.name].reduce((a,c) => a + c.charCodeAt(0), 0) % AVATAR.length];
+const telHref = p => 'tel:' + String(p||'').replace(/[^\d+]/g,'');
+
+/* ---------- enrolment terms ---------- */
+function currentTerm(c){
+  const t = c.terms || [];
+  if(!t.length) return blankTerm();
+  const now = today();
+  return t.find(x => (x.start||'') <= now && (!x.end || x.end > now))
+      || t.filter(x => (x.start||'') <= now).sort((a,b) => (b.start||'').localeCompare(a.start||''))[0]
+      || t.slice().sort((a,b) => (a.start||'').localeCompare(b.start||''))[0];
+}
+const sectionOf = c => currentTerm(c).section || 'active';
+const programOf = c => currentTerm(c).program || 'preschool';
+function annualOf(c){ return (c.terms||[]).reduce((a,t) => a + calc(t).annual, 0); }
+
+/* ---------- the math, per term ---------- */
+function calc(s){
+  const dayCount = DAYS.filter(([k]) => s.days && s.days[k]).length;
+  const weekly = s.rateBasis === 'weekly' ? (+s.rate||0) : (+s.rate||0) * dayCount;
+  let discount = 0;
+  if(s.discountType === 'percent') discount = weekly * (+s.discountValue||0) / 100;
+  else if(s.discountType === 'amount') discount = (+s.discountValue||0);
+  const rcoe = +s.rcoe || 0;
+  const parent = Math.max(0, weekly - discount - rcoe);
+  const weeks = weeksIn(s);
+  const card = CARD[s.program] || CARD.preschool;
+  const cardWeekly = s.rateBasis === 'weekly' ? card.weekly : (card.daily || card.weekly) * dayCount;
+  return { dayCount, weekly, discount, rcoe, parent, weeks, annual: (parent + rcoe) * weeks,
+           monthly: parent * 52 / 12, card, cardWeekly,
+           belowCard: Math.max(0, cardWeekly - weekly),
+           underMin: dayCount > 0 && dayCount < card.minDays,
+           fullySubsidised: rcoe > 0 && parent === 0 };
+}
+function weeksIn(s){
+  const jan = Date.UTC(YEAR,0,1), dec = Date.UTC(YEAR,11,31);
+  const p = d => { if(!d) return null; const [y,m,dd] = d.split('-').map(Number); return Date.UTC(y,m-1,dd); };
+  const from = Math.max(p(s.start) ?? jan, jan);
+  const to   = Math.min(p(s.end) ?? dec, dec);
+  return to <= from ? 0 : Math.round((to - from) / 604800000);
+}
+function ageOf(s){
+  if(!s.dob) return null;
+  const [y,m,d] = s.dob.split('-').map(Number);
+  const n = new Date();
+  let months = (n.getFullYear() - y) * 12 + (n.getMonth()+1 - m);
+  if(n.getDate() < d) months--;
+  if(months < 0) return null;
+  return { months, years: Math.floor(months/12),
+           label: months < 24 ? `${months} mo` : `${Math.floor(months/12)}y ${months%12}m` };
+}
+function agingUp(s){
+  const a = ageOf(s);
+  if(!a) return '';
+  if(programOf(s) === 'infant' && a.years >= 2) return 'Old enough for the Preschool room and rate.';
+  if(programOf(s) !== 'infant' && a.years >= 5 && sectionOf(s) !== 'leaving') return 'Turning TK age — worth planning the transition.';
+  return '';
+}
+/* things worth flagging on the child's own card */
+function issues(s){
+  const c = calc(currentTerm(s)), out = [];
+  if(c.underMin) out.push(`Enrolled ${c.dayCount} day a week; the card sets a two day minimum.`);
+  const up = agingUp(s); if(up) out.push(up);
+  (s.noteList||[]).filter(n => n.pin).forEach(n => out.push(n.text));
+  return out;
+}
+/* profile gaps — counted and filterable, but not shouted on every card */
+function gaps(s){
+  const out = [];
+  if(!(s.emergency||[]).length && !(s.guardians||[]).length) out.push('emergency contact');
+  if(!(s.pickup||[]).some(p => p.ok !== false) && !(s.guardians||[]).length) out.push('approved pickup');
+  return out;
+}
+
+/* ---------- ledger + week ---------- */
+function enrolledList(){ return students.filter(s => ['active','monthly'].includes(sectionOf(s))); }
+
+function renderLedger(){
+  const en = enrolledList();
+  const t = en.reduce((a,s) => { const c = calc(currentTerm(s)); a.parent += c.parent; a.rcoe += c.rcoe; a.below += c.belowCard; if(c.belowCard > .5) a.n++; return a; }, {parent:0,rcoe:0,below:0,n:0});
+  const annual = students.filter(s => sectionOf(s) !== 'archived').reduce((a,s) => a + annualOf(s), 0);
+  const needs = students.filter(s => sectionOf(s) !== 'archived' && issues(s).length).length;
+  const togo = students.filter(s => sectionOf(s) !== 'archived' && gaps(s).length).length;
+  $('ledger').innerHTML = `
+    <div class="led"><i>Families pay weekly</i><b>${money0(t.parent)}</b><small>collected from parents</small></div>
+    <div class="led"><i>RCOE pays weekly</i><b>${money0(t.rcoe)}</b><small>subsidy portion</small></div>
+    <div class="led"><i>Projected ${YEAR}</i><b>${money0(annual)}</b><small>all groups, prorated</small></div>
+    <div class="led"><i>Below card rate</i><b>${money0(t.below)}</b><small>${t.n} children on older rates</small></div>
+    <div class="led"><i>Needs a look</i><b>${needs}</b><small>${en.length} enrolled right now</small></div>
+    <div class="led"><i>Profiles to finish</i><b>${togo}</b><small>missing contact details</small></div>`;
+  $('cnt').textContent = `${students.length} children on the list`;
+}
+
+function renderWeek(){
+  const en = enrolledList();
+  const todayIdx = new Date().getDay() - 1;
+  $('week').innerHTML = DAYS.map(([k,full],i) => {
+    const on = en.filter(s => currentTerm(s).days && currentTerm(s).days[k]);
+    const inf = on.filter(s => programOf(s) === 'infant').length;
+    const pre = on.length - inf;
+    const staff = Math.ceil(inf / CARD.infant.ratio) + Math.ceil(pre / CARD.preschool.ratio);
+    return `<div class="wd${i === todayIdx ? ' today' : ''}">
+      <h4>${full.slice(0,3)}<em>${on.length}</em></h4>
+      <div class="split">${inf} infant · ${pre} preschool</div>
+      <div class="staff">Staff needed: <b>${staff}</b></div>
+    </div>`;
+  }).join('');
+}
+
+/* ---------- roster ---------- */
+function matches(s, q){
+  if(!q) return true;
+  const hay = [s.name, ...(s.noteList||[]).map(n => n.text),
+    ...(s.guardians||[]).map(p => p.name+' '+p.phone), ...(s.emergency||[]).map(p => p.name+' '+p.phone),
+    ...(s.pickup||[]).map(p => p.name+' '+p.phone), s.allergies, s.care].join(' ').toLowerCase();
+  return hay.includes(q);
+}
+function visible(){
+  const q = $('q').value.trim().toLowerCase();
+  const room = $('fRoom').value, sched = $('fSched').value, flag = $('fFlag').value, sort = $('fSort').value;
+  let list = students.filter(s => tab === 'all' ? true : sectionOf(s) === tab);
+  list = list.filter(s => matches(s, q));
+  if(room) list = list.filter(s => programOf(s) === room);
+  if(sched) list = list.filter(s => currentTerm(s).schedule === sched);
+  if(flag === 'legacy')   list = list.filter(s => calc(currentTerm(s)).belowCard > .5);
+  if(flag === 'rcoe')     list = list.filter(s => (+currentTerm(s).rcoe||0) > 0);
+  if(flag === 'review')   list = list.filter(s => issues(s).length);
+  if(flag === 'allergy')  list = list.filter(s => (s.allergies||'').trim());
+  if(flag === 'nocontact')list = list.filter(s => !(s.emergency||[]).length && !(s.guardians||[]).length);
+  if(flag === 'nopickup') list = list.filter(s => !(s.pickup||[]).some(p => p.ok !== false) && !(s.guardians||[]).length);
+  if(flag === 'agingup')  list = list.filter(s => agingUp(s));
+  const key = { name: s => s.name.toLowerCase(), parent: s => -calc(currentTerm(s)).parent,
+                weekly: s => -calc(currentTerm(s)).weekly,
+                start: s => currentTerm(s).start || '9999', age: s => (ageOf(s) ? ageOf(s).months : 9999) }[sort];
+  const order = s => GROUPS.findIndex(g => g[0] === sectionOf(s));
+  return list.sort((a,b) => {
+    if(tab === 'all' && order(a) !== order(b)) return order(a) - order(b);
+    return key(a) > key(b) ? 1 : key(a) < key(b) ? -1 : 0;
+  });
+}
+function renderTabs(){
+  $('tabs').innerHTML = GROUPS.map(([k,label]) => {
+    const n = students.filter(s => sectionOf(s) === k).length;
+    if(k === 'archived' && !n) return '';
+    return `<button class="tab" role="tab" data-tab="${k}" aria-selected="${tab===k}">${label}<span class="cnt">${n}</span></button>`;
+  }).join('') + `<button class="tab" role="tab" data-tab="all" aria-selected="${tab==='all'}">Everyone<span class="cnt">${students.length}</span></button>`;
+}
+function renderRoster(){
+  const list = visible(), el = $('roster');
+  if(!list.length){
+    el.innerHTML = `<div class="empty"><h3>Nothing here yet</h3><p>Add a child, or clear the filters to see the rest of the list.</p>
+      <button class="btn btn-primary" onclick="openDrawer(null)">Add child</button></div>`;
+    return;
+  }
+  let html = '', last = null;
+  for(const s of list){
+    if(tab === 'all' && sectionOf(s) !== last){
+      last = sectionOf(s);
+      html += `<div class="grouphdr">${(GROUPS.find(g => g[0] === last)||[,'Other'])[1]}</div>`;
+    }
+    html += cardHtml(s);
+  }
+  el.innerHTML = html;
+}
+function cardHtml(s){
+  const term = currentTerm(s), c = calc(term), age = ageOf(s), probs = issues(s);
+  const nTerms = (s.terms||[]).length;
+  const dates = term.start ? fmtDate(term.start) + (term.end ? ' → ' + fmtDate(term.end) : '') : (term.dateNote || 'No start date');
+  const roomCls = term.program === 'infant' ? 'p-infant' : term.program === 'halfday' ? 'p-half' : 'p-pre';
+  return `<article class="card${probs.length ? ' flagged' : ''}" data-id="${s.id}">
+    <div class="avatar" style="background:${avatarFor(s)}" onclick="openDrawer('${s.id}')">${esc(initials(s.name))}</div>
+    <div class="c-main" onclick="openDrawer('${s.id}')">
+      <div class="c-name">${esc(s.name)}${age ? `<span style="font-size:13px;color:var(--muted);font-weight:500">${age.label}</span>` : ''}</div>
+      <div class="c-meta">
+        <span class="pill ${term.schedule === 'FT' ? 'p-ft' : 'p-pt'}">${term.schedule === 'FT' ? 'Full time' : 'Part time'}</span>
+        <span class="pill ${roomCls}">${c.card.short}</span>
+        ${(s.allergies||'').trim() ? `<span class="pill p-allergy">Allergy</span>` : ''}
+        ${c.rcoe > 0 ? `<span class="pill p-sub">RCOE ${money0(c.rcoe)}</span>` : ''}
+        ${c.belowCard > .5 ? `<span class="pill p-legacy">${money0(c.belowCard)} under card</span>` : ''}
+        ${nTerms > 1 ? `<span class="pill p-change">${nTerms} rate periods</span>` : ''}
+        <span>${dates}</span>
+      </div>
+    </div>
+    <div class="c-right">
+      <div class="punch" role="group" aria-label="Days for ${esc(s.name)}">
+        ${DAYS.map(([k,full,ltr]) => `<button type="button" class="${term.days && term.days[k] ? 'on' : ''}" data-day="${k}" data-id="${s.id}"
+          aria-pressed="${!!(term.days && term.days[k])}" aria-label="${full}">${ltr}</button>`).join('')}
+      </div>
+      <div class="money" onclick="openDrawer('${s.id}')">
+        <b>${money(c.parent)}</b><small>parent, per week</small>
+        ${c.discount > 0 ? `<span class="rc">less ${money(c.discount)} discount</span>` : ''}
+      </div>
+    </div>
+    ${probs.length ? `<div class="flagnote"><b>Check:</b><span>${esc(probs.join(' · '))}</span></div>` : ''}
+  </article>`;
+}
+function fmtDate(d){
+  if(!d) return '';
+  const [y,m,dd] = d.split('-').map(Number);
+  return new Date(Date.UTC(y,m-1,dd)).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit',timeZone:'UTC'});
+}
+function render(){ renderLedger(); renderWeek(); renderTabs(); renderRoster(); }
+
+/* ================= DRAWER ================= */
+function blankTerm(){
+  return { id: uid('t'), start: today(), end:'', section:'active', program:'preschool', schedule:'PT',
+           days:{mon:false,tue:false,wed:false,thu:false,fri:false},
+           rateBasis:'daily', rate:CARD.preschool.daily, discountType:'none', discountValue:0, rcoe:0, dateNote:'' };
+}
+function blank(){
+  return { id: uid('c'), name:'', dob:'', allergies:'', care:'',
+           guardians:[], emergency:[], pickup:[], noteList:[], terms:[blankTerm()] };
+}
+/* the term the Details tab is editing */
+let termId = null;
+function editTerm(){
+  return (draft.terms||[]).find(t => t.id === termId) || currentTerm(draft);
+}
+window.openDrawer = function(id){
+  editing = id;
+  draft = id ? JSON.parse(JSON.stringify(students.find(s => s.id === id))) : blank();
+  ['guardians','emergency','pickup','noteList'].forEach(k => { if(!Array.isArray(draft[k])) draft[k] = []; });
+  drTab = 'details'; noteFilter = 'all'; termId = currentTerm(draft).id;
+  $('drDelete').style.visibility = id ? 'visible' : 'hidden';
+  paintDrawer();
+  $('drawer').classList.add('open'); $('scrim').classList.add('open');
+  setTimeout(() => { const f = $('f_name'); if(f) f.focus(); }, 220);
+};
+function closeDrawer(){
+  $('drawer').classList.remove('open'); $('scrim').classList.remove('open');
+  document.body.classList.remove('printing');
+  editing = null; draft = null;
+}
+const DRTABS = [['details','Details'],['people','People'],['notes','Notes'],['statement','Statement']];
+function paintDrawer(){
+  const age = ageOf(draft);
+  $('drName').innerHTML = `<span class="avatar" style="background:${draft.name ? avatarFor(draft) : 'var(--muted)'}">${esc(initials(draft.name||'?'))}</span>
+    <span style="min-width:0"><span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(draft.name || 'Add child')}</span>
+    <span class="dr-sub">${age ? age.label + ' · ' : ''}${CARD[editTerm().program].label}</span></span>`;
+  $('drTabs').innerHTML = DRTABS.map(([k,l]) => {
+    const n = k === 'notes' ? (draft.noteList||[]).length
+            : k === 'people' ? (draft.guardians||[]).length + (draft.emergency||[]).length + (draft.pickup||[]).length : 0;
+    return `<button data-drtab="${k}" class="${drTab===k?'on':''}">${l}${n ? ` <span style="opacity:.8">${n}</span>` : ''}</button>`;
+  }).join('');
+  const body = $('drBody');
+  body.innerHTML = drTab === 'details' ? detailsHtml()
+                 : drTab === 'people'  ? peopleHtml()
+                 : drTab === 'notes'   ? notesHtml() : statementHtml();
+  if(drTab === 'details'){ const t = editTerm(); seg('segSched', t.schedule); seg('segBasis', t.rateBasis); drawCalc(); }
+  body.scrollTop = 0;
+}
+function seg(id, val){ const e = $(id); if(e) [...e.children].forEach(b => b.classList.toggle('on', b.dataset.v === val)); }
+
+/* ---------- details tab ---------- */
+function detailsHtml(){
+  const t = editTerm();
+  const many = (draft.terms||[]).length > 1;
+  return `
+  ${many ? termPickerHtml() : ''}
+  ${(draft.allergies||'').trim() ? `<div class="alert"><b>Allergy &amp; dietary</b>${esc(draft.allergies)}</div>` : ''}
+  <div class="field"><label for="f_name">Child's name</label><input id="f_name" data-f="name" value="${esc(draft.name)}" autocomplete="off"></div>
+  <div class="row2">
+    <div class="field"><label for="f_dob">Date of birth</label><input id="f_dob" data-f="dob" type="date" value="${esc(draft.dob)}"></div>
+    <div class="field"><label for="f_program">Program</label>
+      <select id="f_program" data-f="program">
+        ${Object.entries(CARD).map(([k,v]) => `<option value="${k}" ${t.program===k?'selected':''}>${v.label}</option>`).join('')}
+      </select></div>
+  </div>
+  <div class="field"><label>Schedule</label>
+    <div class="seg" id="segSched"><button type="button" data-v="PT">Part time</button><button type="button" data-v="FT">Full time</button></div></div>
+  <div class="field"><label>Days enrolled</label>
+    <div class="punch" id="segDays">${DAYS.map(([k,full,ltr]) => `<button type="button" data-fday="${k}" class="${t.days[k]?'on':''}" aria-pressed="${!!t.days[k]}" aria-label="${full}">${ltr}</button>`).join('')}</div>
+    <p class="hint" id="daysHint"></p></div>
+  <div class="field"><label>How the rate is charged</label>
+    <div class="seg" id="segBasis"><button type="button" data-v="daily">Per day</button><button type="button" data-v="weekly">Flat per week</button></div></div>
+  <div class="row2">
+    <div class="field"><label for="f_rate">Rate</label><input id="f_rate" data-f="rate" type="number" step="0.01" min="0" inputmode="decimal" value="${t.rate||''}"></div>
+    <div class="field"><label for="f_rcoe">RCOE pays</label><input id="f_rcoe" data-f="rcoe" type="number" step="0.01" min="0" inputmode="decimal" value="${t.rcoe||''}"></div>
+  </div>
+  <div id="rateCard"></div>
+  <div class="row2" style="margin-top:13px">
+    <div class="field"><label for="f_discountType">Discount</label>
+      <select id="f_discountType" data-f="discountType">
+        <option value="none" ${t.discountType==='none'?'selected':''}>None</option>
+        <option value="percent" ${t.discountType==='percent'?'selected':''}>Percent off</option>
+        <option value="amount" ${t.discountType==='amount'?'selected':''}>Dollars off</option>
+      </select></div>
+    <div class="field"><label for="f_discountValue">Amount</label><input id="f_discountValue" data-f="discountValue" type="number" step="0.01" min="0" inputmode="decimal" value="${t.discountValue||''}" ${t.discountType==='none'?'disabled':''}></div>
+  </div>
+  <div class="row2">
+    <div class="field"><label for="f_start">Start date</label><input id="f_start" data-f="start" type="date" value="${esc(t.start)}"></div>
+    <div class="field"><label for="f_end">Last day <span style="text-transform:none;font-weight:400">(optional)</span></label><input id="f_end" data-f="end" type="date" value="${esc(t.end)}"></div>
+  </div>
+  <div class="field"><label for="f_section">Group</label>
+    <select id="f_section" data-f="section">${GROUPS.map(([k,l]) => `<option value="${k}" ${t.section===k?'selected':''}>${l}</option>`).join('')}</select></div>
+  <div class="field"><label for="f_allergies">Allergies &amp; dietary needs</label>
+    <textarea id="f_allergies" data-f="allergies" placeholder="Meals are served, so anything the kitchen needs to know">${esc(draft.allergies)}</textarea></div>
+  <div class="field"><label for="f_care">Daily care notes</label>
+    <textarea id="f_care" data-f="care" placeholder="Naps, comfort items, routines that help">${esc(draft.care)}</textarea></div>
+  <div class="calc" id="calc"></div>
+  <button class="btn btn-sm" style="width:100%;margin-top:10px" id="btnRateChange">Record a rate change</button>
+  <p class="hint">Ends this period today and starts a new one. The child's contacts and notes stay in one place.</p>`;
+}
+function termPickerHtml(){
+  const now = today();
+  return `<div class="field"><label>Rate periods for this child</label>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      ${draft.terms.slice().sort((a,b) => (a.start||'').localeCompare(b.start||'')).map(t => {
+        const live = (t.start||'') <= now && (!t.end || t.end > now);
+        return `<button type="button" class="btn btn-xs" data-term="${t.id}"
+          style="${t.id===termId?'background:var(--ink);border-color:var(--ink);color:#fff':''}">
+          ${t.start ? fmtDate(t.start) : '?'}${t.end ? '–'+fmtDate(t.end) : '→'}${live?' •':''}</button>`;
+      }).join('')}
+    </div>
+    <p class="hint">Editing the highlighted period. • marks the one in effect today.
+      ${draft.terms.length > 1 ? `<button type="button" class="btn btn-xs btn-danger" id="btnDelTerm" style="margin-left:4px">Delete this period</button>` : ''}</p>
+  </div>`;
+}
+function cardRateFor(d){ const c = CARD[d.program]; return d.rateBasis === 'weekly' ? c.weekly : c.daily; }
+function drawCalc(){
+  if(drTab !== 'details') return;
+  const t = editTerm();
+  const c = calc(t), per = t.rateBasis === 'weekly' ? 'per week' : 'per day', cr = cardRateFor(t);
+  const same = cr != null && Math.abs(cr - (+t.rate||0)) < .005;
+  $('rateCard').innerHTML = cr == null
+    ? `<div class="cardrate"><span>Half day is billed at a flat ${money0(CARD.halfday.weekly)} a week.</span></div>`
+    : `<div class="cardrate"><span>${same ? `Matches the card: ${money0(cr)} ${per}.` : `Card rate is ${money0(cr)} ${per} — this child is at ${money0(t.rate||0)}.`}</span>
+       ${same ? '' : `<button type="button" id="useCard">Use card rate</button>`}</div>`;
+  if(!same && cr != null) $('useCard').onclick = () => { editTerm().rate = cr; $('f_rate').value = cr; drawCalc(); };
+  $('daysHint').innerHTML = c.dayCount
+    ? `<b>${c.dayCount} day${c.dayCount===1?'':'s'} a week.</b> Tuition is based on enrollment, not attendance.${c.underMin ? ' The card sets a two day minimum.' : ''}`
+    : 'Tap the days this child is enrolled.';
+  const basis = t.rateBasis === 'weekly' ? 'flat weekly rate' : `${money(t.rate||0)} × ${c.dayCount} day${c.dayCount===1?'':'s'}`;
+  $('calc').innerHTML = `<h4>What this adds up to</h4>
+    <div class="calcrow"><span>Weekly total <span style="color:var(--muted);font-size:12.5px">(${basis})</span></span><span>${money(c.weekly)}</span></div>
+    ${c.discount ? `<div class="calcrow neg"><span>Discount</span><span>−${money(c.discount)}</span></div>` : ''}
+    ${c.rcoe ? `<div class="calcrow neg"><span>RCOE pays</span><span>−${money(c.rcoe)}</span></div>` : ''}
+    <div class="calcrow"><span>Roughly per month</span><span>${money0(c.monthly)}</span></div>
+    <div class="calcrow"><span>This period in ${YEAR} <span style="color:var(--muted);font-size:12.5px">(${c.weeks} wk)</span></span><span>${money0(c.annual)}</span></div>
+    ${(draft.terms||[]).length > 1 ? `<div class="calcrow"><span>All periods in ${YEAR}</span><span>${money0(annualOf(draft))}</span></div>` : ''}
+    <div class="calcrow"><span>${c.fullySubsidised ? 'Family pays nothing' : 'Family pays weekly'}</span><span>${money(c.parent)}</span></div>`;
+}
+
+/* ---------- people tab ---------- */
+const LISTS = {
+  guardians: { title:'Parents & guardians', blurb:'Always allowed to pick up.', rel:'Mother, Father, Grandparent…' },
+  emergency: { title:'Emergency contacts', blurb:'Called if a parent cannot be reached.', rel:'Aunt, Neighbor, Family friend…' },
+  pickup:    { title:'Approved for pickup', blurb:'Anyone else allowed to collect this child.', rel:'Relationship to the child' }
+};
+function peopleHtml(){
+  return Object.entries(LISTS).map(([k,meta]) => `
+    <div class="sec">
+      <div class="sec-hd">
+        <div><h3>${meta.title}</h3><p>${meta.blurb}</p></div>
+        <button class="btn btn-xs" data-addperson="${k}">Add</button>
+      </div>
+      ${(draft[k]||[]).length ? draft[k].map(p => personHtml(k,p)).join('')
+        : `<p class="hint" style="margin:0 0 4px">Nobody added yet.</p>`}
+    </div>`).join('');
+}
+function personHtml(list, p){
+  const isPickup = list === 'pickup';
+  const allowed = p.ok !== false;
+  return `<div class="person${p._edit ? ' editing' : ''}" data-pid="${p.id}" data-plist="${list}">
+    <div class="top">
+      <div style="min-width:0">
+        <div class="nm">${esc(p.name || 'New contact')}</div>
+        <div class="rel">${esc(p.rel || '')}${p.rel && p.phone ? ' · ' : ''}${p.phone ? `<a href="${esc(telHref(p.phone))}">${esc(p.phone)}</a>` : ''}</div>
+        <div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap">
+          ${isPickup ? `<span class="chip ${allowed?'ok':'no'}">${allowed ? 'Approved' : 'Not approved'}</span>` : ''}
+          ${p.idCheck ? `<span class="chip id">Check photo ID</span>` : ''}
+          ${list==='guardians' && p.primary ? `<span class="chip ok">Primary contact</span>` : ''}
+        </div>
+      </div>
+      <div style="display:flex;gap:5px;flex-shrink:0">
+        <button class="btn btn-xs" data-pedit="1">${p._edit ? 'Done' : 'Edit'}</button>
+        <button class="btn btn-xs btn-danger" data-pdel="1">Remove</button>
+      </div>
+    </div>
+    <div class="fields">
+      <div class="row2">
+        <div class="field"><label>Name</label><input data-p="name" value="${esc(p.name)}"></div>
+        <div class="field"><label>Relationship</label><input data-p="rel" value="${esc(p.rel)}" placeholder="${esc(LISTS[list].rel)}"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Phone</label><input data-p="phone" type="tel" value="${esc(p.phone)}"></div>
+        <div class="field"><label>Email</label><input data-p="email" type="email" value="${esc(p.email||'')}"></div>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:13.5px;font-weight:600">
+        ${isPickup ? `<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-p="ok" ${allowed?'checked':''} style="width:auto"> Approved for pickup</label>` : ''}
+        <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-p="idCheck" ${p.idCheck?'checked':''} style="width:auto"> Check photo ID</label>
+        ${list==='guardians' ? `<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-p="primary" ${p.primary?'checked':''} style="width:auto"> Primary contact</label>` : ''}
+      </div>
+      <div class="field" style="margin-top:10px;margin-bottom:0"><label>Note</label><input data-p="note" value="${esc(p.note||'')}" placeholder="Anything staff should know"></div>
+    </div>
+  </div>`;
+}
+
+/* ---------- notes tab ---------- */
+function notesHtml(){
+  const all = (draft.noteList||[]).slice().sort((a,b) => (b.pin?1:0)-(a.pin?1:0) || (b.date||'').localeCompare(a.date||''));
+  const list = noteFilter === 'all' ? all : all.filter(n => n.cat === noteFilter);
+  return `
+  <div class="addbox">
+    <div class="row2">
+      <div class="field" style="margin-bottom:8px"><label for="nCat">Kind of note</label>
+        <select id="nCat">${NOTE_CATS.map(([k,l]) => `<option value="${k}">${l}</option>`).join('')}</select></div>
+      <div class="field" style="margin-bottom:8px"><label for="nDate">Date</label><input id="nDate" type="date" value="${today()}"></div>
+    </div>
+    <div class="field" style="margin-bottom:8px"><label for="nText">Note</label>
+      <textarea id="nText" placeholder="What happened, what was agreed, what to remember"></textarea></div>
+    <button class="btn btn-primary btn-sm" id="nAdd" style="width:100%">Add note</button>
+  </div>
+  <div class="notefilter">
+    <button data-nf="all" class="${noteFilter==='all'?'on':''}">All ${all.length}</button>
+    ${NOTE_CATS.map(([k,l]) => { const n = all.filter(x => x.cat === k).length;
+      return n ? `<button data-nf="${k}" class="${noteFilter===k?'on':''}">${l} ${n}</button>` : ''; }).join('')}
+  </div>
+  ${list.length ? list.map(noteHtml).join('') : `<p class="hint">No notes here yet.</p>`}`;
+}
+function noteHtml(n){
+  return `<div class="note ${n.cat}" data-nid="${n.id}">
+    <div class="nhd">
+      <span class="ncat">${(NOTE_CATS.find(c => c[0] === n.cat)||[,'Note'])[1]}${n.pin ? ' · pinned' : ''}</span>
+      <span class="ndate">${esc(n.date)}</span>
+    </div>
+    <p>${esc(n.text)}</p>
+    <div class="nact">
+      <button class="btn btn-xs" data-npin="1">${n.pin ? 'Unpin' : 'Pin to card'}</button>
+      <button class="btn btn-xs btn-danger" data-ndel="1">Delete</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- statement tab ---------- */
+function statementHtml(){
+  const t = currentTerm(draft), c = calc(t);
+  const days = DAYS.filter(([k]) => t.days[k]).map(([,full]) => full).join(', ') || 'No days set';
+  const g = (draft.guardians||[])[0];
+  return `<div class="stmt" id="stmtArea">
+    <div class="stmt-hd">
+      <div><h3>Schoolhouse Daycare</h3>
+        <div style="font-size:12.5px;color:var(--muted)">Weekly tuition statement · ${fmtDate(today())}</div></div>
+      <div class="lic">LIC #334846754<br>Centers, LLC</div>
+    </div>
+    <table>
+      <tr><td><b>${esc(draft.name || 'Child')}</b>${g ? `<br><span style="color:var(--muted);font-size:12.5px">c/o ${esc(g.name)}</span>` : ''}</td>
+          <td>${esc(CARD[t.program].label)}</td></tr>
+      <tr><td>Days enrolled</td><td>${esc(days)}</td></tr>
+      <tr><td>Rate</td><td>${money(t.rate||0)} ${t.rateBasis === 'weekly' ? 'per week' : 'per day'}</td></tr>
+      <tr><td>Weekly tuition</td><td>${money(c.weekly)}</td></tr>
+      ${c.discount ? `<tr><td>Discount</td><td>−${money(c.discount)}</td></tr>` : ''}
+      ${c.rcoe ? `<tr><td>Paid by RCOE</td><td>−${money(c.rcoe)}</td></tr>` : ''}
+      <tr class="tot"><td>Due from family each week</td><td>${money(c.parent)}</td></tr>
+    </table>
+    <div class="foot">Roughly ${money0(c.monthly)} a month. Tuition is based on enrollment, not attendance — your child's space is reserved.</div>
+  </div>
+  <button class="btn btn-primary btn-sm" id="btnPrint" style="width:100%;margin-top:12px">Print or save as PDF</button>`;
+}
+
+/* ---------- persistence + toast ---------- */
+function persist(){ clearTimeout(saveTimer); saveTimer = setTimeout(() => store.save(students), 250); }
+function toast(msg, undo){
+  const t = $('toast');
+  t.innerHTML = `<span>${esc(msg)}</span>` + (undo ? `<button id="undoBtn">Undo</button>` : '');
+  t.classList.add('show');
+  clearTimeout(undoTimer);
+  undoTimer = setTimeout(() => t.classList.remove('show'), undo ? 7000 : 2200);
+  if(undo) $('undoBtn').onclick = () => {
+    students.push(undoBuf); undoBuf = null;
+    persist(); render(); t.classList.remove('show'); toast('Brought back');
+  };
+}
+
+/* ================= EVENTS ================= */
+$('roster').addEventListener('click', e => {
+  const b = e.target.closest('button[data-day]'); if(!b) return;
+  const t = currentTerm(students.find(x => x.id === b.dataset.id));
+  t.days[b.dataset.day] = !t.days[b.dataset.day];
+  persist(); render();
+});
+$('tabs').addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if(!b) return;
+  tab = b.dataset.tab; render();
+});
+['q','fRoom','fSched','fSort','fFlag'].forEach(id => $(id).addEventListener('input', renderRoster));
+
+$('drTabs').addEventListener('click', e => {
+  const b = e.target.closest('button[data-drtab]'); if(!b) return;
+  drTab = b.dataset.drtab; paintDrawer();
+});
+
+/* one delegated input handler for every field in the drawer */
+$('drBody').addEventListener('input', e => {
+  const t = e.target;
+  if(t.dataset.f){
+    const f = t.dataset.f;
+    const TERM_F = ['program','rate','rcoe','discountType','discountValue','start','end','section'];
+    const target = TERM_F.includes(f) ? editTerm() : draft;
+    target[f] = (f === 'rate' || f === 'rcoe' || f === 'discountValue') ? (+t.value || 0) : t.value;
+    if(f === 'program'){
+      const tm = editTerm();
+      if(tm.program === 'halfday'){ tm.rateBasis = 'weekly'; seg('segBasis','weekly'); }
+      const cr = cardRateFor(tm); if(cr != null){ tm.rate = cr; $('f_rate').value = cr; }
+    }
+    if(f === 'discountType') $('f_discountValue').disabled = t.value === 'none';
+    if(f === 'name' || f === 'dob' || f === 'program'){
+      const age = ageOf(draft);
+      $('drName').innerHTML = `<span class="avatar" style="background:${draft.name ? avatarFor(draft) : 'var(--muted)'}">${esc(initials(draft.name||'?'))}</span>
+        <span style="min-width:0"><span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(draft.name || 'Add child')}</span>
+        <span class="dr-sub">${age ? age.label + ' · ' : ''}${CARD[editTerm().program].label}</span></span>`;
+    }
+    drawCalc();
+    return;
+  }
+  const pf = t.dataset.p;
+  if(pf){
+    const wrap = t.closest('.person');
+    const arr = draft[wrap.dataset.plist];
+    const p = arr.find(x => x.id === wrap.dataset.pid);
+    p[pf] = t.type === 'checkbox' ? t.checked : t.value;
+    if(pf === 'name') wrap.querySelector('.nm').textContent = t.value || 'New contact';
+  }
+});
+$('drBody').addEventListener('click', e => {
+  const t = e.target;
+  /* day toggles */
+  const d = t.closest('button[data-fday]');
+  if(d){ const tm = editTerm(); tm.days[d.dataset.fday] = !tm.days[d.dataset.fday];
+    d.classList.toggle('on'); d.setAttribute('aria-pressed', tm.days[d.dataset.fday]); drawCalc(); return; }
+  const tp = t.closest('button[data-term]');
+  if(tp){ termId = tp.dataset.term; paintDrawer(); return; }
+  if(t.id === 'btnDelTerm'){
+    if(draft.terms.length < 2) return;
+    if(!confirm('Delete this rate period? The child stays on the list.')) return;
+    draft.terms = draft.terms.filter(x => x.id !== termId);
+    termId = currentTerm(draft).id; paintDrawer(); return;
+  }
+  /* segmented controls */
+  const sg = t.closest('#segSched button, #segBasis button');
+  if(sg){
+    const which = sg.closest('.seg').id;
+    const tm = editTerm();
+    if(which === 'segSched'){
+      tm.schedule = sg.dataset.v;
+      tm.rateBasis = sg.dataset.v === 'FT' || tm.program === 'halfday' ? 'weekly' : 'daily';
+      const cr = cardRateFor(tm); if(cr != null) tm.rate = cr;
+      if(sg.dataset.v === 'FT') DAYS.forEach(([k]) => tm.days[k] = true);
+      paintDrawer();
+    } else { tm.rateBasis = sg.dataset.v; seg('segBasis', sg.dataset.v); drawCalc(); }
+    return;
+  }
+  /* people */
+  const add = t.closest('button[data-addperson]');
+  if(add){
+    const k = add.dataset.addperson;
+    draft[k].push({ id: uid('p'), name:'', rel:'', phone:'', email:'', note:'', ok:true, idCheck:false, primary:false, _edit:true });
+    paintDrawer(); return;
+  }
+  const per = t.closest('.person');
+  if(per && t.closest('button[data-pedit]')){
+    const arr = draft[per.dataset.plist], p = arr.find(x => x.id === per.dataset.pid);
+    p._edit = !p._edit; paintDrawer(); return;
+  }
+  if(per && t.closest('button[data-pdel]')){
+    const arr = draft[per.dataset.plist], p = arr.find(x => x.id === per.dataset.pid);
+    if(p.name && !confirm(`Remove ${p.name}?`)) return;
+    draft[per.dataset.plist] = arr.filter(x => x.id !== per.dataset.pid);
+    paintDrawer(); return;
+  }
+  /* notes */
+  if(t.id === 'nAdd'){
+    const text = $('nText').value.trim();
+    if(!text){ $('nText').focus(); return; }
+    draft.noteList.push({ id: uid('n'), date: $('nDate').value || today(), cat: $('nCat').value, text, pin:false });
+    paintDrawer(); return;
+  }
+  const nf = t.closest('button[data-nf]');
+  if(nf){ noteFilter = nf.dataset.nf; paintDrawer(); return; }
+  const note = t.closest('.note');
+  if(note && t.closest('button[data-npin]')){
+    const n = draft.noteList.find(x => x.id === note.dataset.nid); n.pin = !n.pin; paintDrawer(); return;
+  }
+  if(note && t.closest('button[data-ndel]')){
+    if(!confirm('Delete this note?')) return;
+    draft.noteList = draft.noteList.filter(x => x.id !== note.dataset.nid); paintDrawer(); return;
+  }
+  /* rate change */
+  if(t.id === 'btnRateChange'){
+    const cur = editTerm();
+    if(cur.start && cur.start >= today()){ toast('This period starts today or later — change its rate directly'); return; }
+    const next = JSON.parse(JSON.stringify(cur));
+    next.id = uid('t'); next.start = today(); next.end = cur.end; next.dateNote = '';
+    cur.end = today();
+    draft.terms.push(next);
+    termId = next.id; drTab = 'details'; paintDrawer();
+    toast('New rate period started today — set the new rate');
+    return;
+  }
+  if(t.id === 'btnPrint'){
+    document.body.classList.add('printing');
+    window.print();
+    setTimeout(() => document.body.classList.remove('printing'), 500);
+  }
+});
+
+$('btnAdd').onclick = () => openDrawer(null);
+$('drCancel').onclick = closeDrawer;
+$('drClose').onclick = closeDrawer;
+$('scrim').onclick = closeDrawer;
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && $('drawer').classList.contains('open')) closeDrawer(); });
+
+$('drSave').onclick = () => {
+  if(!draft.name.trim()){ drTab = 'details'; paintDrawer(); $('f_name').focus(); toast('Add a name before saving'); return; }
+  (draft.guardians||[]).concat(draft.emergency||[], draft.pickup||[]).forEach(p => delete p._edit);
+  draft.terms.sort((a,b) => (a.start||'').localeCompare(b.start||''));
+  const i = students.findIndex(s => s.id === draft.id);
+  if(i >= 0) students[i] = draft; else students.push(draft);
+  persist(); render(); const nm = draft.name; closeDrawer(); toast(i >= 0 ? 'Changes saved' : nm + ' added');
+};
+$('drDelete').onclick = () => {
+  if(!editing) return;
+  const s = students.find(x => x.id === editing);
+  if(!confirm(`Remove ${s.name} from the list?`)) return;
+  undoBuf = s;
+  students = students.filter(x => x.id !== editing);
+  persist(); render(); closeDrawer(); toast(s.name + ' removed', true);
+};
+
+/* ---------- exports ---------- */
+function download(name, text, type){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], {type}));
+  a.download = name; a.click(); URL.revokeObjectURL(a.href);
+}
+const csvQ = v => `"${String(v == null ? '' : v).replace(/"/g,'""')}"`;
+$('btnCsv').onclick = () => {
+  const head = ['Name','Date of birth','Age (months)','Period','Current period','Group','Program','Schedule','Mon','Tue','Wed','Thu','Fri','Days','Rate','Rate basis','Weekly total','Card rate','Under card','Discount','RCOE','Family weekly','Approx monthly','Weeks in '+YEAR,'Projected '+YEAR,'Start','Last day','Allergies','Care notes','Guardians','Emergency contacts','Approved pickup','Notes'];
+  const ppl = a => (a||[]).map(p => `${p.name}${p.rel?' ('+p.rel+')':''}${p.phone?' '+p.phone:''}`).join(' | ');
+  const rows = [];
+  students.forEach(s => {
+    const age = ageOf(s), cur = currentTerm(s), terms = s.terms||[];
+    terms.forEach((t,i) => { const c = calc(t); rows.push([
+      s.name, s.dob, age ? age.months : '', `${i+1} of ${terms.length}`, t.id === cur.id ? 'yes' : '',
+      (GROUPS.find(g => g[0] === t.section)||[,t.section])[1], c.card.label, t.schedule,
+      ...DAYS.map(([k]) => t.days[k] ? 'X' : ''), c.dayCount, t.rate, t.rateBasis,
+      c.weekly.toFixed(2), c.cardWeekly.toFixed(2), c.belowCard.toFixed(2), c.discount.toFixed(2), c.rcoe.toFixed(2),
+      c.parent.toFixed(2), c.monthly.toFixed(2), c.weeks, c.annual.toFixed(2), t.start, t.end,
+      s.allergies, s.care, ppl(s.guardians), ppl(s.emergency), ppl((s.pickup||[]).filter(p => p.ok !== false)),
+      (s.noteList||[]).map(n => `[${n.cat} ${n.date}] ${n.text}`).join(' | ')
+    ].map(csvQ).join(',')); });
+  });
+  download(`master-list-${today()}.csv`, head.map(csvQ).join(',')+'\n'+rows.join('\n'), 'text/csv');
+  toast('CSV downloaded');
+};
+$('btnSheet').onclick = () => {
+  const en = enrolledList().slice().sort((a,b) => a.name.localeCompare(b.name));
+  const rows = en.map(s => {
+    const ok = (s.guardians||[]).map(p => `${p.name} (${p.rel||'guardian'})${p.phone?' '+p.phone:''}`)
+      .concat((s.pickup||[]).filter(p => p.ok !== false).map(p => `${p.name} (${p.rel||'approved'})${p.phone?' '+p.phone:''}${p.idCheck?' [ID]':''}`));
+    const em = (s.emergency||[]).map(p => `${p.name} (${p.rel||'emergency'})${p.phone?' '+p.phone:''}`);
+    return `<tr><td><b>${esc(s.name)}</b><br><small>${esc(CARD[programOf(s)].short)}${s.allergies?' · ALLERGY':''}</small></td>
+      <td>${ok.length ? ok.map(esc).join('<br>') : '<i>nobody listed</i>'}</td>
+      <td>${em.length ? em.map(esc).join('<br>') : '<i>none</i>'}</td>
+      <td>${esc(s.allergies||'')}</td></tr>`;
+  }).join('');
+  const w = window.open('', '_blank');
+  if(!w){ toast('Allow pop-ups to open the pickup sheet'); return; }
+  w.document.write(`<html><head><title>Pickup & emergency sheet</title><style>
+    body{font-family:system-ui,sans-serif;margin:24px;color:#33404F}
+    h1{font-size:20px;margin:0} .sub{color:#8695A5;font-size:12px;margin:2px 0 16px}
+    table{width:100%;border-collapse:collapse;font-size:12.5px}
+    th{text-align:left;background:#F4EFE5;padding:7px;border-bottom:2px solid #33404F}
+    td{padding:7px;border-bottom:1px solid #E9E2D6;vertical-align:top}
+    small{color:#8695A5} tr{break-inside:avoid}
+  </style></head><body>
+    <h1>Pickup &amp; emergency sheet</h1>
+    <div class="sub">Schoolhouse Daycare · LIC #334846754 · ${en.length} children · ${fmtDate(today())}</div>
+    <table><thead><tr><th>Child</th><th>Approved for pickup</th><th>Emergency contacts</th><th>Allergies</th></tr></thead>
+    <tbody>${rows}</tbody></table></body></html>`);
+  w.document.close(); setTimeout(() => w.print(), 400);
+};
+$('btnBackup').onclick = () => {
+  download(`master-list-backup-${today()}.json`, JSON.stringify(students,null,1), 'application/json');
+  toast('Backup downloaded');
+};
+$('btnRestore').onclick = () => $('fileIn').click();
+$('fileIn').onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const data = JSON.parse(r.result);
+      if(!Array.isArray(data) || !data.length || !data[0].name) throw 0;
+      if(!confirm(`Replace the current list with ${data.length} children from this backup?`)) return;
+      students = data.map(migrate); persist(); render(); toast('Backup restored');
+    }catch(err){ toast('That file is not a Master List backup'); }
+  };
+  r.readAsText(f); e.target.value = '';
+};
+
+/* ---------- migrate older records ---------- */
+const TERM_KEYS = ['id','start','end','section','program','schedule','days','rateBasis','rate','discountType','discountValue','rcoe','dateNote'];
+function migrate(s){
+  if(typeof s.notes === 'string'){
+    s.noteList = s.notes.trim() ? [{id:uid('n'),date:today(),cat:'general',text:s.notes,pin:false}] : [];
+    delete s.notes;
+  }
+  ['guardians','emergency','pickup','noteList'].forEach(k => { if(!Array.isArray(s[k])) s[k] = []; });
+  ['dob','allergies','care'].forEach(k => { if(s[k] == null) s[k] = ''; });
+  if(s.review){ s.noteList.unshift({id:uid('n'),date:today(),cat:'billing',text:s.review,pin:true}); delete s.review; }
+  /* flat record from an older backup -> single term */
+  if(!Array.isArray(s.terms) || !s.terms.length){
+    const t = blankTerm();
+    TERM_KEYS.forEach(k => { if(k !== 'id' && s[k] != null) t[k] = s[k]; });
+    if(!t.program) t.program = s.room === 'Infant' ? 'infant' : 'preschool';
+    s.terms = [t];
+    TERM_KEYS.filter(k => k !== 'id').forEach(k => delete s[k]);
+  }
+  s.terms.forEach(t => {
+    if(!t.id) t.id = uid('t');
+    if(!t.program) t.program = 'preschool';
+    if(!t.days) t.days = {mon:false,tue:false,wed:false,thu:false,fri:false};
+    if(!t.section) t.section = 'active';
+  });
+  return s;
+}
+
+/* ---------- go ---------- */
+(async function init(){
+  const saved = await store.load();
+  students = ((saved && saved.length) ? saved : SEED).map(migrate);
+  if(!saved) store.save(students);
+  render();
+})();
+</script>
+</body>
+</html>

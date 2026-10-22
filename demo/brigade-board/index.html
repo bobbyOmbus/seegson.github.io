@@ -187,6 +187,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--heat);outline:none}
 .t-job i.cleaning{background:var(--tag-clean);color:var(--tag-clean-ink)}
 .t-job span{min-width:0}
 .t-with{font-style:normal;color:var(--ticket-dim)}
+.recipe-picks{display:flex;flex-wrap:wrap;gap:6px}
+.rchip{font:inherit;font-size:13.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);cursor:pointer}
+.rchip:hover{border-color:var(--fg-faint)}
+.rchip[aria-pressed="true"]{background:var(--heat);border-color:var(--heat);color:var(--heat-ink);font-weight:600}
+.rchip.loaded{color:var(--ok);border-color:var(--ok)}
+.rchip.loaded[aria-pressed="true"]{color:var(--heat-ink)}
 .t-per{display:block;font-size:.88em;color:var(--tag-gather-ink);margin-top:1px;line-height:1.3}
 .t-line{display:block;font-size:11px;color:var(--ticket-dim);margin-top:3px}
 .t-row{display:flex;justify-content:space-between;align-items:center;gap:6px}
@@ -601,7 +607,8 @@ function parseLine(raw) {
   return { amount, unit, name: rest || raw.trim() };
 }
 const PLURAL_UNIT = { cup:'cups', stick:'sticks', bunch:'bunches', clove:'cloves', can:'cans' };
-function unitLabel(amtStr, unit) { if (!unit) return amtStr; const n = parseFloat(amtStr) + (/\//.test(amtStr) && / /.test(amtStr) ? 1 : 0); return amtStr + ' ' + ((n > 1 && PLURAL_UNIT[unit]) ? PLURAL_UNIT[unit] : unit); }
+function qtyValue(str) { return String(str).split(' ').reduce((v, p) => { if (p.includes('/')) { const [a, b] = p.split('/').map(Number); return v + a / b; } return v + (Number(p) || 0); }, 0); }
+function unitLabel(amtStr, unit) { if (!unit) return amtStr; const n = qtyValue(amtStr); return amtStr + ' ' + ((n > 1 && PLURAL_UNIT[unit]) ? PLURAL_UNIT[unit] : unit); }
 function totalLabel(it, n) { return it.amount == null ? it.name : unitLabel(formatQty(it.amount * n), it.unit) + ' ' + it.name; }
 function perLabel(it) { return it.amount == null ? '' : unitLabel(formatQty(it.amount), it.unit); }
 function wholeNote(it, n) {
@@ -995,11 +1002,12 @@ function renderToday() {
     <section class="card" aria-labelledby="menuH">
       <div class="card-h"><h3 id="menuH">Today's production</h3><span class="eyebrow" id="recipeTag"></span></div>
       <div class="stack" style="gap:14px">
-        <div class="field"><label class="lbl" for="recipePick">From your recipe file</label>
-          <div class="inline"><select id="recipePick"></select><button class="btn" type="button" id="loadRecipe">Load</button></div></div>
+        <div class="field"><span class="lbl" id="recipePickLbl">From your recipe file · pick one or more</span>
+          <div class="recipe-picks" id="recipePick" role="group" aria-labelledby="recipePickLbl"></div>
+          <div class="row" style="margin-top:8px"><button class="btn" type="button" id="loadRecipe">Add to today</button><button class="btn ghost sm" type="button" id="clearIng">Clear list</button></div></div>
         <div class="field"><label class="lbl" for="ingIn">Ingredients for one station</label>
-          <textarea id="ingIn" rows="7" placeholder="1 cup diced onion&#10;1/2 cup diced celery&#10;2 qt chicken stock&#10;1 lb andouille">${esc(ing)}</textarea>
-          <p class="hint">One per line, the way one station's recipe calls for it. Gatherers get the total for every station.</p></div>
+          <textarea id="ingIn" rows="9" placeholder="# Chicken & andouille gumbo&#10;1 cup diced onion&#10;1/2 cup diced celery&#10;2 qt chicken stock&#10;&#10;# Shrimp étouffée&#10;1 cup diced onion&#10;1 lb peeled shrimp">${esc(ing)}</textarea>
+          <p class="hint">One per line, the way one station's recipe calls for it. A line starting with # names a recipe. When recipes share an ingredient, it becomes one gather job with the combined amount, converting tsp, tbsp and cups, or oz and lb, as needed.</p></div>
         <div class="fields">
           <div class="field"><label class="lbl" for="stnIn">Stations</label><input type="number" id="stnIn" min="1" max="20" value="${K.data.stations || 6}"></div>
           <div class="field"><label class="lbl" for="sousPick">Sous chef</label><select id="sousPick"></select></div>
@@ -1012,14 +1020,21 @@ function renderToday() {
   </div>
   <section class="board" id="board" aria-live="polite"></section>`;
   paintRoll(); paintRecipePick(); paintTodayBoard(); paintSetupSum();
-  $('#ingIn').addEventListener('input', e => store.set(draftKey(), e.target.value));
+  $('#ingIn').addEventListener('input', e => { store.set(draftKey(), e.target.value); paintRecipePick(); });
+  $('#recipePick').addEventListener('click', e => {
+    const b = e.target.closest('button[data-rid]'); if (!b) return;
+    K.recipeSel = K.recipeSel || new Set();
+    if (K.recipeSel.has(b.dataset.rid)) K.recipeSel.delete(b.dataset.rid); else K.recipeSel.add(b.dataset.rid);
+    paintRecipePick();
+  });
+  $('#clearIng').addEventListener('click', confirmStep($('#clearIng'), 'Tap again to clear', () => { setDraft(''); paintRecipePick(); }));
   $('#allIn').addEventListener('click', () => { (K.data.roster || []).forEach(n => K.overrides.set(n, true)); paintRoll(); });
   $('#useLive').addEventListener('click', () => { K.overrides = new Map((K.data.roster || []).map(n => [n, K.checkins.has(n)])); paintRoll(); });
   $('#roll').addEventListener('change', e => { const cb = e.target.closest('input[data-name]'); if (!cb) return; K.overrides.set(cb.dataset.name, cb.checked); paintRoll(); });
   $('#loadRecipe').addEventListener('click', () => {
-    const r = K.recipes.find(x => x.id === $('#recipePick').value); if (!r) return;
-    $('#ingIn').value = (r.ingredients || []).join('\n'); store.set(draftKey(), $('#ingIn').value); K.pickedRecipe = r.name;
-    $('#recipeTag').textContent = r.name; toast(`Loaded ${r.name}`);
+    const picked = K.recipes.filter(r => K.recipeSel && K.recipeSel.has(r.id));
+    if (!picked.length) { toast('Tap one or more recipes first.'); return; }
+    addRecipesToDraft(picked); K.recipeSel = new Set(); paintRecipePick();
   });
   $('#stnIn').addEventListener('change', async e => {
     const n = Math.max(1, Math.min(20, parseInt(e.target.value, 10) || 6)); e.target.value = n;
@@ -1042,12 +1057,68 @@ function paintSetupSum() {
   el.innerHTML = `${eq.length} equipment ${eq.length === 1 ? 'set' : 'sets'} and ${cl.length} cleaning ${cl.length === 1 ? 'job' : 'jobs'} rotate with the brigade. <button class="linkish" type="button" id="toSetup">Edit in class setup</button>`;
   $('#toSetup').addEventListener('click', () => { S.tab = 'setup'; renderClass(); });
 }
+/* ---------- today's production: one or more recipes in one list ---------- */
+function getDraft() {
+  const d = store.get(draftKey());
+  if (d != null) return d;
+  return K.today && K.today.ingredientLines ? K.today.ingredientLines.join('\n') : '';
+}
+function setDraft(text) { store.set(draftKey(), text); const ta = $('#ingIn'); if (ta) ta.value = text; }
+function recipeHeaders(text) { return lines(text).filter(l => l.startsWith('#')).map(l => l.replace(/^#+\s*/, '').trim()).filter(Boolean); }
+function addRecipesToDraft(list) {
+  let text = getDraft();
+  const have = new Set(recipeHeaders(text).map(h => h.toLowerCase()));
+  const added = [], skipped = [];
+  list.forEach(r => {
+    if (have.has(r.name.toLowerCase())) { skipped.push(r.name); return; }
+    text = text.replace(/\s+$/, '') + (text.trim() ? '\n\n' : '') + '# ' + r.name + '\n' + (r.ingredients || []).join('\n');
+    have.add(r.name.toLowerCase()); added.push(r.name);
+  });
+  setDraft(text);
+  if (added.length) toast(`Added ${added.join(' + ')}${skipped.length ? ` (${skipped.join(', ')} already on the list)` : ''}`);
+  else if (skipped.length) toast(`${skipped.join(', ')} ${skipped.length === 1 ? 'is' : 'are'} already on today's list`);
+}
+/* Units that convert into each other, as [family, size in the family's smallest unit]. */
+const UNIT_FAMILY = { tsp: ['v', 1], tbsp: ['v', 3], cup: ['v', 48], pt: ['v', 96], qt: ['v', 192], gal: ['v', 768], ml: ['mv', 1], l: ['mv', 1000], oz: ['w', 1], lb: ['w', 16], g: ['mw', 1], kg: ['mw', 1000] };
+/* Parse the list into gather items, combining the same ingredient across recipes.
+   Matching units convert (2 tsp + 1 tbsp garlic -> 1 2/3 tbsp), shown in the larger unit used. */
+function parseProduction(text) {
+  const recipes = []; const items = []; const byKey = new Map(); let current = '';
+  lines(text).forEach(l => {
+    if (l.startsWith('#')) { current = l.replace(/^#+\s*/, '').trim(); if (current) recipes.push(current); return; }
+    const it = parseLine(l);
+    const nm = it.name.toLowerCase().replace(/\s+/g, ' ').trim();
+    const fam = it.unit && UNIT_FAMILY[it.unit];
+    const key = it.amount == null ? 'x|' + nm : (fam ? fam[0] : (it.unit || '')) + '|' + nm;
+    const hit = byKey.get(key);
+    if (hit) {
+      if (it.amount != null) {
+        if (fam && hit.base != null) {
+          hit.base += it.amount * fam[1];
+          if (fam[1] > UNIT_FAMILY[hit.unit][1]) hit.unit = it.unit;
+          hit.amount = hit.base / UNIT_FAMILY[hit.unit][1];
+        } else hit.amount += it.amount;
+      }
+      if (current && !hit.from.includes(current)) hit.from.push(current);
+    } else {
+      const item = { ...it, base: fam && it.amount != null ? it.amount * fam[1] : null, from: current ? [current] : [] };
+      byKey.set(key, item); items.push(item);
+    }
+  });
+  return { recipes, items };
+}
 function paintRecipePick() {
-  const sel = $('#recipePick'); if (!sel) return; const prev = sel.value;
-  sel.innerHTML = K.recipes.length ? K.recipes.map(r => `<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('') : '<option value="">No saved recipes yet</option>';
-  if (prev && K.recipes.some(r => r.id === prev)) sel.value = prev;
-  $('#loadRecipe').disabled = !K.recipes.length;
-  const tag = $('#recipeTag'); if (tag && !tag.textContent && K.today && K.today.recipeName) tag.textContent = K.today.recipeName;
+  const el = $('#recipePick'); if (!el) return;
+  K.recipeSel = K.recipeSel || new Set();
+  const loaded = new Set(recipeHeaders($('#ingIn') ? $('#ingIn').value : getDraft()).map(h => h.toLowerCase()));
+  el.innerHTML = K.recipes.length ? K.recipes.map(r => {
+    const on = K.recipeSel.has(r.id); const isLoaded = loaded.has(r.name.toLowerCase());
+    return `<button type="button" class="rchip${isLoaded ? ' loaded' : ''}" data-rid="${esc(r.id)}" aria-pressed="${on}" title="${isLoaded ? 'Already on today\'s list' : ''}">${isLoaded ? '<span aria-hidden="true">✓ </span>' : ''}${esc(r.name)}</button>`;
+  }).join('') : '<span class="hint" style="margin:0">No saved recipes yet. Add them on the Recipes tab.</span>';
+  const n = K.recipeSel.size; const btn = $('#loadRecipe');
+  btn.disabled = !K.recipes.length; btn.textContent = n > 1 ? `Add ${n} recipes to today` : 'Add to today';
+  const tag = $('#recipeTag');
+  if (tag) { const names = Array.from(loaded.size ? recipeHeaders($('#ingIn') ? $('#ingIn').value : getDraft()) : []); tag.textContent = names.length ? names.join(' + ') : (K.today && K.today.recipeName) || ''; }
 }
 function paintRoll() {
   const ul = $('#roll'); if (!ul) return;
@@ -1097,8 +1168,10 @@ function callBrigade() {
 
   const laborPool = line.length ? line : present;
   const ingLines = lines($('#ingIn').value);
+  const prod = parseProduction($('#ingIn').value);
+  const multi = prod.recipes.length > 1;
   const jobs = [
-    ...shuffle(ingLines.map(parseLine)).map(it => ({ category: 'ingredient', label: totalLabel(it, stations), detail: [perLabel(it) ? perLabel(it) + ' per station' : '', wholeNote(it, stations)].filter(Boolean).join(' · ') })),
+    ...shuffle(prod.items).map(it => ({ category: 'ingredient', label: totalLabel(it, stations), detail: [perLabel(it) ? perLabel(it) + ' per station' : '', wholeNote(it, stations), multi && it.from.length ? 'for ' + it.from.join(' + ') : ''].filter(Boolean).join(' · ') })),
     ...shuffle(K.data.equipment || []).map(e => ({ category: 'equipment', label: e, detail: 'One set to every station' })),
     ...shuffle(K.data.cleaning || []).map(e => ({ category: 'cleaning', label: e, detail: 'For the whole kitchen' }))
   ];
@@ -1107,7 +1180,7 @@ function callBrigade() {
   const session = {
     date: TODAY, calledAt: Date.now(), present, stationCount: stations, stationTeams: teams,
     leadership: { sousChef: sous }, laborAssignments: labor,
-    ingredientLines: ingLines, recipeName: K.pickedRecipe || (K.today && K.today.recipeName) || ''
+    ingredientLines: ingLines, recipeName: prod.recipes.length ? prod.recipes.join(' + ') : ''
   };
   const btn = $('#callBtn'); btn.disabled = true;
   db.doc(`classes/${K.id}/sessions/${TODAY}`).set(session)
@@ -1124,7 +1197,7 @@ function paintTodayBoard() {
 }
 const JOB_TAG = { ingredient: 'Gather', equipment: 'Set up', cleaning: 'Clean' };
 /* ticket version of the gatherer note: "1 cup per station · about 1 whole onion per station, 6 onions total" -> "1 cup per station · 6 onions total" */
-function shortDetail(d) { return String(d).replace(/about \d+ whole \S+ per station, (\d+ .+? total)/, '$1'); }
+function shortDetail(d) { return String(d).replace(/ · for .+$/, '').replace(/about \d+ whole \S+ per station, (\d+ .+? total)/, '$1'); }
 function jobsHTML(jobs) {
   return jobs.map(j => `<span class="t-job"><i class="${esc(j.category)}">${JOB_TAG[j.category] || esc(j.category)}</i><span>${esc(j.label)}${j.with && j.with.length ? ` <em class="t-with">with ${esc(j.with.join(' & '))}</em>` : ''}${j.category === 'ingredient' && j.detail ? `<small class="t-per">${esc(shortDetail(j.detail))}</small>` : ''}</span></span>`).join('');
 }
@@ -1361,7 +1434,7 @@ function renderRecipes() {
   });
   $('#recipeList').addEventListener('click', e => {
     const b = e.target.closest('button[data-act]'); if (!b) return; const r = K.recipes.find(x => x.id === b.dataset.id); if (!r) return;
-    if (b.dataset.act === 'use') { store.set(draftKey(), (r.ingredients || []).join('\n')); K.pickedRecipe = r.name; S.tab = 'today'; renderClass(); toast(`${r.name} loaded for today`); }
+    if (b.dataset.act === 'use') { addRecipesToDraft([r]); paintRecipeList(); }
     if (b.dataset.act === 'edit') { $('#rId').value = r.id; $('#rName').value = r.name; $('#rIng').value = (r.ingredients || []).join('\n'); $('#rEdH').textContent = 'Edit recipe'; $('#rCancel').hidden = false; preview(); $('#rName').focus(); }
   });
 }
@@ -1369,7 +1442,7 @@ function paintRecipeList() {
   const el = $('#recipeList'); if (!el) return;
   el.innerHTML = K.recipes.length ? K.recipes.map(r => `
     <div class="recipe"><div style="min-width:0"><h4>${esc(r.name)}</h4><p>${esc((r.ingredients || []).slice(0, 4).join(' · '))}${(r.ingredients || []).length > 4 ? ` · +${r.ingredients.length - 4} more` : ''}</p></div>
-      <div class="row" style="gap:6px"><button class="btn sm heat" type="button" data-act="use" data-id="${esc(r.id)}">Use today</button><button class="btn sm ghost" type="button" data-act="edit" data-id="${esc(r.id)}">Edit</button><button class="btn sm ghost danger" type="button" data-act="del" data-id="${esc(r.id)}">Delete</button></div></div>`).join('')
+      <div class="row" style="gap:6px"><button class="btn sm heat" type="button" data-act="use" data-id="${esc(r.id)}">${recipeHeaders(getDraft()).some(h => h.toLowerCase() === r.name.toLowerCase()) ? '✓ On today\'s list' : 'Add to today'}</button><button class="btn sm ghost" type="button" data-act="edit" data-id="${esc(r.id)}">Edit</button><button class="btn sm ghost danger" type="button" data-act="del" data-id="${esc(r.id)}">Delete</button></div></div>`).join('')
     : `<div class="empty"><h4>No recipes on file</h4><p style="margin:0">Save the dishes you teach this term and load any of them on lab day in one tap.</p></div>`;
   $$('button[data-act="del"]', el).forEach(b => b.addEventListener('click', confirmStep(b, 'Confirm', async () => {
     try { await db.doc(`classes/${K.id}/recipes/${b.dataset.id}`).delete(); toast('Recipe deleted'); } catch (e) { toast("Couldn't delete. Try again."); }

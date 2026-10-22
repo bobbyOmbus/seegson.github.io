@@ -3,10 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Brigade Board helps culinary instructors run lab check-ins, rotate brigade roles, scale recipes, and track term participation.">
+<meta name="description" content="Brigade Board: live check-in, fair brigade assignment and term records for culinary lab classes.">
 <meta name="theme-color" content="#121417">
-<meta name="color-scheme" content="dark light">
-<title>Brigade Board — Culinary Lab Operations</title>
+<title>Brigade Board</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -19,6 +18,10 @@
   --ticket:#F6F3EA; --ticket-ink:#1B1A17; --ticket-dim:#6B675D; --ticket-rule:#D9D3C3;
   --steel-hi:#8B949C; --steel-lo:#4A5259;
   --ok:#6CC08B; --ok-wash:rgba(108,192,139,.14); --late:#EB7D5F; --late-wash:rgba(235,125,95,.14);
+  /* job tags sit on the paper ticket, which stays light in both themes */
+  --tag-gather:#F1DDB2; --tag-gather-ink:#5E3B05;
+  --tag-setup:#D3E3EE; --tag-setup-ink:#1D4359;
+  --tag-clean:#D7EAD5; --tag-clean-ink:#21502B;
   --display:'Archivo','Arial Narrow',system-ui,sans-serif;
   --body:'Instrument Sans',system-ui,-apple-system,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
@@ -163,7 +166,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--heat);outline:none}
 .board-h h2{font-size:28px;font-stretch:70%;font-weight:800;text-transform:uppercase}
 .rail{position:relative;padding-top:20px}
 .rail::before{content:"";position:absolute;left:-4px;right:-4px;top:0;height:9px;border-radius:5px;background:linear-gradient(var(--steel-hi),var(--steel-lo));box-shadow:0 2px 4px rgba(0,0,0,.25)}
-.tickets{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:18px 14px;align-items:start}
+.board-h .row{gap:10px;align-items:center}
+.tickets{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:18px 14px;align-items:start}
 .ticket{position:relative;background:var(--ticket);color:var(--ticket-ink);font-family:var(--mono);font-size:13px;padding:16px 14px 20px;box-shadow:0 10px 18px -12px rgba(0,0,0,.55);min-width:0;animation:hang .38s ease-out both}
 .ticket:nth-child(odd){transform:rotate(-.5deg)} .ticket:nth-child(3n){transform:rotate(.4deg)}
 .ticket::before{content:"";position:absolute;top:-14px;left:50%;width:34px;height:16px;margin-left:-17px;border-radius:2px;background:linear-gradient(var(--steel-hi),var(--steel-lo))}
@@ -173,7 +177,37 @@ input:focus,select:focus,textarea:focus{border-color:var(--heat);outline:none}
 .t-head b{font-family:var(--display);font-stretch:66%;font-weight:800;font-size:26px;letter-spacing:.02em;text-transform:uppercase;line-height:1}
 .t-head span{font-size:11px;color:var(--ticket-dim)}
 .ticket ul{list-style:none;margin:0;padding:0}
-.ticket li{padding:3px 0;overflow-wrap:anywhere}
+.ticket li{padding:7px 0;border-bottom:1px dotted var(--ticket-rule);overflow-wrap:anywhere}
+.ticket li:last-child{border-bottom:0;padding-bottom:0}
+.t-nm{display:block;font-family:var(--body);font-weight:600;font-size:15px;line-height:1.2}
+.t-job{display:flex;gap:6px;align-items:baseline;font-size:12px;line-height:1.3;margin-top:4px}
+.t-job i{font-style:normal;font-size:.78em;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:1px 5px;border-radius:2px;flex-shrink:0}
+.t-job i.ingredient{background:var(--tag-gather);color:var(--tag-gather-ink)}
+.t-job i.equipment{background:var(--tag-setup);color:var(--tag-setup-ink)}
+.t-job i.cleaning{background:var(--tag-clean);color:var(--tag-clean-ink)}
+.t-job span{min-width:0}
+.t-with{font-style:normal;color:var(--ticket-dim)}
+.t-per{display:block;font-size:.88em;color:var(--tag-gather-ink);margin-top:1px;line-height:1.3}
+.t-line{display:block;font-size:11px;color:var(--ticket-dim);margin-top:3px}
+.t-row{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.lk{display:inline-flex;align-items:center;justify-content:center;border:0;background:none;padding:4px;border-radius:3px;color:var(--ticket-dim);cursor:pointer;opacity:.5;flex-shrink:0}
+.lk:hover,.lk:focus-visible{opacity:1}
+.lk[aria-pressed="true"]{opacity:1;background:var(--heat);color:var(--heat-ink)}
+.empty-lead{border:1.5px dashed var(--heat)}
+/* moving students */
+[data-mv]{cursor:grab;border-radius:4px;transition:background .12s}
+.ticket [data-mv]:hover{background:rgba(0,0,0,.04)}
+.picked{outline:2px solid var(--heat);outline-offset:2px;background:var(--heat-wash)!important}
+.dragging{opacity:.45}
+.moving [data-drop]{outline:2px dashed var(--heat);outline-offset:4px}
+[data-drop].over{outline:3px solid var(--heat);outline-offset:4px}
+.pool{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px;border:1px dashed var(--line);border-radius:8px;margin-bottom:22px;min-height:48px}
+.mv-chip{font-family:var(--mono);font-size:13px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);user-select:none}
+.mv-chip:hover{border-color:var(--heat)}
+.lock-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
+.lz{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;border:1px dashed var(--line);border-radius:8px;padding:10px;min-height:96px;background:var(--surface)}
+.lz h5{flex-basis:100%;margin:0 0 2px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-dim);font-weight:600}
+.lz-pool{min-height:64px;background:var(--surface-2)}
 .ticket.lead{background:var(--ticket)}
 .ticket.lead .t-head{border-bottom-style:solid;border-bottom-color:var(--heat)}
 .ticket.lead .t-who{font-family:var(--display);font-stretch:80%;font-weight:750;font-size:22px;line-height:1.1}
@@ -202,8 +236,40 @@ input:focus,select:focus,textarea:focus{border-color:var(--heat);outline:none}
 .in-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
 .in-chips span{font-family:var(--mono);font-size:14px;padding:6px 12px;border-radius:999px;background:var(--ok-wash);color:var(--ok);border:1px solid var(--ok)}
 .pass.big .tickets{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
-.pass.big .ticket{font-size:16px}
-.pass.big .t-head b{font-size:34px}
+.pass.big .t-head b{font-size:32px}
+
+/* full-screen classroom display */
+.railview{position:fixed;inset:0;z-index:30;background:var(--bg);overflow:auto;display:flex;flex-direction:column;gap:2.4vh;
+  padding:calc(env(safe-area-inset-top,0px) + 2.4vh) max(16px,2.4vw) calc(env(safe-area-inset-bottom,0px) + 3vh)}
+.rv-top{display:flex;justify-content:space-between;align-items:flex-end;gap:2vw;border-bottom:1px solid var(--line);padding-bottom:1.6vh;flex-shrink:0}
+.rv-top > div:first-child{min-width:0}
+.rv-top .eyebrow{font-size:clamp(11px,.8vw,18px)}
+.rv-top h2{font-size:clamp(24px,2.6vw,60px);font-stretch:66%;font-weight:800;text-transform:uppercase;line-height:.95;margin-top:.5vh}
+.rv-recipe{font-family:var(--display);font-stretch:70%;font-weight:750;text-transform:uppercase;color:var(--heat-text);font-size:clamp(16px,1.5vw,36px);line-height:1.1;margin-top:.4vh}
+.rv-right{display:flex;align-items:center;gap:18px;flex-shrink:0}
+.rv-right .clock{font-size:clamp(24px,2.6vw,60px)}
+.rv-exit{opacity:.55}
+.rv-exit:hover,.rv-exit:focus-visible{opacity:1}
+/* ticket sizes are in em so the display can scale them to fit the screen */
+.railview .rv-rail{font-size:var(--rv-fs,18px)}
+.railview .rail{padding-top:1.3em}
+.railview .tickets{grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:1.7em .8em}
+.railview .ticket{font-size:1em;padding:.85em .75em 1.15em}
+.railview .ticket::before{width:1.9em;height:.9em;top:-.8em;margin-left:-.95em}
+.railview .t-head{padding-bottom:.45em;margin-bottom:.3em;white-space:nowrap}
+.railview .t-head b{font-size:2.2em}
+.railview .t-head span{font-size:.72em}
+.railview .ticket .flag{font-size:.6em}
+.railview .t-nm{font-size:1.3em}
+.railview .t-job{font-size:.88em}
+.railview .ticket.lead .t-who{font-size:1.9em}
+.railview .ticket.lead .t-note,.railview .t-line{font-size:.72em}
+.railview .ticket li{padding:.42em 0}
+@media (max-width:760px){.rv-top{flex-wrap:wrap}}
+.railview .bigcode{font-size:clamp(60px,11vw,240px)}
+.railview .callout p{font-size:clamp(18px,2vw,44px)}
+.railview .in-chips span{font-size:clamp(14px,1.3vw,28px)}
+@media (max-width:760px){.railview .tickets{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}}
 
 /* student */
 .code-input{font-family:var(--mono);font-size:30px !important;letter-spacing:.16em;text-transform:uppercase;text-align:center;padding:14px !important}
@@ -251,61 +317,6 @@ table.rep th.n{text-align:right}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 .demo-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--fg-dim);background:var(--heat-wash);border:1px solid var(--heat);border-radius:8px;padding:8px 12px;margin:-12px 0 22px}
 .demo-bar b{color:var(--heat-text);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
-
-/* Market polish: stronger hierarchy, focus states, responsive tools, and theme control. */
-:root{--radius-lg:16px;--shadow-card:0 16px 40px rgba(0,0,0,.12)}
-body{background:radial-gradient(ellipse at 12% 0%,rgba(242,169,59,.055),transparent 38%),var(--bg);transition:background .2s,color .2s}
-.wrap{max-width:1180px;padding-top:22px}
-.topbar{position:relative;gap:16px;margin-bottom:24px}
-.mark{min-height:42px}
-.mark .lamp{flex:0 0 12px}
-.mark b{letter-spacing:.055em}
-.top-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
-.icon-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);border-radius:999px;background:var(--surface);padding:8px 12px;min-height:38px;cursor:pointer;font-size:13px;font-weight:600}
-.icon-btn:hover{border-color:var(--heat)}
-.hero{padding-block:40px 32px;gap:26px}
-.hero h1{max-width:12ch;font-size:clamp(44px,8vw,92px);letter-spacing:-.035em}
-.hero .lede{font-size:clamp(16px,2vw,19px);line-height:1.65;max-width:62ch}
-.doors{gap:18px}
-.door{min-height:230px;padding:26px;background:linear-gradient(145deg,var(--surface),var(--surface-2));border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}
-.door h2{letter-spacing:-.025em}
-.door .go{font-weight:600}
-.facts{margin-top:8px}
-.fact{padding:20px 18px 8px 0}
-.fact b{font-size:17px}
-.card,.tile,.class-card,.pass{border-radius:var(--radius-lg)}
-.card{box-shadow:0 8px 28px rgba(0,0,0,.055)}
-.btn,.tab,.class-card,.name,.door,.icon-btn{transition:all .16s ease}
-.btn{border-radius:8px}
-.btn.heat{box-shadow:0 5px 15px rgba(242,169,59,.12)}
-.class-head{margin-bottom:22px}
-.class-head h1{letter-spacing:-.025em}
-.class-grid{gap:16px}
-.class-card{padding:22px;min-height:158px;box-shadow:0 8px 22px rgba(0,0,0,.05)}
-.class-card h3{letter-spacing:-.02em}
-.class-card .who{line-height:1.5}
-.class-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 16px}
-.class-tools input{max-width:420px}
-.class-tools .hint{margin:0}
-.dash-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 18px}
-.dash-stat{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:15px 17px}
-.dash-stat b{display:block;font-family:var(--display);font-size:26px;line-height:1.1}
-.dash-stat span{display:block;color:var(--fg-dim);font-size:12px;margin-top:5px}
-.tabs{gap:8px;border-bottom-color:var(--line)}
-.tab{border-radius:8px 8px 0 0;padding-inline:15px}
-.tab[aria-selected="true"]{background:var(--heat-wash)}
-.ticket{border-radius:3px}
-.ticket .t-head b{letter-spacing:-.02em}
-.pass{box-shadow:var(--shadow-card)}
-.toast{border:1px solid var(--line)}
-.demo-bar{border-radius:10px;padding:10px 14px}
-.demo-bar span{flex:1;min-width:180px}
-input,select,textarea{transition:border-color .15s,box-shadow .15s}
-input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px var(--heat-wash)}
-.empty{background:color-mix(in srgb,var(--surface) 65%,transparent)}
-@media(max-width:640px){body{padding-inline:12px}.wrap{padding-top:12px}.topbar{margin-bottom:16px}.top-actions .icon-btn .action-label{display:none}.hero{padding-top:28px}.door{min-height:190px;padding:21px}.dash-summary{grid-template-columns:1fr 1fr}.dash-stat:last-child{grid-column:1/-1}.class-tools input{max-width:none}.card{padding:16px}.pass{padding:14px}}
-@media(prefers-reduced-motion:reduce){body,*{transition:none!important}}
-@media print{body{background:#fff!important;color:#111!important;padding:0}.topbar,.crumb,.demo-bar,.tabs,.btn,.icon-btn{display:none!important}.wrap{max-width:none;padding:0}.pass,.ticket{box-shadow:none!important;break-inside:avoid}.ticket{border:1px solid #bbb}.pass{border:0}}
 </style>
 
 </head>
@@ -313,10 +324,9 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px var(--heat-wash)}
 <div class="wrap" id="app">
   <header class="topbar">
     <button class="mark" id="homeBtn" type="button" aria-label="Brigade Board home"><span class="lamp"></span><b>Brigade Board</b></button>
-    <div class="top-actions"><button class="icon-btn" id="themeToggle" type="button" aria-label="Switch color theme"><span id="themeGlyph" aria-hidden="true">☼</span><span class="action-label" id="themeLabel">Light mode</span></button></div>
     <nav class="crumb" id="crumb" aria-label="Location"></nav>
   </header>
-  <div class="demo-bar" id="demoBar" hidden><b>Demo</b><span>Demo workspace only: sample records are stored in this browser and are not shared across devices. Do not enter real student data until secure instructor accounts and a production database are configured.</span><button class="linkish" type="button" id="resetDemo">Reset demo data</button></div>
+  <div class="demo-bar" id="demoBar" hidden><b>Demo</b><span>Sample classes and data stay in this browser. Open the student and instructor views in two tabs to watch check-ins land live.</span><button class="linkish" type="button" id="resetDemo">Reset demo data</button></div>
   <main id="root"></main>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
@@ -362,7 +372,7 @@ window.BB_BACKEND = (function () {
   }
 
   /* ---------- local database (Firestore-shaped subset) ---------- */
-  const KEY = 'bb-demo-db-v1';
+  const KEY = 'bb-demo-db-v2';
   function read() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
   let mem = read();
   const listeners = new Set();
@@ -449,16 +459,16 @@ window.BB_BACKEND = (function () {
           const late = rnd() < 0.12; const t = new Date(day); t.setHours(h, m + (late ? 7 + Math.floor(rnd() * 15) : -Math.floor(rnd() * 12)), 0, 0);
           db[`classes/${id}/checkins/${date}_${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`] = { date, name, checkedInAt: t.getTime(), late, via: 'student' };
         });
-        const order = shuffle(present); const sous = order[0], expo = order[1]; const line = order.slice(2);
+        const order = shuffle(present); const sous = order[0]; const line = order.slice(1);
         const teams = Array.from({ length: c.stations }, () => []); line.forEach((n, i) => teams[i % c.stations].push(n));
         const rec = (recipes[id] || [])[di % ((recipes[id] || []).length || 1)];
         let li = 0; const who = () => line[(li++) % line.length];
         const labor = [];
-        (rec ? rec[1] : []).forEach(ing => labor.push({ who: who(), category: 'ingredient', label: ing, detail: '' }));
+        (rec ? rec[1] : []).forEach(ing => labor.push({ who: who(), category: 'ingredient', label: ing + ' ×' + c.stations, detail: '' }));
         c.equipment.forEach(e => labor.push({ who: who(), category: 'equipment', label: e, detail: 'One set to every station' }));
         c.cleaning.forEach(e => labor.push({ who: who(), category: 'cleaning', label: e, detail: 'For the whole kitchen' }));
         const called = new Date(day); called.setHours(h, m + 12);
-        db[`classes/${id}/sessions/${date}`] = { date, calledAt: called.getTime(), present, stationCount: c.stations, stationTeams: teams, leadership: { sousChef: sous, expediter: expo }, laborAssignments: labor, ingredientLines: rec ? rec[1] : [], recipeName: rec ? rec[0] : '' };
+        db[`classes/${id}/sessions/${date}`] = { date, calledAt: called.getTime(), present, stationCount: c.stations, stationTeams: teams, leadership: { sousChef: sous }, laborAssignments: labor, ingredientLines: rec ? rec[1] : [], recipeName: rec ? rec[0] : '' };
       });
       /* a few students already checked in today so roll call looks alive */
       const date = iso(today);
@@ -593,11 +603,10 @@ function wholeNote(it, n) {
 
 /* ---------------- fairness ---------------- */
 function historyCounts(roster, sessions) {
-  const c = {}; roster.forEach(n => c[n] = { sous: 0, expo: 0, labor: 0, days: 0, stations: {} });
+  const c = {}; roster.forEach(n => c[n] = { sous: 0, labor: 0, days: 0, stations: {} });
   sessions.forEach(s => {
     const L = s.leadership || {};
     if (L.sousChef && c[L.sousChef]) c[L.sousChef].sous++;
-    if (L.expediter && c[L.expediter]) c[L.expediter].expo++;
     (s.laborAssignments || []).forEach(t => { if (c[t.who]) c[t.who].labor++; });
     (s.present || []).forEach(n => { if (c[n]) c[n].days++; });
     (s.stationTeams || []).forEach((team, i) => team.forEach(n => { if (c[n]) c[n].stations[i] = (c[n].stations[i] || 0) + 1; }));
@@ -612,11 +621,40 @@ function fairPicker(people, seed) {
   const load = new Map(people.map(p => [p, seed(p)]));
   return { load, pick() { const min = Math.min(...load.values()); const c = shuffle(people.filter(p => load.get(p) === min)); const x = c[0]; load.set(x, load.get(x) + 1); return x; } };
 }
-function buildTeams(people, n, pairs, counts) {
+/* Deal today's jobs so everyone gets one before anyone gets two. Term history only breaks ties.
+   If there are more cooks than jobs, the extra cooks join a job as helpers (cleaning first),
+   so nobody is left with nothing to do. Returns one entry per person per job. */
+function assignJobs(jobs, people, counts) {
+  if (!jobs.length || !people.length) return [];
+  const load = new Map(people.map(p => [p, 0]));
+  const hist = n => (counts[n] ? counts[n].labor : 0);
+  const pickLeast = () => {
+    const min = Math.min(...load.values());
+    const tied = people.filter(p => load.get(p) === min);
+    const minH = Math.min(...tied.map(hist));
+    return shuffle(tied.filter(p => hist(p) === minH))[0];
+  };
+  const crews = jobs.map(j => { const w = pickLeast(); load.set(w, load.get(w) + 1); return { ...j, crew: [w] }; });
+  const helpFirst = { cleaning: 0, equipment: 1, ingredient: 2 };
+  const idle = shuffle(people.filter(p => load.get(p) === 0)).sort((a, b) => hist(a) - hist(b));
+  idle.forEach(p => {
+    const job = crews.slice().sort((a, b) => (a.crew.length - b.crew.length) || ((helpFirst[a.category] ?? 3) - (helpFirst[b.category] ?? 3)))[0];
+    job.crew.push(p);
+  });
+  const out = [];
+  crews.forEach(c => c.crew.forEach((who, i) => out.push({ who, category: c.category, label: c.label, detail: c.detail, with: c.crew.filter(x => x !== who), helper: i > 0 })));
+  return out;
+}
+
+/* locks: { name: stationIndex } — locked students are placed first and never moved by the shuffle */
+function buildTeams(people, n, pairs, counts, locks) {
+  locks = locks || {};
   const teams = Array.from({ length: n }, () => []);
+  const free = [];
+  people.forEach(p => { const i = locks[p]; if (Number.isInteger(i) && i >= 0 && i < n) teams[i].push(p); else free.push(p); });
   const cap = Math.ceil(people.length / n);
-  for (const p of shuffle(people)) {
-    let best = 0, bestScore = Infinity;
+  for (const p of shuffle(free)) {
+    let best = -1, bestScore = Infinity;
     teams.forEach((t, i) => {
       if (t.length >= cap) return;
       const repeat = t.reduce((s, q) => s + (pairs[pairKey(p, q)] || 0), 0);
@@ -624,14 +662,17 @@ function buildTeams(people, n, pairs, counts) {
       const score = t.length * 1000 + repeat * 10 + sameStation * 3 + Math.random();
       if (score < bestScore) { bestScore = score; best = i; }
     });
+    if (best < 0) best = teams.reduce((m, t, i) => t.length < teams[m].length ? i : m, 0);
     teams[best].push(p);
   }
   return teams;
 }
+function smallestTeam(teams) { return teams.reduce((m, t, i) => t.length < teams[m].length ? i : m, 0); }
 
 /* ---------------- shell / routing ---------------- */
 $('#homeBtn').addEventListener('click', () => go('home'));
 function go(view, extra) {
+  closeRail();
   releaseAll();
   if (view !== 'class') K = null;
   S.view = view; Object.assign(S, extra || {});
@@ -661,7 +702,7 @@ function renderHome() {
   root.innerHTML = `
   <section class="hero">
     <h1>Roll call to <em>the pass</em> in two minutes</h1>
-    <p class="lede">Students check in from their phones as they walk into the kitchen. You see who's here and who's late, then call the brigade: station teams, sous chef, expediter, gathering and cleaning, rotated fairly across the term.</p>
+    <p class="lede">Students check in from their phones as they walk into the kitchen. You see who's here and who's late, then call the brigade: station teams, a sous chef, and gathering, setup and cleaning jobs, rotated fairly across the term.</p>
     <div class="doors">
       <button class="door" type="button" id="toStudent">
         <span class="eyebrow">Student</span>
@@ -800,7 +841,6 @@ function mountStudentClass(classId) {
     let headline = '', detail = '';
     const ti = (s.stationTeams || []).findIndex(t => t.includes(me));
     if (L.sousChef === me) { headline = 'Sous chef'; detail = 'You run the line today. Check stations, keep time, and back up the chef.'; }
-    else if (L.expediter === me) { headline = 'Expediter'; detail = 'You own the pass today. Call tickets, check plates, keep service moving.'; }
     else if (ti >= 0) { headline = 'Station ' + (ti + 1); const mates = s.stationTeams[ti].filter(n => n !== me); detail = mates.length ? 'Working with ' + mates.join(', ') + '.' : 'Working solo today.'; }
     else { headline = 'Floating'; detail = 'You were marked present after the brigade was called. Check with Chef for a station.'; }
     const jobs = (s.laborAssignments || []).filter(t => t.who === me);
@@ -810,7 +850,7 @@ function mountStudentClass(classId) {
       <p style="margin:8px 0 0;color:var(--fg-dim)">${esc(detail)}</p>
       <div class="tasks">
         <h4>Your jobs</h4>
-        ${jobs.length ? jobs.map(j => `<div class="task"><span class="what">${esc(j.label)}</span><span class="who">${esc(catName(j.category))}</span>${j.detail ? `<span class="sub">${esc(j.detail)}</span>` : ''}</div>`).join('') : '<div class="task"><span class="what" style="color:var(--fg-dim)">No gathering or cleaning jobs for you today.</span></div>'}
+        ${jobs.length ? jobs.map(j => `<div class="task"><span class="what">${esc(j.label)}</span><span class="who">${esc(catName(j.category))}</span>${j.detail || (j.with && j.with.length) ? `<span class="sub">${esc([j.with && j.with.length ? 'With ' + j.with.join(' & ') : '', j.detail || ''].filter(Boolean).join(' · '))}</span>` : ''}</div>`).join('') : '<div class="task"><span class="what" style="color:var(--fg-dim)">No gathering or cleaning jobs for you today.</span></div>'}
       </div>`;
   }
 
@@ -841,31 +881,21 @@ function renderClassList() {
   root.innerHTML = `
     <div class="class-head"><div><span class="eyebrow">Chef instructor</span><h1>Your classes</h1></div></div>
     ${dbNotice('The instructor console')}
-    <div class="dash-summary" id="classSummary"><div class="dash-stat"><b>—</b><span>Classes</span></div><div class="dash-stat"><b>—</b><span>Enrolled students</span></div><div class="dash-stat"><b>Ready</b><span>Instructor workspace</span></div></div>
-    <div class="class-tools"><input type="search" id="classSearch" placeholder="Search classes or instructors…" aria-label="Search classes or instructors"><p class="hint" id="classSearchHint">Choose a class to take attendance, call stations, or review the term.</p></div>
     <div class="class-grid" id="classGrid"></div>`;
   paintClassGrid();
 }
 function paintClassGrid() {
   const g = $('#classGrid'); if (!g) return;
   if (!S.classesLoaded && db) { g.innerHTML = `<div class="empty" style="grid-column:1/-1"><h4>Loading classes</h4></div>`; return; }
-  const q = ($('#classSearch')?.value || '').trim().toLowerCase();
-  const sorted = S.classes.slice().sort((a, b) => (a.data.name || '').localeCompare(b.data.name || ''));
-  const filtered = sorted.filter(c => `${c.data.name || ''} ${c.data.instructor || ''} ${c.data.code || ''}`.toLowerCase().includes(q));
-  const totalStudents = sorted.reduce((sum,c) => sum + (c.data.roster || []).length, 0);
-  const summary = $('#classSummary');
-  if (summary) summary.innerHTML = `<div class="dash-stat"><b>${sorted.length}</b><span>${sorted.length === 1 ? 'Class' : 'Classes'} in workspace</span></div><div class="dash-stat"><b>${totalStudents}</b><span>Roster seats across classes</span></div><div class="dash-stat"><b>${sorted.filter(c => c.data.startTime).length}</b><span>Classes with start times set</span></div>`;
-  const hint = $('#classSearchHint'); if (hint) hint.textContent = q ? `${filtered.length} matching ${filtered.length === 1 ? 'class' : 'classes'}` : 'Choose a class to take attendance, call stations, or review the term.';
-  g.innerHTML = filtered.map(c => `
+  g.innerHTML = S.classes.slice().sort((a, b) => (a.data.name || '').localeCompare(b.data.name || '')).map(c => `
     <button class="class-card" type="button" data-id="${esc(c.id)}">
-      <span class="eyebrow">Culinary lab</span><h3>${esc(c.data.name || 'Untitled class')}</h3>
-      <span class="who">${esc(c.data.instructor || 'Instructor not set')}</span>
-      <span class="meta"><span class="chip code">${esc(c.data.code || 'No code')}</span><span class="chip">${(c.data.roster || []).length} students</span><span class="chip">${c.data.stations || 6} stations</span>${c.data.startTime ? `<span class="chip">${esc(fmtStart(c.data.startTime))}</span>` : ''}</span>
-    </button>`).join('') + (q && !filtered.length ? `<div class="empty" style="grid-column:1/-1"><h4>No matching classes</h4><p>Try another class name, instructor, or student code.</p></div>` : '') + `
-    <button class="class-card new-card" type="button" id="newClass" ${db ? '' : 'disabled'}><span class="eyebrow">Get started</span><h3>+ New class</h3><span class="who">Add a roster, stations and your start time.</span></button>`;
+      <h3>${esc(c.data.name || 'Untitled class')}</h3>
+      <span class="who">${esc(c.data.instructor || '')}</span>
+      <span class="meta"><span class="chip code">${esc(c.data.code || '—')}</span><span class="chip">${(c.data.roster || []).length} students</span><span class="chip">${c.data.stations || 6} stations</span>${c.data.startTime ? `<span class="chip">${esc(fmtStart(c.data.startTime))}</span>` : ''}</span>
+    </button>`).join('') + `
+    <button class="class-card new-card" type="button" id="newClass" ${db ? '' : 'disabled'}><h3>+ New class</h3><span class="who">Add a roster, stations and your start time.</span></button>`;
   $$('.class-card[data-id]', g).forEach(b => b.addEventListener('click', () => go('class', { classId: b.dataset.id, tab: 'today' })));
   const n = $('#newClass'); if (n) n.addEventListener('click', () => go('class', { classId: null, tab: 'setup' }));
-  const search = $('#classSearch'); if (search && !search.dataset.bound) { search.dataset.bound = '1'; search.addEventListener('input', paintClassGrid); }
 }
 
 /* ================================================================
@@ -922,6 +952,8 @@ function subscribeClass() {
 }
 function liveRefresh(what) {
   if (S.view !== 'class' || !K) return;
+  if (what !== 'recipes') paintRail();
+  if (S.tab === 'setup' && what === 'class') paintLockEditor();
   if (what === 'class') { const w = $('#clsWho'); if (w) w.textContent = (K.data.instructor || '') + (K.data.startTime ? ' · starts ' + fmtStart(K.data.startTime) : ''); }
   if (S.tab === 'today') { paintRoll(); paintTodayBoard(); paintRecipePick(); paintSetupSum(); }
   if (S.tab === 'pass') paintPass();
@@ -957,10 +989,7 @@ function renderToday() {
           <p class="hint">One per line, the way one station's recipe calls for it. Gatherers get the total for every station.</p></div>
         <div class="fields">
           <div class="field"><label class="lbl" for="stnIn">Stations</label><input type="number" id="stnIn" min="1" max="20" value="${K.data.stations || 6}"></div>
-          <div class="field" style="justify-content:flex-end;gap:8px">
-            <label class="check"><input type="checkbox" id="useSous" ${K.today ? (K.today.leadership && K.today.leadership.sousChef ? 'checked' : '') : 'checked'}> Assign a sous chef</label>
-            <label class="check"><input type="checkbox" id="useExpo" ${K.today ? (K.today.leadership && K.today.leadership.expediter ? 'checked' : '') : 'checked'}> Assign an expediter</label>
-          </div>
+          <div class="field"><label class="lbl" for="sousPick">Sous chef</label><select id="sousPick"></select></div>
         </div>
         <div class="row"><button class="btn heat lg" type="button" id="callBtn">Call the brigade</button><button class="btn ghost" type="button" id="clearBtn" hidden>Clear today's board</button></div>
         <p class="msg" id="todayMsg" role="status"></p>
@@ -983,7 +1012,13 @@ function renderToday() {
     const n = Math.max(1, Math.min(20, parseInt(e.target.value, 10) || 6)); e.target.value = n;
     if (db && n !== K.data.stations) { try { await db.doc(`classes/${K.id}`).update({ stations: n }); } catch (x) {} }
   });
+  $('#sousPick').addEventListener('change', e => { K.sousPick = e.target.value; });
   $('#callBtn').addEventListener('click', callBrigade);
+  $('#board').addEventListener('click', e => {
+    if (e.target.closest('[data-rail]')) { openRail(true); return; }
+    const lk = e.target.closest('[data-lock]'); if (lk) toggleLock(lk.dataset.lock);
+  });
+  bindMover($('#board'), moveOnBoard);
   $('#clearBtn').addEventListener('click', confirmStep($('#clearBtn'), 'Tap again to clear', async () => {
     try { await db.doc(`classes/${K.id}/sessions/${TODAY}`).delete(); toast("Today's board cleared"); } catch (e) { toast("Couldn't clear. Try again."); }
   }));
@@ -1012,6 +1047,15 @@ function paintRoll() {
     return `<li class="${isIn ? '' : 'out'}"><label><input type="checkbox" data-name="${esc(n)}" ${isIn ? 'checked' : ''}><span class="nm">${esc(n)}</span>${stamp}</label></li>`;
   }).join('') || '<li class="hint" style="grid-column:1/-1">No students on the roster yet. Add them in class setup.</li>';
   $('#rollTally').innerHTML = `<span class="chip ok">${present.size} present</span><span class="chip">${live} checked in</span>${late ? `<span class="chip late">${late} late</span>` : ''}<span class="chip">${roster.length - present.size} out</span>`;
+  paintSousPick(Array.from(present));
+}
+function paintSousPick(present) {
+  const sel = $('#sousPick'); if (!sel) return;
+  let v = K.sousPick || 'auto';
+  if (v !== 'auto' && v !== 'none' && !present.includes(v)) v = 'auto';
+  sel.innerHTML = `<option value="auto">Rotate fairly (picks for you)</option><option value="none">No sous chef today</option>`
+    + (present.length ? `<optgroup label="Choose a student">${present.slice().sort((a, b) => a.localeCompare(b)).map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('')}</optgroup>` : '');
+  sel.value = v; K.sousPick = v;
 }
 
 function callBrigade() {
@@ -1024,25 +1068,32 @@ function callBrigade() {
   const counts = historyCounts(roster, K.sessions);
   const pairs = pairCounts(K.sessions);
 
-  let sous = null, expo = null;
-  if ($('#useSous').checked && present.length > 1) sous = fairPicker(present, n => counts[n] ? counts[n].sous : 0).pick();
-  if ($('#useExpo').checked && present.length > 2) { const pool = present.filter(n => n !== sous); expo = fairPicker(pool, n => counts[n] ? counts[n].expo : 0).pick(); }
-  let line = present.filter(n => n !== sous && n !== expo);
+  const locks = K.data.locks || {};
+  const mode = $('#sousPick').value || 'auto';
+  let sous = null;
+  if (mode === 'auto' && present.length > 1) {
+    const unlocked = present.filter(n => !(n in locks));
+    sous = fairPicker(unlocked.length ? unlocked : present, n => counts[n] ? counts[n].sous : 0).pick();
+  } else if (mode !== 'auto' && mode !== 'none' && present.includes(mode)) sous = mode;
+  let line = present.filter(n => n !== sous);
   let note = '';
   if (line.length < stations) { note = `Only ${line.length} cooks on the line, so ${line.length} ${line.length === 1 ? 'station' : 'stations'} today.`; stations = Math.max(1, line.length); }
-  const teams = buildTeams(line, stations, pairs, counts);
+  const teams = buildTeams(line, stations, pairs, counts, locks);
+  const lockedHere = line.filter(n => Number.isInteger(locks[n]) && locks[n] < stations).length;
+  if (lockedHere) note += (note ? ' ' : '') + `${lockedHere} locked ${lockedHere === 1 ? 'student stayed' : 'students stayed'} at their station.`;
 
   const laborPool = line.length ? line : present;
-  const picker = fairPicker(laborPool, n => counts[n] ? counts[n].labor : 0);
   const ingLines = lines($('#ingIn').value);
-  const labor = [];
-  shuffle(ingLines.map(parseLine)).forEach(it => labor.push({ who: picker.pick(), category: 'ingredient', label: totalLabel(it, stations), detail: [perLabel(it) ? perLabel(it) + ' per station' : '', wholeNote(it, stations)].filter(Boolean).join(' · ') }));
-  shuffle(K.data.equipment || []).forEach(e => labor.push({ who: picker.pick(), category: 'equipment', label: e, detail: 'One set to every station' }));
-  shuffle(K.data.cleaning || []).forEach(e => labor.push({ who: picker.pick(), category: 'cleaning', label: e, detail: 'For the whole kitchen' }));
+  const jobs = [
+    ...shuffle(ingLines.map(parseLine)).map(it => ({ category: 'ingredient', label: totalLabel(it, stations), detail: [perLabel(it) ? perLabel(it) + ' per station' : '', wholeNote(it, stations)].filter(Boolean).join(' · ') })),
+    ...shuffle(K.data.equipment || []).map(e => ({ category: 'equipment', label: e, detail: 'One set to every station' })),
+    ...shuffle(K.data.cleaning || []).map(e => ({ category: 'cleaning', label: e, detail: 'For the whole kitchen' }))
+  ];
+  const labor = assignJobs(jobs, laborPool, counts);
 
   const session = {
     date: TODAY, calledAt: Date.now(), present, stationCount: stations, stationTeams: teams,
-    leadership: { sousChef: sous, expediter: expo }, laborAssignments: labor,
+    leadership: { sousChef: sous }, laborAssignments: labor,
     ingredientLines: ingLines, recipeName: K.pickedRecipe || (K.today && K.today.recipeName) || ''
   };
   const btn = $('#callBtn'); btn.disabled = true;
@@ -1055,21 +1106,181 @@ function paintTodayBoard() {
   const b = $('#board'); if (!b) return;
   const cb = $('#callBtn'); if (cb) cb.textContent = K.today ? 'Reshuffle the brigade' : 'Call the brigade';
   const cl = $('#clearBtn'); if (cl) cl.hidden = !K.today;
-  b.innerHTML = K.today ? boardHTML(K.today, false) : `<div class="empty"><h4>No brigade on the rail yet</h4><p style="margin:0">Take roll, load today's recipe, then call the brigade. Tickets for each station, the sous chef and the expediter hang here.</p></div>`;
+  b.innerHTML = K.today ? boardHTML(K.today, false) : `<div class="empty"><h4>No brigade on the rail yet</h4><p style="margin:0">Take roll, load today's recipe, then call the brigade. A ticket for the sous chef and each station hangs here, with every cook's jobs printed under their name.</p></div>`;
+  remarkPicked(b);
+}
+const JOB_TAG = { ingredient: 'Gather', equipment: 'Set up', cleaning: 'Clean' };
+/* ticket version of the gatherer note: "1 cup per station · about 1 whole onion per station, 6 onions total" -> "1 cup per station · 6 onions total" */
+function shortDetail(d) { return String(d).replace(/about \d+ whole \S+ per station, (\d+ .+? total)/, '$1'); }
+function jobsHTML(jobs) {
+  return jobs.map(j => `<span class="t-job"><i class="${esc(j.category)}">${JOB_TAG[j.category] || esc(j.category)}</i><span>${esc(j.label)}${j.with && j.with.length ? ` <em class="t-with">with ${esc(j.with.join(' & '))}</em>` : ''}${j.category === 'ingredient' && j.detail ? `<small class="t-per">${esc(shortDetail(j.detail))}</small>` : ''}</span></span>`).join('');
+}
+const LOCK_SVG = on => `<svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7.5" rx="1.5" fill="currentColor"/><path d="${on ? 'M5.2 7V5a2.8 2.8 0 0 1 5.6 0v2' : 'M5.2 7V5a2.8 2.8 0 0 1 5.5-.8'}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`;
+/* editable: instructor board (drag, tap-to-move, lock). Not editable: rail display and pass preview. */
+function ticketsHTML(s, editable) {
+  const L = s.leadership || {}; const counts = historyCounts(K.data.roster || [], K.sessions);
+  const locks = K.data.locks || {};
+  const byWho = {}; (s.laborAssignments || []).forEach(t => { (byWho[t.who] = byWho[t.who] || []).push(t); });
+  const mv = n => editable ? ` data-mv="${esc(n)}" draggable="true"` : '';
+  let sous = '';
+  if (L.sousChef) sous = `<article class="ticket lead"${editable ? ' data-drop="sous"' : ''}><div class="t-head"><b>Sous</b><span class="flag">LEAD</span></div><div class="t-who"${mv(L.sousChef)}>${esc(L.sousChef)}</div><div class="t-note">Runs the line · ${ordinal((counts[L.sousChef] ? counts[L.sousChef].sous : 0) + 1)} time this term</div>${byWho[L.sousChef] ? jobsHTML(byWho[L.sousChef]) : ''}</article>`;
+  else if (editable) sous = `<article class="ticket lead empty-lead" data-drop="sous"><div class="t-head"><b>Sous</b><span class="flag">LEAD</span></div><div class="t-note">No sous chef today. Drop a student here to make them sous chef.</div></article>`;
+  const stations = (s.stationTeams || []).map((t, i) => `<article class="ticket"${editable ? ` data-drop="${i}"` : ''}><div class="t-head"><b>Stn ${i + 1}</b><span>${t.length} ${t.length === 1 ? 'cook' : 'cooks'}</span></div><ul>${t.map(n => {
+    const locked = locks[n] === i;
+    return `<li class="${locked ? 'locked' : ''}"${mv(n)}><span class="t-row"><b class="t-nm">${esc(n)}</b>${editable ? `<button type="button" class="lk" data-lock="${esc(n)}" aria-pressed="${locked}" aria-label="${locked ? 'Unlock' : 'Lock'} ${esc(n)} ${locked ? 'from' : 'to'} station ${i + 1}" title="${locked ? 'Locked to this station. Tap to unlock.' : 'Lock to this station'}">${LOCK_SVG(locked)}</button>` : ''}</span>${byWho[n] ? jobsHTML(byWho[n]) : '<span class="t-line">Cooking · no extra job</span>'}</li>`;
+  }).join('')}${editable && !t.length ? '<li class="t-line">Drop cooks here</li>' : ''}</ul></article>`).join('');
+  return sous + stations;
+}
+function poolHTML(s) {
+  const placed = new Set([...(s.stationTeams || []).flat(), (s.leadership || {}).sousChef].filter(Boolean));
+  const extra = Array.from(new Set([...effectivePresent(), ...(s.present || [])])).filter(n => !placed.has(n));
+  return `<div class="pool" data-drop="out"><span class="eyebrow">Not on a station</span>${extra.map(n => `<span class="mv-chip" data-mv="${esc(n)}" draggable="true">${esc(n)}</span>`).join('') || '<span class="hint" style="margin:0">Late arrivals land here. Drag a name here to take someone off the line.</span>'}</div>`;
+}
+
+/* ---------- moving students: drag on desktop, or tap a name then tap where it goes ---------- */
+function bindMover(root, onMove) {
+  const clear = () => { root._sel = null; root.classList.remove('moving'); $$('.picked', root).forEach(x => x.classList.remove('picked')); };
+  const pick = el => { clear(); root._sel = el.dataset.mv; el.classList.add('picked'); root.classList.add('moving'); };
+  root._clearSel = clear;
+  root.addEventListener('dragstart', e => { const el = e.target.closest('[data-mv]'); if (!el) return; clear(); e.dataTransfer.setData('text/plain', el.dataset.mv); e.dataTransfer.effectAllowed = 'move'; el.classList.add('dragging'); root.classList.add('moving'); });
+  root.addEventListener('dragend', () => { root.classList.remove('moving'); $$('.dragging,.over', root).forEach(x => x.classList.remove('dragging', 'over')); });
+  root.addEventListener('dragover', e => { const z = e.target.closest('[data-drop]'); if (!z) return; e.preventDefault(); $$('.over', root).forEach(x => x !== z && x.classList.remove('over')); z.classList.add('over'); });
+  root.addEventListener('drop', e => { const z = e.target.closest('[data-drop]'); if (!z) return; e.preventDefault(); const n = e.dataTransfer.getData('text/plain'); root.classList.remove('moving'); $$('.over,.dragging', root).forEach(x => x.classList.remove('over', 'dragging')); if (n) onMove(n, z.dataset.drop); });
+  root.addEventListener('click', e => {
+    if (e.target.closest('[data-lock],[data-rail],button,select,input,a')) return;
+    const item = e.target.closest('[data-mv]'); const zone = e.target.closest('[data-drop]');
+    if (root._sel && item && item.dataset.mv === root._sel) { clear(); return; }
+    if (root._sel && zone) { const n = root._sel; clear(); onMove(n, zone.dataset.drop); return; }
+    if (item) pick(item); else clear();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && root._sel) clear(); });
+}
+function remarkPicked(root) {
+  if (!root || !root._sel) return;
+  const el = $$('[data-mv]', root).find(x => x.dataset.mv === root._sel);
+  if (el) { el.classList.add('picked'); root.classList.add('moving'); } else root._clearSel && root._clearSel();
+}
+async function moveOnBoard(name, dest) {
+  const s = K && K.today; if (!s) return;
+  if (!db) { toast('Moving students needs the live database.'); return; }
+  const teams = (s.stationTeams || []).map(t => t.slice()); const L = { ...(s.leadership || {}) };
+  let from = L.sousChef === name ? 'sous' : 'out';
+  teams.forEach((t, i) => { if (t.includes(name)) from = String(i); });
+  if (from === dest) return;
+  if (from === 'sous') L.sousChef = null; else if (from !== 'out') teams[+from] = teams[+from].filter(n => n !== name);
+  if (dest === 'sous') {
+    const prev = L.sousChef; L.sousChef = name;
+    if (prev) teams[(from !== 'out' && from !== 'sous') ? +from : smallestTeam(teams)].push(prev); /* old sous swaps into the new sous's spot */
+  } else if (dest !== 'out') teams[+dest].push(name);
+  const present = Array.from(new Set([...(s.present || []), name]));
+  const locks = { ...(K.data.locks || {}) }; let locksChanged = false;
+  if (name in locks) { if (dest !== 'sous' && dest !== 'out') locks[name] = +dest; else delete locks[name]; locksChanged = true; }
+  const patch = { stationTeams: teams, leadership: L, present };
+  K.today = { ...s, ...patch }; if (locksChanged) K.data = { ...K.data, locks };
+  /* keep the sous chef picker in step, so a reshuffle keeps the sous you chose by hand */
+  if (dest === 'sous') K.sousPick = name; else if (from === 'sous') K.sousPick = 'none';
+  paintTodayBoard(); paintRail(); paintSousPick(effectivePresent());
+  const where = dest === 'sous' ? 'sous chef' : dest === 'out' ? 'off the line' : 'Station ' + (+dest + 1);
+  toast(`${name} moved to ${where}${locksChanged && dest !== 'sous' && dest !== 'out' ? ' (still locked)' : ''}`);
+  try {
+    await db.doc(`classes/${K.id}/sessions/${TODAY}`).update(patch);
+    if (locksChanged) await db.doc(`classes/${K.id}`).update({ locks });
+  } catch (e) { toast("Couldn't save that move. Check your connection and try again."); }
+}
+async function toggleLock(name) {
+  const s = K && K.today; if (!s || !db) return;
+  const i = (s.stationTeams || []).findIndex(t => t.includes(name)); if (i < 0) return;
+  const locks = { ...(K.data.locks || {}) };
+  const on = locks[name] !== i;
+  if (on) locks[name] = i; else delete locks[name];
+  K.data = { ...K.data, locks }; paintTodayBoard(); paintRail();
+  toast(on ? `${name} locked to Station ${i + 1}` : `${name} unlocked and back in the rotation`);
+  try { await db.doc(`classes/${K.id}`).update({ locks }); } catch (e) { toast("Couldn't save the lock. Try again."); }
 }
 function boardHTML(s, big) {
-  const L = s.leadership || {}; const counts = historyCounts(K.data.roster || [], K.sessions);
-  const leadTicket = (role, name, key) => name ? `<article class="ticket lead"><div class="t-head"><b>${role}</b><span class="flag">LEAD</span></div><div class="t-who">${esc(name)}</div><div class="t-note">${ordinal((counts[name] ? counts[name][key] : 0) + 1)} time this term</div></article>` : '';
-  const stationTickets = (s.stationTeams || []).map((t, i) => `<article class="ticket"><div class="t-head"><b>Stn ${i + 1}</b><span>${t.length} ${t.length === 1 ? 'cook' : 'cooks'}</span></div><ul>${t.map(n => `<li>${esc(n)}</li>`).join('')}</ul></article>`).join('');
   const groups = [['ingredient', 'Gather'], ['equipment', 'Set up'], ['cleaning', 'Clean']];
-  const tasks = groups.map(([k, label]) => {
-    const rows = (s.laborAssignments || []).filter(t => t.category === k); if (!rows.length) return '';
-    return `<h4>${label}</h4>` + rows.map(t => `<div class="task"><span class="what">${esc(t.label)}</span><span class="who">${esc(t.who)}</span>${t.detail ? `<span class="sub">${esc(t.detail)}</span>` : ''}</div>`).join('');
+  const tasks = big ? '' : groups.map(([k, label]) => {
+    /* one row per job, with everyone on that job's crew */
+    const rows = []; const byLabel = new Map();
+    (s.laborAssignments || []).filter(t => t.category === k).forEach(t => {
+      if (byLabel.has(t.label)) { byLabel.get(t.label).names.push(t.who); return; }
+      const r = { ...t, names: [t.who] }; byLabel.set(t.label, r); rows.push(r);
+    });
+    if (!rows.length) return '';
+    return `<h4>${label}</h4>` + rows.map(t => `<div class="task"><span class="what">${esc(t.label)}</span><span class="who">${esc(t.names.join(' + '))}</span>${t.detail ? `<span class="sub">${esc(t.detail)}</span>` : ''}</div>`).join('');
   }).join('');
   return `
-    <div class="board-h"><h2>${big ? 'The brigade' : 'On the rail'}${s.recipeName ? ' · ' + esc(s.recipeName) : ''}</h2><span class="eyebrow">Called ${esc(fmtTime(s.calledAt))} · ${(s.present || []).length} cooks · ${s.stationCount || (s.stationTeams || []).length} stations</span></div>
-    <div class="rail"><div class="tickets">${leadTicket('Sous', L.sousChef, 'sous')}${leadTicket('Expo', L.expediter, 'expo')}${stationTickets}</div></div>
-    ${tasks ? `<div class="tasks">${tasks}</div>` : ''}`;
+    <div class="board-h"><h2>${big ? 'The brigade' : 'On the rail'}${s.recipeName ? ' · ' + esc(s.recipeName) : ''}</h2><div class="row"><span class="eyebrow">Called ${esc(fmtTime(s.calledAt))} · ${(s.present || []).length} cooks · ${s.stationCount || (s.stationTeams || []).length} stations</span>${big ? '' : '<button class="btn sm" type="button" data-rail>Full-screen rail</button>'}</div></div>
+    ${big ? '' : `<p class="hint" style="margin:-4px 0 12px">Drag a name to another ticket, or tap a name and then tap where it goes. Use the lock to keep a student at that station every time you call the brigade.</p>${poolHTML(s)}`}
+    <div class="rail"><div class="tickets">${ticketsHTML(s, !big)}</div></div>
+    ${tasks ?`<div class="tasks"><h4 style="margin-top:12px;color:var(--fg)">Job details for gatherers</h4>${tasks}</div>` : ''}`;
+}
+
+/* ---------- FULL-SCREEN CLASSROOM DISPLAY ---------- */
+let railClock = null;
+function railKey(e) { if (e.key === 'Escape') closeRail(); }
+function openRail(fromClick) {
+  if (!K || !K.id) return;
+  let ov = $('#railview');
+  if (!ov) {
+    ov = document.createElement('div'); ov.id = 'railview'; ov.className = 'railview';
+    ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'Classroom display');
+    document.body.appendChild(ov);
+    ov.addEventListener('click', e => { if (e.target.closest('#rvExit')) closeRail(); });
+  }
+  document.body.style.overflow = 'hidden';
+  paintRail();
+  clearInterval(railClock); railClock = setInterval(() => { const c = $('#rvClock'); if (c) c.textContent = fmtTime(Date.now()); }, 15000);
+  document.addEventListener('keydown', railKey);
+  if (fromClick) { try { const p = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
+}
+/* Pick the row count and the largest ticket text that fits the whole rail on one screen. */
+function fitRail() {
+  const ov = $('#railview'); const rr = ov && ov.querySelector('.rv-rail'); const grid = rr && rr.querySelector('.tickets');
+  if (!grid) return;
+  if (window.innerWidth <= 760) { rr.style.removeProperty('--rv-fs'); grid.style.removeProperty('--cols'); return; }
+  const n = grid.children.length || 1;
+  const options = Array.from(new Set([n, Math.ceil(n / 2), Math.ceil(n / 3)])).filter(c => c >= 1 && (n <= 4 ? c === n : c >= 3));
+  /* tickets hang slightly tilted, so allow a few pixels of overhang */
+  const heads = Array.from(grid.querySelectorAll('.t-head'));
+  const fits = () => ov.scrollHeight <= ov.clientHeight + 6 && heads.every(h => h.scrollWidth <= h.clientWidth + 1);
+  let best = { fs: 0, cols: options[0] };
+  for (const cols of options) {
+    grid.style.setProperty('--cols', cols);
+    let lo = 9, hi = 42;
+    for (let i = 0; i < 9; i++) { const mid = (lo + hi) / 2; rr.style.setProperty('--rv-fs', mid + 'px'); if (fits()) lo = mid; else hi = mid; }
+    if (lo > best.fs) best = { fs: lo, cols };
+  }
+  grid.style.setProperty('--cols', best.cols);
+  rr.style.setProperty('--rv-fs', Math.floor(best.fs * 10) / 10 + 'px');
+}
+let railResizeT;
+window.addEventListener('resize', () => { clearTimeout(railResizeT); railResizeT = setTimeout(fitRail, 120); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitRail());
+function closeRail() {
+  const ov = $('#railview'); if (!ov) return;
+  ov.remove(); document.body.style.overflow = '';
+  clearInterval(railClock); railClock = null;
+  document.removeEventListener('keydown', railKey);
+  try { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); } catch (e) {}
+}
+function paintRail() {
+  const ov = $('#railview'); if (!ov || !K) return;
+  const d = K.data; const s = K.today; const roster = d.roster || [];
+  const top = `<header class="rv-top"><div><span class="eyebrow">${esc(fmtDate(TODAY, { weekday: 'long', month: 'long', day: 'numeric' }))} · ${esc(d.instructor || '')}</span>
+      <h2>${esc(d.name || '')}</h2>${s && s.recipeName ? `<div class="rv-recipe">${esc(s.recipeName)}</div>` : ''}</div>
+    <div class="rv-right"><div class="clock" id="rvClock">${esc(fmtTime(Date.now()))}</div><button class="btn ghost sm rv-exit" type="button" id="rvExit">Exit display</button></div></header>`;
+  if (s) {
+    ov.innerHTML = top + `<div class="rv-rail"><div class="rail"><div class="tickets">${ticketsHTML(s)}</div></div></div>`;
+    fitRail();
+  } else {
+    const ins = roster.filter(n => K.checkins.has(n));
+    ov.innerHTML = top + `
+      <div class="callout"><div class="bigcode">${esc(d.code || '—')}</div>
+        <div><p>Open <b>Brigade Board</b>, tap <b>Check in</b>, enter this code and tap your name.</p>
+        <p style="margin-top:1.4vh"><b style="color:var(--ok)">${ins.length}</b> of ${roster.length} checked in${d.startTime ? ' · class starts ' + esc(fmtStart(d.startTime)) : ''}. The ticket rail appears here when Chef calls the brigade.</p></div></div>
+      <div class="in-chips">${ins.map(n => `<span>${esc(n)}</span>`).join('')}</div>`;
+  }
 }
 function ordinal(n) { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
 
@@ -1079,10 +1290,12 @@ function stopClock() { if (clockTimer) { clearInterval(clockTimer); clockTimer =
 function renderPass() {
   const tb = $('#tabBody');
   tb.innerHTML = `
-    <div class="row" style="justify-content:space-between;margin-bottom:12px"><p class="hint" style="margin:0">Put this on the classroom TV or projector. It updates live as students check in.</p><div class="row"><button class="btn sm" type="button" id="printPass">Print board</button><button class="btn sm" type="button" id="fsBtn">Full screen</button></div></div>
+    <div class="row" style="justify-content:space-between;margin-bottom:12px;align-items:flex-start">
+      <div style="min-width:0;flex:1 1 320px"><p class="hint" style="margin:0">Put this on the classroom TV or projector. It shows the check-in code until you call the brigade, then switches to the ticket rail, live.</p>
+      <p class="hint">On the classroom computer, add <b style="font-family:var(--mono)">#rail-${esc(K.data.code || '')}</b> to the end of the Brigade Board link to open straight into the display.</p></div>
+      <button class="btn heat" type="button" id="fsBtn">Open full-screen display</button></div>
     <section class="pass big" id="pass"></section>`;
-  $('#fsBtn').addEventListener('click', async () => { try { await $('#pass').requestFullscreen(); } catch (e) { toast('Full screen is not available here. Use your browser\'s full screen instead.'); } });
-  $('#printPass').addEventListener('click', () => window.print());
+  $('#fsBtn').addEventListener('click', () => openRail(true));
   paintPass();
   stopClock(); clockTimer = setInterval(() => { const c = $('#passClock'); if (c) c.textContent = fmtTime(Date.now()); else stopClock(); }, 15000);
   hold(stopClock);
@@ -1173,7 +1386,7 @@ function reportRows() {
   const roster = K.data.roster || []; const sessions = K.sessions.concat(K.today ? [K.today] : []);
   const counts = historyCounts(roster, sessions); const days = sessions.length;
   const lateMap = {}; (K.allCheckins || []).forEach(c => { if (c.late && c.name) lateMap[c.name] = (lateMap[c.name] || 0) + 1; });
-  return { days, rows: roster.map(n => { const c = counts[n]; return { name: n, present: c.days, late: lateMap[n] || 0, pct: days ? Math.round(c.days / days * 100) : null, sous: c.sous, expo: c.expo, jobs: c.labor }; }) };
+  return { days, rows: roster.map(n => { const c = counts[n]; return { name: n, present: c.days, late: lateMap[n] || 0, pct: days ? Math.round(c.days / days * 100) : null, sous: c.sous, jobs: c.labor }; }) };
 }
 function paintReport() {
   const t = $('#repTable'); if (!t) return;
@@ -1182,16 +1395,16 @@ function paintReport() {
   const lateTotal = rows.reduce((s, r) => s + r.late, 0);
   $('#repTiles').innerHTML = `<div class="tile"><b>${days}</b><span>lab days logged</span></div><div class="tile"><b>${days ? avg + '%' : '—'}</b><span>average attendance</span></div><div class="tile"><b>${K.allCheckins ? lateTotal : '…'}</b><span>late check-ins</span></div><div class="tile"><b>${rows.filter(r => r.pct != null && r.pct < 80).length}</b><span>students under 80%</span></div>`;
   if (!rows.length) { t.innerHTML = '<p class="hint">Add students in class setup to start a term record.</p>'; }
-  else t.innerHTML = `<table class="rep"><thead><tr><th>Student</th><th>Attendance</th><th class="n">Days</th><th class="n">Late</th><th class="n">Sous</th><th class="n">Expo</th><th class="n">Jobs</th></tr></thead><tbody>${rows.slice().sort((a, b) => a.name.localeCompare(b.name)).map(r => `
-    <tr><td>${esc(r.name)}</td><td>${r.pct == null ? '<span class="hint">—</span>' : `<span class="bar"><i class="${r.pct < 80 ? 'low' : ''}" style="width:${Math.max(2, r.pct * 0.9)}px"></i><em>${r.pct}%</em></span>`}</td><td class="n">${r.present}</td><td class="n">${K.allCheckins ? r.late : '…'}</td><td class="n">${r.sous}</td><td class="n">${r.expo}</td><td class="n">${r.jobs}</td></tr>`).join('')}</tbody></table>`;
+  else t.innerHTML = `<table class="rep"><thead><tr><th>Student</th><th>Attendance</th><th class="n">Days</th><th class="n">Late</th><th class="n">Sous</th><th class="n">Jobs</th></tr></thead><tbody>${rows.slice().sort((a, b) => a.name.localeCompare(b.name)).map(r => `
+    <tr><td>${esc(r.name)}</td><td>${r.pct == null ? '<span class="hint">—</span>' : `<span class="bar"><i class="${r.pct < 80 ? 'low' : ''}" style="width:${Math.max(2, r.pct * 0.9)}px"></i><em>${r.pct}%</em></span>`}</td><td class="n">${r.present}</td><td class="n">${K.allCheckins ? r.late : '…'}</td><td class="n">${r.sous}</td><td class="n">${r.jobs}</td></tr>`).join('')}</tbody></table>`;
   const all = (K.today ? [K.today] : []).concat(K.sessions);
-  $('#repDays').innerHTML = all.length ? `<table class="rep"><thead><tr><th>Date</th><th>Recipe</th><th class="n">Cooks</th><th>Sous chef</th><th>Expediter</th></tr></thead><tbody>${all.map(s => `<tr><td>${esc(fmtDate(s.date))}</td><td>${esc(s.recipeName || '—')}</td><td class="n">${(s.present || []).length}</td><td>${esc((s.leadership || {}).sousChef || '—')}</td><td>${esc((s.leadership || {}).expediter || '—')}</td></tr>`).join('')}</tbody></table>` : '<p class="hint">Lab days appear here each time you call the brigade.</p>';
+  $('#repDays').innerHTML = all.length ? `<table class="rep"><thead><tr><th>Date</th><th>Recipe</th><th class="n">Cooks</th><th>Sous chef</th></tr></thead><tbody>${all.map(s => `<tr><td>${esc(fmtDate(s.date))}</td><td>${esc(s.recipeName || '—')}</td><td class="n">${(s.present || []).length}</td><td>${esc((s.leadership || {}).sousChef || '—')}</td></tr>`).join('')}</tbody></table>` : '<p class="hint">Lab days appear here each time you call the brigade.</p>';
 }
 async function exportCSV() {
   const { days, rows } = reportRows();
   const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
-  const out = [['Student', 'Days present', `Lab days (${days})`, 'Attendance %', 'Late check-ins', 'Sous chef', 'Expediter', 'Jobs'].map(q).join(',')]
-    .concat(rows.map(r => [r.name, r.present, days, r.pct == null ? '' : r.pct, r.late, r.sous, r.expo, r.jobs].map(q).join(','))).join('\n');
+  const out = [['Student', 'Days present', `Lab days (${days})`, 'Attendance %', 'Late check-ins', 'Sous chef', 'Jobs'].map(q).join(',')]
+    .concat(rows.map(r => [r.name, r.present, days, r.pct == null ? '' : r.pct, r.late, r.sous, r.jobs].map(q).join(','))).join('\n');
   try { await downloads.save({ filename: `${slug(K.data.name)}-term-report-${TODAY}.csv`, data: out }); }
   catch (e) { if (e && e.code !== 'declined') toast("Couldn't export the file here."); }
 }
@@ -1222,7 +1435,20 @@ function renderSetup() {
       <div class="row"><button class="btn heat lg" type="submit">${isNew ? 'Create class' : 'Save changes'}</button>${isNew ? '' : '<button class="btn ghost danger" type="button" id="delClass">Delete class</button>'}</div>
       <p class="msg" id="sMsg" role="status"></p>
     </section>
-  </form>`;
+  </form>
+  ${isNew ? '' : `<section class="card" style="margin-top:16px" aria-labelledby="lockH">
+    <div class="card-h"><h3 id="lockH">Locked teams</h3><div class="row"><span class="chip" id="lockCount"></span><button class="btn sm ghost" type="button" id="unlockAll">Unlock everyone</button></div></div>
+    <p class="hint" style="margin:-6px 0 14px">Set up groups for a module or the whole term. Locked students stay at their station every time you call the brigade, and everyone else rotates fairly around them. Drag names, or tap a name and then tap a station. Changes save right away.</p>
+    <div id="lockEditor"></div>
+  </section>`}`;
+  if (!isNew) {
+    paintLockEditor();
+    bindMover($('#lockEditor'), moveLock);
+    $('#unlockAll').addEventListener('click', confirmStep($('#unlockAll'), 'Tap again to unlock all', async () => {
+      K.data = { ...K.data, locks: {} }; paintLockEditor();
+      try { await db.doc(`classes/${K.id}`).update({ locks: {} }); toast('Everyone is back in the rotation'); } catch (e) { toast("Couldn't save. Try again."); }
+    }));
+  }
   $('#sRoster').addEventListener('input', e => { const n = new Set(lines(e.target.value)).size; $('#rosterCount').textContent = n + ' students'; });
   $('#setupForm').addEventListener('submit', async e => {
     e.preventDefault(); const m = $('#sMsg'); m.className = 'msg warn';
@@ -1246,6 +1472,25 @@ function renderSetup() {
   }));
 }
 
+function paintLockEditor() {
+  const el = $('#lockEditor'); if (!el || !K) return;
+  const roster = (K.data.roster || []).slice().sort((a, b) => a.localeCompare(b));
+  const n = K.data.stations || 6; const locks = K.data.locks || {};
+  const at = nm => (Number.isInteger(locks[nm]) && locks[nm] < n) ? locks[nm] : -1;
+  const chip = nm => `<span class="mv-chip" data-mv="${esc(nm)}" draggable="true">${esc(nm)}</span>`;
+  const pool = roster.filter(r => at(r) < 0);
+  el.innerHTML = `<div class="lz lz-pool" data-drop="out"><h5>Rotating · ${pool.length}</h5>${pool.map(chip).join('') || '<span class="hint" style="margin:0">Everyone is locked to a station.</span>'}</div>
+    <div class="lock-grid">${Array.from({ length: n }, (_, i) => { const names = roster.filter(r => at(r) === i); return `<div class="lz" data-drop="${i}"><h5>Station ${i + 1} · ${names.length}</h5>${names.map(chip).join('') || '<span class="hint" style="margin:0">Drop names here</span>'}</div>`; }).join('')}</div>`;
+  const c = $('#lockCount'); if (c) c.textContent = `${roster.length - pool.length} locked`;
+  remarkPicked(el);
+}
+async function moveLock(name, dest) {
+  const locks = { ...(K.data.locks || {}) };
+  if (dest === 'out') delete locks[name]; else locks[name] = +dest;
+  K.data = { ...K.data, locks }; paintLockEditor();
+  try { await db.doc(`classes/${K.id}`).update({ locks }); } catch (e) { toast("Couldn't save the lock. Try again."); }
+}
+
 /* two-tap confirmation, since the viewer has no confirm() dialog */
 function confirmStep(btn, armedLabel, action) {
   let armed = false, t; const original = btn.textContent;
@@ -1255,27 +1500,22 @@ function confirmStep(btn, armedLabel, action) {
   };
 }
 
-/* ---------- appearance preferences ---------- */
-(function initTheme(){
-  const key='bb-theme';
-  const apply=theme=>{
-    document.documentElement.dataset.theme=theme;
-    const btn=$('#themeToggle'), glyph=$('#themeGlyph'), label=$('#themeLabel');
-    if(btn){btn.setAttribute('aria-label',theme==='dark'?'Switch to light theme':'Switch to dark theme');}
-    if(glyph) glyph.textContent=theme==='dark'?'☾':'☼';
-    if(label) label.textContent=theme==='dark'?'Dark mode':'Light mode';
-    const meta=$('meta[name="theme-color"]'); if(meta) meta.content=theme==='dark'?'#121417':'#E7EAEC';
-  };
-  const saved=store.get(key); apply(saved==='light'||saved==='dark'?saved:(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'));
-  $('#themeToggle')?.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';store.set(key,next);apply(next);});
-})();
-
 /* ================================================================
    BOOT
    ================================================================ */
 function startFromHash() {
   const h = (location.hash || '').replace('#', '');
+  const m = h.match(/^rail-([A-Za-z0-9]+)$/);
+  if (m) { S.pendingRail = m[1]; go('classes'); return; }
   if (h === 'checkin') go('student'); else if (h === 'chef') go('classes'); else render();
+}
+/* #rail-CODE opens a class straight into the classroom display once classes load */
+function resolvePendingRail() {
+  if (!S.pendingRail || !S.classesLoaded) return;
+  const c = findClassByCode(S.pendingRail); S.pendingRail = null;
+  if (!c) { toast('No class uses that display code.'); return; }
+  go('class', { classId: c.id, tab: 'pass' });
+  openRail(false);
 }
 startFromHash();
 (async function boot() {
@@ -1291,7 +1531,8 @@ startFromHash();
   if (db) {
     db.collection('classes').onSnapshot(snap => {
       S.classes = snap.docs.map(d => ({ id: d.id, data: d.data() || {} })); S.classesLoaded = true;
-      if (S.view === 'classes') paintClassGrid();
+      if (S.pendingRail) resolvePendingRail();
+      else if (S.view === 'classes') paintClassGrid();
       else if (S.view === 'class' && S.classId && (!K || !K.data.name) && S.classes.some(c => c.id === S.classId)) render();
       else if (S.view === 'class' && K && S.classId && !S.classes.some(c => c.id === S.classId)) go('classes');
       else if (S.view === 'student' && S.stuClassId && !S.classes.some(c => c.id === S.stuClassId)) go('student', { stuClassId: null });

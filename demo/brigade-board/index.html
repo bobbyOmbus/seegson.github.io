@@ -372,7 +372,7 @@ window.BB_BACKEND = (function () {
   }
 
   /* ---------- local database (Firestore-shaped subset) ---------- */
-  const KEY = 'bb-demo-db-v2';
+  const KEY = 'bb-demo-db-v3';
   function read() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
   let mem = read();
   const listeners = new Set();
@@ -425,9 +425,21 @@ window.BB_BACKEND = (function () {
     const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
     const db = {};
     const classes = {
-      carlos: { name: 'Advanced Cajun & Creole', instructor: 'Chef Carlos Reyes', code: 'CARLOS', startTime: '08:00', stations: 6,
-        roster: ['Eduardo','Niki','Emma','Day','Rodrigo','Jacob','Nakeyia','Hipolito','Bobby','Halle','Robert','Jean','Adriana','Hong','Nathen','Alicia','Kayla','Larry','Jesse','Rosslyn','Genesis','Victor','Catherine','Tori'],
-        equipment: ['Cutting boards','Pots & pans','Soapy water buckets'], cleaning: ['Dish pit','Floor & trash','Sanitizing buckets','Walk-in & dry storage'] },
+      carlos: (() => {
+        /* Bobby's locked station groups (default until the live database is set up) */
+        const groups = [
+          ['Day', 'Eduardo', 'Emma', 'Niki'],
+          ['Hipolito', 'Jacob', 'Jesse', 'Key'],
+          ['Bobby', 'Genesis', 'Halle', 'Robert'],
+          ['Adriana', 'Hong', 'Lisa'],
+          ['Nathen', 'Rodrigo', 'Tori'],
+          ['Catherine', 'Larry', 'Victor']
+        ];
+        const locks = {}; groups.forEach((g, i) => g.forEach(n => { locks[n] = i; }));
+        return { name: 'Advanced Cajun & Creole', instructor: 'Chef Carlos Reyes', code: 'CARLOS', startTime: '08:00', stations: 6,
+          roster: groups.flat(), locks,
+          equipment: ['Cutting boards','Pots & pans','Soapy water buckets'], cleaning: ['Dish pit','Floor & trash'] };
+      })(),
       okafor: { name: 'Garde Manger & Charcuterie', instructor: 'Chef Marcus Okafor', code: 'OKAFOR', startTime: '12:30', stations: 5,
         roster: ['Femi','Callie','Trent','Bianca','Soren','Rashida','Milo','Anya','Dev','Quinn','Estelle','Malik','Joaquin','Petra','Gideon'],
         equipment: ['Cutting boards','Knife kits','Sanitizing buckets'], cleaning: ['Dish pit','Cooler & cure room check','Floor & trash'] },
@@ -460,7 +472,8 @@ window.BB_BACKEND = (function () {
           db[`classes/${id}/checkins/${date}_${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`] = { date, name, checkedInAt: t.getTime(), late, via: 'student' };
         });
         const order = shuffle(present); const sous = order[0]; const line = order.slice(1);
-        const teams = Array.from({ length: c.stations }, () => []); line.forEach((n, i) => teams[i % c.stations].push(n));
+        const teams = Array.from({ length: c.stations }, () => []); let ri = 0;
+        line.forEach(n => { const L = c.locks && c.locks[n]; if (Number.isInteger(L) && L < c.stations) teams[L].push(n); else teams[(ri++) % c.stations].push(n); });
         const rec = (recipes[id] || [])[di % ((recipes[id] || []).length || 1)];
         let li = 0; const who = () => line[(li++) % line.length];
         const labor = [];
@@ -1488,7 +1501,17 @@ async function moveLock(name, dest) {
   const locks = { ...(K.data.locks || {}) };
   if (dest === 'out') delete locks[name]; else locks[name] = +dest;
   K.data = { ...K.data, locks }; paintLockEditor();
-  try { await db.doc(`classes/${K.id}`).update({ locks }); } catch (e) { toast("Couldn't save the lock. Try again."); }
+  try { await db.doc(`classes/${K.id}`).update({ locks }); } catch (e) { toast("Couldn't save the lock. Try again."); return; }
+  /* If today's brigade is already on the rail, move this cook there too, so the pass display matches right away. */
+  const s = K.today;
+  if (!s || dest === 'out') return;
+  const to = +dest; const teams = (s.stationTeams || []).map(t => t.slice());
+  const from = teams.findIndex(t => t.includes(name));
+  if (from < 0 || from === to || to >= teams.length) return;
+  teams[from] = teams[from].filter(n => n !== name); teams[to].push(name);
+  K.today = { ...s, stationTeams: teams };
+  try { await db.doc(`classes/${K.id}/sessions/${TODAY}`).update({ stationTeams: teams }); toast(`${name} moved to Station ${to + 1} on today's board`); }
+  catch (e) { toast("Locked, but today's board didn't update. Reshuffle to apply it."); }
 }
 
 /* two-tap confirmation, since the viewer has no confirm() dialog */

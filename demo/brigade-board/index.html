@@ -200,6 +200,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--heat);outline:none}
 .lk:hover,.lk:focus-visible{opacity:1}
 .lk[aria-pressed="true"]{opacity:1;background:var(--heat);color:var(--heat-ink)}
 .empty-lead{border:1.5px dashed var(--heat)}
+.ticket.empty-stn{opacity:.6;border:1.5px dashed var(--ticket-dim)}
 /* moving students */
 [data-mv]{cursor:grab;border-radius:4px;transition:background .12s}
 .ticket [data-mv]:hover{background:rgba(0,0,0,.04)}
@@ -641,6 +642,13 @@ function fairPicker(people, seed) {
   const load = new Map(people.map(p => [p, seed(p)]));
   return { load, pick() { const min = Math.min(...load.values()); const c = shuffle(people.filter(p => load.get(p) === min)); const x = c[0]; load.set(x, load.get(x) + 1); return x; } };
 }
+/* Stations that actually have cooks today. Ingredient totals scale to this number,
+   so if a whole group is out (or you empty a station), gatherers bring less. */
+function activeStations(s) { const n = (s.stationTeams || []).filter(t => t.length).length; return n || s.stationCount || 1; }
+function ingDetail(it, n, from, multi) { return [perLabel(it) ? perLabel(it) + ' per station' : '', wholeNote(it, n), multi && from && from.length ? 'for ' + from.join(' + ') : ''].filter(Boolean).join(' · '); }
+/* Jobs with ingredient totals recalculated for the stations in use right now. */
+function liveJobs(s) { const n = activeStations(s); return (s.laborAssignments || []).map(j => j.item ? { ...j, label: totalLabel(j.item, n), detail: ingDetail(j.item, n, j.from, j.multi) } : j); }
+
 /* Deal today's jobs so everyone gets one before anyone gets two. Term history only breaks ties.
    If there are more cooks than jobs, the extra cooks join a job as helpers (cleaning first),
    so nobody is left with nothing to do. Returns one entry per person per job. */
@@ -662,7 +670,7 @@ function assignJobs(jobs, people, counts) {
     job.crew.push(p);
   });
   const out = [];
-  crews.forEach(c => c.crew.forEach((who, i) => out.push({ who, category: c.category, label: c.label, detail: c.detail, with: c.crew.filter(x => x !== who), helper: i > 0 })));
+  crews.forEach(c => { const { crew, ...job } = c; crew.forEach((who, i) => out.push({ ...job, who, with: crew.filter(x => x !== who), helper: i > 0 })); });
   return out;
 }
 
@@ -863,7 +871,7 @@ function mountStudentClass(classId) {
     if (L.sousChef === me) { headline = 'Sous chef'; detail = 'You run the line today. Check stations, keep time, and back up the chef.'; }
     else if (ti >= 0) { headline = 'Station ' + (ti + 1); const mates = s.stationTeams[ti].filter(n => n !== me); detail = mates.length ? 'Working with ' + mates.join(', ') + '.' : 'Working solo today.'; }
     else { headline = 'Floating'; detail = 'You were marked present after the brigade was called. Check with Chef for a station.'; }
-    const jobs = (s.laborAssignments || []).filter(t => t.who === me);
+    const jobs = liveJobs(s).filter(t => t.who === me);
     el.innerHTML = `
       <span class="eyebrow">Your assignment</span>
       <div class="assign-big">${esc(headline)}</div>
@@ -1166,12 +1174,17 @@ function callBrigade() {
   const lockedHere = line.filter(n => Number.isInteger(locks[n]) && locks[n] < stations).length;
   if (lockedHere) note += (note ? ' ' : '') + `${lockedHere} locked ${lockedHere === 1 ? 'student stayed' : 'students stayed'} at their station.`;
 
+  const active = teams.filter(t => t.length).length || 1;
+  if (active < stations) {
+    const empty = teams.map((t, i) => t.length ? null : i + 1).filter(Boolean);
+    note += (note ? ' ' : '') + `${empty.length === 1 ? 'Station ' + empty[0] + ' has' : 'Stations ' + empty.join(', ') + ' have'} no cooks today, so ingredients are scaled for ${active} ${active === 1 ? 'station' : 'stations'}.`;
+  }
   const laborPool = line.length ? line : present;
   const ingLines = lines($('#ingIn').value);
   const prod = parseProduction($('#ingIn').value);
   const multi = prod.recipes.length > 1;
   const jobs = [
-    ...shuffle(prod.items).map(it => ({ category: 'ingredient', label: totalLabel(it, stations), detail: [perLabel(it) ? perLabel(it) + ' per station' : '', wholeNote(it, stations), multi && it.from.length ? 'for ' + it.from.join(' + ') : ''].filter(Boolean).join(' · ') })),
+    ...shuffle(prod.items).map(it => ({ category: 'ingredient', item: { amount: it.amount, unit: it.unit, name: it.name }, from: it.from, multi, label: totalLabel(it, active), detail: ingDetail(it, active, it.from, multi) })),
     ...shuffle(K.data.equipment || []).map(e => ({ category: 'equipment', label: e, detail: 'One set to every station' })),
     ...shuffle(K.data.cleaning || []).map(e => ({ category: 'cleaning', label: e, detail: 'For the whole kitchen' }))
   ];
@@ -1206,15 +1219,15 @@ const LOCK_SVG = on => `<svg width="13" height="13" viewBox="0 0 16 16" aria-hid
 function ticketsHTML(s, editable) {
   const L = s.leadership || {}; const counts = historyCounts(K.data.roster || [], K.sessions);
   const locks = K.data.locks || {};
-  const byWho = {}; (s.laborAssignments || []).forEach(t => { (byWho[t.who] = byWho[t.who] || []).push(t); });
+  const byWho = {}; liveJobs(s).forEach(t => { (byWho[t.who] = byWho[t.who] || []).push(t); });
   const mv = n => editable ? ` data-mv="${esc(n)}" draggable="true"` : '';
   let sous = '';
   if (L.sousChef) sous = `<article class="ticket lead"${editable ? ' data-drop="sous"' : ''}><div class="t-head"><b>Sous</b><span class="flag">LEAD</span></div><div class="t-who"${mv(L.sousChef)}>${esc(L.sousChef)}</div><div class="t-note">Runs the line · ${ordinal((counts[L.sousChef] ? counts[L.sousChef].sous : 0) + 1)} time this term</div>${byWho[L.sousChef] ? jobsHTML(byWho[L.sousChef]) : ''}</article>`;
   else if (editable) sous = `<article class="ticket lead empty-lead" data-drop="sous"><div class="t-head"><b>Sous</b><span class="flag">LEAD</span></div><div class="t-note">No sous chef today. Drop a student here to make them sous chef.</div></article>`;
-  const stations = (s.stationTeams || []).map((t, i) => `<article class="ticket"${editable ? ` data-drop="${i}"` : ''}><div class="t-head"><b>Stn ${i + 1}</b><span>${t.length} ${t.length === 1 ? 'cook' : 'cooks'}</span></div><ul>${t.map(n => {
+  const stations = (s.stationTeams || []).map((t, i) => (!t.length && !editable) ? '' : `<article class="ticket${t.length ? '' : ' empty-stn'}"${editable ? ` data-drop="${i}"` : ''}><div class="t-head"><b>Stn ${i + 1}</b><span>${t.length ? `${t.length} ${t.length === 1 ? 'cook' : 'cooks'}` : 'no cooks today'}</span></div><ul>${t.map(n => {
     const locked = locks[n] === i;
     return `<li class="${locked ? 'locked' : ''}"${mv(n)}><span class="t-row"><b class="t-nm">${esc(n)}</b>${editable ? `<button type="button" class="lk" data-lock="${esc(n)}" aria-pressed="${locked}" aria-label="${locked ? 'Unlock' : 'Lock'} ${esc(n)} ${locked ? 'from' : 'to'} station ${i + 1}" title="${locked ? 'Locked to this station. Tap to unlock.' : 'Lock to this station'}">${LOCK_SVG(locked)}</button>` : ''}</span>${byWho[n] ? jobsHTML(byWho[n]) : '<span class="t-line">Cooking · no extra job</span>'}</li>`;
-  }).join('')}${editable && !t.length ? '<li class="t-line">Drop cooks here</li>' : ''}</ul></article>`).join('');
+  }).join('')}${editable && !t.length ? '<li class="t-line">Not counted in ingredient totals. Drop cooks here to open it.</li>' : ''}</ul></article>`).join('');
   return sous + stations;
 }
 function poolHTML(s) {
@@ -1262,12 +1275,13 @@ async function moveOnBoard(name, dest) {
   const locks = { ...(K.data.locks || {}) }; let locksChanged = false;
   if (name in locks) { if (dest !== 'sous' && dest !== 'out') locks[name] = +dest; else delete locks[name]; locksChanged = true; }
   const patch = { stationTeams: teams, leadership: L, present };
+  const before = activeStations(s), after = activeStations({ ...s, stationTeams: teams });
   K.today = { ...s, ...patch }; if (locksChanged) K.data = { ...K.data, locks };
   /* keep the sous chef picker in step, so a reshuffle keeps the sous you chose by hand */
   if (dest === 'sous') K.sousPick = name; else if (from === 'sous') K.sousPick = 'none';
   paintTodayBoard(); paintRail(); paintSousPick(effectivePresent());
   const where = dest === 'sous' ? 'sous chef' : dest === 'out' ? 'off the line' : 'Station ' + (+dest + 1);
-  toast(`${name} moved to ${where}${locksChanged && dest !== 'sous' && dest !== 'out' ? ' (still locked)' : ''}`);
+  toast(`${name} moved to ${where}${locksChanged && dest !== 'sous' && dest !== 'out' ? ' (still locked)' : ''}${before !== after ? `. Ingredients rescaled for ${after} ${after === 1 ? 'station' : 'stations'}.` : ''}`);
   try {
     await db.doc(`classes/${K.id}/sessions/${TODAY}`).update(patch);
     if (locksChanged) await db.doc(`classes/${K.id}`).update({ locks });
@@ -1288,7 +1302,7 @@ function boardHTML(s, big) {
   const tasks = big ? '' : groups.map(([k, label]) => {
     /* one row per job, with everyone on that job's crew */
     const rows = []; const byLabel = new Map();
-    (s.laborAssignments || []).filter(t => t.category === k).forEach(t => {
+    liveJobs(s).filter(t => t.category === k).forEach(t => {
       if (byLabel.has(t.label)) { byLabel.get(t.label).names.push(t.who); return; }
       const r = { ...t, names: [t.who] }; byLabel.set(t.label, r); rows.push(r);
     });
@@ -1296,7 +1310,7 @@ function boardHTML(s, big) {
     return `<h4>${label}</h4>` + rows.map(t => `<div class="task"><span class="what">${esc(t.label)}</span><span class="who">${esc(t.names.join(' + '))}</span>${t.detail ? `<span class="sub">${esc(t.detail)}</span>` : ''}</div>`).join('');
   }).join('');
   return `
-    <div class="board-h"><h2>${big ? 'The brigade' : 'On the rail'}${s.recipeName ? ' · ' + esc(s.recipeName) : ''}</h2><div class="row"><span class="eyebrow">Called ${esc(fmtTime(s.calledAt))} · ${(s.present || []).length} cooks · ${s.stationCount || (s.stationTeams || []).length} stations</span>${big ? '' : '<button class="btn sm" type="button" data-rail>Full-screen rail</button>'}</div></div>
+    <div class="board-h"><h2>${big ? 'The brigade' : 'On the rail'}${s.recipeName ? ' · ' + esc(s.recipeName) : ''}</h2><div class="row"><span class="eyebrow">Called ${esc(fmtTime(s.calledAt))} · ${(s.present || []).length} cooks · ${activeStations(s)} ${activeStations(s) === 1 ? 'station' : 'stations'}</span>${big ? '' : '<button class="btn sm" type="button" data-rail>Full-screen rail</button>'}</div></div>
     ${big ? '' : `<p class="hint" style="margin:-4px 0 12px">Drag a name to another ticket, or tap a name and then tap where it goes. Use the lock to keep a student at that station every time you call the brigade.</p>${poolHTML(s)}`}
     <div class="rail"><div class="tickets">${ticketsHTML(s, !big)}</div></div>
     ${tasks ?`<div class="tasks"><h4 style="margin-top:12px;color:var(--fg)">Job details for gatherers</h4>${tasks}</div>` : ''}`;
